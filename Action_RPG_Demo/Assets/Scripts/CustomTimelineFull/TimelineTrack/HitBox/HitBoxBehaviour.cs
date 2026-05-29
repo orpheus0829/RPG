@@ -16,10 +16,16 @@ public class HitBoxBehaviour : PlayableBehaviour
     //public float endTime;
 
     private bool isActive;
+    private ActionControl cont;
 
+    public override void OnBehaviourPlay(Playable playable, FrameData info)
+    {
+
+    }
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {
         ActionControl ctrl = playerData as ActionControl;
+        cont = ctrl;
         if (ctrl == null)
         {
             return;
@@ -53,7 +59,12 @@ public class HitBoxBehaviour : PlayableBehaviour
     }
     public override void OnBehaviourPause(Playable playable, FrameData info)
     {
+        if (cont != null)
+        {
+            cont.CloseHitBox();
+        }
         isActive = false;
+        cont = null;
         // 移除过期的GetBinding取值，依靠运行时传入的playerData即可收尾
     }
 }

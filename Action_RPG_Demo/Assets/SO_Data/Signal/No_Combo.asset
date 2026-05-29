@@ -9,9 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf4d27c31143c5f4d8e424156e5fbbc3, type: 3}
-  m_Name: Player_Data
+  m_Script: {fileID: 11500000, guid: d97da93a9d5d3114b818ee5ae4b748e9, type: 3}
+  m_Name: No_Combo
   m_EditorClassIdentifier: 
-  Player_Name: Player
-  WalkSpeed: 5
-  RunSpeed: 7
+  allowCombo: 0

@@ -9,8 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb7c6627053405740afb7f6a6b83c0de, type: 3}
-  m_Name: atk_start
+  m_Script: {fileID: 11500000, guid: d97da93a9d5d3114b818ee5ae4b748e9, type: 3}
+  m_Name: Can_Combo
   m_EditorClassIdentifier: 
-  allowCombo: 0
-  allowInterrupt: 1
+  allowCombo: 1

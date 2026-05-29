@@ -10,19 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f07cd29b8943cab4ca89a155dd596839, type: 3}
-  m_Name: Attack2
+  m_Name: Walk
   m_EditorClassIdentifier: 
-  actionID: 2
-  actionName: "\u653B\u51FB2"
-  timeline: {fileID: 0}
+  actionID: 5
+  actionName: Walk
+  timeline: {fileID: 11400000, guid: 854331fba9d56d74b9f414b7b0373680, type: 2}
   actionType: 0
   damageValue: 0
   hitBoxOffset: {x: 0, y: 0, z: 0}
   hitBoxRadius: 0
   hitStartTime: 0
   hitEndTime: 0
-  nextAction: {fileID: 0}
+  nextAction: {fileID: 11400000}
+  cameraMoveMode: 0
+  cameraDirection: {x: 0, y: 0, z: 1}
+  cameraTotalDistance: 0
   cameraTargetLocalPos: {x: 0, y: 0, z: 0}
+  cameraMoveSpeed: 0
+  cameraStartSpeed: 0
+  cameraEndSpeed: 0
   effectPrefab: {fileID: 0}
   soundClip: {fileID: 0}
   effectTriggerTime: 0
+  moveMode: 0
+  direction: {x: 0, y: 0, z: 1}
+  endPos: {x: 0, y: 0, z: 0}
+  moveSpeed: 0
+  totalDistance: 0
+  startSpeed: 0
+  endSpeed: 0

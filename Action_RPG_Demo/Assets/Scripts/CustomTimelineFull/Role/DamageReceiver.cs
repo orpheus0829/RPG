@@ -8,14 +8,14 @@ using UnityEngine;
 /// </summary>
 public class DamageReceiver : MonoBehaviour, IDamageable
 {
-    [Header("受击参数")]
-    public float stiffDuration = 0.3f;
-    public float knockForce = 5f;
     public float maxHp = 100f;
-
     private float currentHp;
-    private float stiffTimer;
-    private bool isStiff;
+    [Header("受击击退")]
+    public float knockForce = 5f;
+    [Header("受击冷却")]
+    public float stiffDuration = 0.3f;
+    public float stiffTimer;
+    public bool isStiff;
     private Rigidbody enemyRb;
 
     private void Awake()

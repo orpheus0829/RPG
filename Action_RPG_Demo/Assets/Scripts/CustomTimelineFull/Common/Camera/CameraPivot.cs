@@ -25,7 +25,8 @@ public class CameraPivot : MonoBehaviour
     }
     void Start()
     {
-        Cursor.lockState = CursorLockMode.None;
+        //Cursor.lockState = CursorLockMode.None;
+        Cursor.lockState = CursorLockMode.Locked;
         rotY = transform.eulerAngles.y;
     }
 

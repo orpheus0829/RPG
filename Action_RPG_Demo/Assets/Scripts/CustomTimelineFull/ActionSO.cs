@@ -27,10 +27,28 @@ public class ActionSO : ScriptableObject
     public ActionSO nextAction;
 
     [Header("镜头演出参数")]
+    public MoveMode cameraMoveMode;
+    public Vector3 cameraDirection = Vector3.forward;
+    public float cameraTotalDistance;
     public Vector3 cameraTargetLocalPos;
+    public float cameraMoveSpeed;
+    public float cameraStartSpeed;
+    public float cameraEndSpeed;
 
     [Header("特效音效参数")]
     public GameObject effectPrefab;
     public AudioClip soundClip;
     public float effectTriggerTime;
+
+    [Header("位移")]
+    public MoveMode moveMode;
+    public Vector3 direction = Vector3.forward;
+
+    public Vector3 endPos;
+
+    public float moveSpeed;
+    public float totalDistance;
+
+    public float startSpeed;
+    public float endSpeed;
 }

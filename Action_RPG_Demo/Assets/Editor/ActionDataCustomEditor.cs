@@ -11,6 +11,7 @@ public class ActionDataCustomEditor : Editor
 {
     private bool camFold;
     private bool effectFold;
+    private bool moveFold;
 
     public override void OnInspectorGUI()
     {
@@ -45,7 +46,23 @@ public class ActionDataCustomEditor : Editor
         if (camFold)
         {
             EditorGUI.indentLevel++;
-            data.cameraTargetLocalPos = EditorGUILayout.Vector3Field("目标机位坐标", data.cameraTargetLocalPos);
+            data.cameraMoveMode = (MoveMode)EditorGUILayout.EnumPopup("镜头移动模式", data.cameraMoveMode);
+            data.cameraDirection = EditorGUILayout.Vector3Field("镜头移动方向", data.cameraDirection);
+            data.cameraTotalDistance = EditorGUILayout.FloatField("镜头总距离", data.cameraTotalDistance);
+
+            switch (data.cameraMoveMode)
+            {
+                case MoveMode.FixedEndPos:
+                    data.cameraTargetLocalPos = EditorGUILayout.Vector3Field("固定目标点", data.cameraTargetLocalPos);
+                    break;
+                case MoveMode.SpeedAndDistance:
+                    data.cameraMoveSpeed = EditorGUILayout.FloatField("移动速度", data.cameraMoveSpeed);
+                    break;
+                case MoveMode.VariableSpeed:
+                    data.cameraStartSpeed = EditorGUILayout.FloatField("起始速度", data.cameraStartSpeed);
+                    data.cameraEndSpeed = EditorGUILayout.FloatField("结束速度", data.cameraEndSpeed);
+                    break;
+            }
             EditorGUI.indentLevel--;
         }
 
@@ -58,6 +75,33 @@ public class ActionDataCustomEditor : Editor
             data.effectPrefab = EditorGUILayout.ObjectField("动作特效", data.effectPrefab, typeof(GameObject), false) as GameObject;
             data.soundClip = EditorGUILayout.ObjectField("动作音效", data.soundClip, typeof(AudioClip), false) as AudioClip;
             data.effectTriggerTime = EditorGUILayout.FloatField("触发时间点", data.effectTriggerTime);
+            EditorGUI.indentLevel--;
+        }
+
+        EditorGUILayout.Space(8);
+        moveFold = EditorGUILayout.Foldout(moveFold, "位移参数", true);
+        if (moveFold)
+        {
+            EditorGUI.indentLevel++;
+            data.moveMode = (MoveMode)EditorGUILayout.EnumPopup("位移模式", data.moveMode);
+            data.direction = EditorGUILayout.Vector3Field("移动方向", data.direction);
+
+            data.totalDistance = EditorGUILayout.FloatField("总移动距离", data.totalDistance);
+
+            switch (data.moveMode)
+            {
+                case MoveMode.FixedEndPos:
+                    data.endPos = EditorGUILayout.Vector3Field("目标终点坐标", data.endPos);
+                    break;
+                case MoveMode.SpeedAndDistance:
+                    data.moveSpeed = EditorGUILayout.FloatField("移动速度", data.moveSpeed);
+                    //data.totalDistance = EditorGUILayout.FloatField("总移动距离", data.totalDistance);
+                    break;
+                case MoveMode.VariableSpeed:
+                    data.startSpeed = EditorGUILayout.FloatField("起始速度", data.startSpeed);
+                    data.endSpeed = EditorGUILayout.FloatField("结束速度", data.endSpeed);
+                    break;
+            }
             EditorGUI.indentLevel--;
         }
 

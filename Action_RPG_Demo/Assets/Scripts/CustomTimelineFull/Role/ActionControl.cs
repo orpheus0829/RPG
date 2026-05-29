@@ -7,17 +7,30 @@ using UnityEngine.Timeline;
 public class ActionControl : MonoBehaviour, INotificationReceiver
 {
     [Header("组件绑定")]
+    public Player player;
     public Animator roleAnimator;
     public AudioSource audioSource;
     public Camera mainCamera;
     public PlayableDirector timelineDirector;
 
-    [Header("默认动作")]
+    [Header("待机动作")]
     public ActionSO idleAction;
 
-    private ActionSO currentAction;
+    [Header("移动动作")]
+    public ActionSO walkAction;
+    public ActionSO WalkStart;
+    public ActionSO runAction;
+
+    [Header("攻击动作")]
+    public ActionSO attack1Action;
+    public ActionSO attack2Action;
+    public ActionSO attack3Action;
+    public ActionSO attack4Action;
+
+    public ActionSO currentAction;
 
     [Header("动作窗口（由 Timeline 信号控制）")]
+    public int AttackLevel;
     public bool canCombo;
     public bool canInterrupt;
 
@@ -30,6 +43,11 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
 
     private void Awake()
     {
+        player = GetComponent<Player>();
+        roleAnimator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
+        timelineDirector = GetComponent<PlayableDirector>();
+
         hitCollider = gameObject.AddComponent<SphereCollider>();
         hitCollider.isTrigger = true;
         hitCollider.enabled = false;
@@ -39,7 +57,6 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
     {
         if (notification is SignalEmitter emitter)
         {
-            // 拿出你真正的信号 SO
             ActionWindowSignal sig = emitter.asset as ActionWindowSignal;
 
             if (sig != null)
@@ -47,6 +64,28 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
                 canCombo = sig.allowCombo;
                 canInterrupt = sig.allowInterrupt;
                 //Debug.Log($"收到信号: canCombo={canCombo}, canInterrupt={canInterrupt}");
+                return;
+            }
+        }
+        if (notification is SignalEmitter emitter_c)
+        {
+            ComboSignal sig = emitter_c.asset as ComboSignal;
+
+            if (sig != null)
+            {
+                canCombo = sig.allowCombo;
+                //Debug.Log($"收到信号: canCombo={canCombo}");
+                return;
+            }
+        }
+        if (notification is SignalEmitter emitter_i)
+        {
+            InterruptSignal sig = emitter_i.asset as InterruptSignal;
+
+            if (sig != null)
+            {
+                canInterrupt = sig.allowInterrupt;
+                //Debug.Log($"收到信号:  canInterrupt={canInterrupt}");
                 return;
             }
         }
@@ -60,7 +99,15 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
         {
             return;
         }
+        if (currentAction == attack1Action || currentAction == attack2Action || currentAction == attack3Action || currentAction == attack4Action)
+        {
+            player.isWalking = false;
+        }
         Debug.Log("切换为" + action.actionName);
+        if (currentAction == walkAction)
+        {
+            currentAction = walkAction;
+        }
         currentAction = action;
 
         timelineDirector.Stop();
@@ -70,22 +117,55 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
 
     public void OnActionEnd()
     {
-        if (currentAction == null) return;
-
+        if (currentAction == null)
+        {
+            return;
+        }
         if (currentAction.nextAction != null)
         {
+            Debug.Log("转至" + currentAction.nextAction);
             PlayAction(currentAction.nextAction);
         }
         else
         {
+            Debug.Log("默认转至待机");
             PlayAction(idleAction);
         }
     }
 
 
     #region 攻击判定
+    public void PlayAttackAction()
+    {
+        AttackLevel = canCombo ? (AttackLevel % 2) + 1 : 1;
+        ActionSO attack_so;
+        switch (AttackLevel)
+        {
+            case 1:
+                attack_so = attack1Action;
+                break;
+            case 2:
+                attack_so = attack2Action;
+                break;
+            case 3:
+                attack_so = attack3Action;
+                break;
+            case 4:
+                attack_so = attack4Action;
+                break;
+            default:
+                attack_so = attack1Action;
+                break;
+        }
+        PlayAction(attack_so);
+        player.IsAttacking = false;
+    }
     public void OpenHitBox(Vector3 offset, float radius)
     {
+        if (hitCollider)
+        {
+            hitCollider.isTrigger = true;
+        }
         hitCollider.center = offset;
         hitCollider.radius = radius;
         hitCollider.enabled = true;
