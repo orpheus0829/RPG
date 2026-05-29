@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Player_Data
   m_EditorClassIdentifier: 
   Player_Name: Player
-  WalkSpeed: 3
-  RunSpeed: 5
+  WalkSpeed: 5
+  RunSpeed: 7
