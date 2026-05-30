@@ -15,3 +15,5 @@ MonoBehaviour:
   Player_Name: Player
   WalkSpeed: 5
   RunSpeed: 7
+  DetectionRadius: 6
+  LockDuration: 1
