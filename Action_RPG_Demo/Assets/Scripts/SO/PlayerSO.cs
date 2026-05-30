@@ -9,4 +9,7 @@ public class PlayerSO : ScriptableObject
     public string Player_Name;
     public float WalkSpeed;
     public float RunSpeed;
+
+    public float DetectionRadius;
+    public float LockDuration;
 }

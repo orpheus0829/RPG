@@ -36,6 +36,7 @@ public class ActionDataCustomEditor : Editor
             data.hitBoxRadius = EditorGUILayout.FloatField("判定盒半径", data.hitBoxRadius);
             data.hitStartTime = EditorGUILayout.FloatField("判定开始时间", data.hitStartTime);
             data.hitEndTime = EditorGUILayout.FloatField("判定结束时间", data.hitEndTime);
+            data.hitForce = EditorGUILayout.FloatField("打击力度", data.hitForce);
             EditorGUILayout.Space(8);
         }
 
@@ -75,6 +76,7 @@ public class ActionDataCustomEditor : Editor
             data.effectPrefab = EditorGUILayout.ObjectField("动作特效", data.effectPrefab, typeof(GameObject), false) as GameObject;
             data.soundClip = EditorGUILayout.ObjectField("动作音效", data.soundClip, typeof(AudioClip), false) as AudioClip;
             data.effectTriggerTime = EditorGUILayout.FloatField("触发时间点", data.effectTriggerTime);
+            data.effectSpawnOffset = EditorGUILayout.Vector3Field("特效生成偏移（局部）", data.effectSpawnOffset);
             EditorGUI.indentLevel--;
         }
 

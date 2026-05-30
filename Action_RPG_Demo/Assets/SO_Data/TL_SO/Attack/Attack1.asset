@@ -21,6 +21,7 @@ MonoBehaviour:
   hitBoxRadius: 0.5
   hitStartTime: 0
   hitEndTime: 2
+  hitForce: 1
   nextAction: {fileID: 11400000, guid: 81e8fad9bf1509a4f9b2b25eb2f24ea8, type: 2}
   cameraMoveMode: 2
   cameraDirection: {x: 1, y: 1, z: 1}
@@ -29,13 +30,14 @@ MonoBehaviour:
   cameraMoveSpeed: 1000000
   cameraStartSpeed: 1e+9
   cameraEndSpeed: 1.5e+9
-  effectPrefab: {fileID: 0}
-  soundClip: {fileID: 0}
+  effectPrefab: {fileID: 1753931898948783255, guid: b4bf6e5812692734a935223fb843a712, type: 3}
+  soundClip: {fileID: 8300000, guid: 90a08c6e24d05854981bd4dfe451756b, type: 3}
   effectTriggerTime: 0
+  effectSpawnOffset: {x: 0, y: 0.7, z: 1.5}
   moveMode: 2
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
   moveSpeed: 10000
-  totalDistance: 1
+  totalDistance: 1.3
   startSpeed: 1000000
   endSpeed: 999999

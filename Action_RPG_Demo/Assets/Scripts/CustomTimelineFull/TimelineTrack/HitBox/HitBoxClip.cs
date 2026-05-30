@@ -16,6 +16,7 @@ public class HitBoxClip : PlayableAsset
     public float boxRadius;
     public float startTime;
     public float endTime;
+    public float HitForce;
 
     public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
     {

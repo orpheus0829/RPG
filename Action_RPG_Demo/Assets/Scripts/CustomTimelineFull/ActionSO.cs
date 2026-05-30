@@ -23,6 +23,8 @@ public class ActionSO : ScriptableObject
     public float hitStartTime;
     public float hitEndTime;
 
+    public float hitForce;
+
     [Header("无突发时 → 自动跳转")]
     public ActionSO nextAction;
 
@@ -39,6 +41,7 @@ public class ActionSO : ScriptableObject
     public GameObject effectPrefab;
     public AudioClip soundClip;
     public float effectTriggerTime;
+    public Vector3 effectSpawnOffset;
 
     [Header("位移")]
     public MoveMode moveMode;

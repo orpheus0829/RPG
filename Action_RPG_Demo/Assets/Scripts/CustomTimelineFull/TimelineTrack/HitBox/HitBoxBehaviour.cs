@@ -35,6 +35,8 @@ public class HitBoxBehaviour : PlayableBehaviour
         float radius = clip.data != null ? clip.data.hitBoxRadius : clip.boxRadius;
         float start = clip.data != null ? clip.data.hitStartTime : clip.startTime;
         float end = clip.data != null ? clip.data.hitEndTime : clip.endTime;
+        float force = clip.data != null ? clip.data.hitForce : clip.HitForce;
+        ctrl.Hit_Force = force;
 
         float t = (float)playable.GetTime() / (float)playable.GetDuration();
         bool inRange = t >= start && t <= end;

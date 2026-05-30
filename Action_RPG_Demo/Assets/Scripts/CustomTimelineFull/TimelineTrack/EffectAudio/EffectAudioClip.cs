@@ -19,9 +19,6 @@ public class EffectAudioClip : PlayableAsset
     public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
     {
         var b = new EffectAudioBehaviour();
-        //b.sound = sound;
-        //b.effectPrefab = effectPrefab;
-        //b.spawnOffset = spawnOffset;
         b.clip = this;
         return ScriptPlayable<EffectAudioBehaviour>.Create(graph, b);
     }

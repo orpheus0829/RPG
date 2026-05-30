@@ -14,6 +14,8 @@ public class EffectAudioBehaviour : PlayableBehaviour
     //public Vector3 spawnOffset;
     private bool fired;
 
+    public List<GameObject> VWait_for_Des = new List<GameObject>();
+
     public override void OnBehaviourPlay(Playable playable, FrameData info)
     {
         fired = false;
@@ -31,13 +33,43 @@ public class EffectAudioBehaviour : PlayableBehaviour
             return;
         }
 
-        AudioClip snd = clip.data != null ? clip.data.soundClip : clip.sound;
-        GameObject fx = clip.data != null ? clip.data.effectPrefab : clip.effectPrefab;
-        Vector3 offset = clip.data != null ? clip.data.hitBoxOffset : clip.spawnOffset;
+        AudioClip snd = null;
+        GameObject fx = null;
+        Vector3 offset = Vector3.zero;
 
-        ctrl.PlaySound(snd);
-        Vector3 pos = ctrl.transform.TransformPoint(offset);
-        ctrl.SpawnEffect(fx, pos, ctrl.transform.rotation);
+        if (clip.data != null)
+        {
+            snd = clip.data.soundClip;
+            fx = clip.data.effectPrefab;
+            offset = clip.data.effectSpawnOffset;
+        }
+        else
+        {
+            snd = clip.sound;
+            fx = clip.effectPrefab;
+            offset = clip.spawnOffset;
+        }
+        Vector3 worldPos = ctrl.transform.TransformPoint(offset);
+        if (snd != null)
+        {
+            ctrl.PlaySound(snd);
+        }
+        if (fx != null)
+        {
+            GameObject vfx = ctrl.SpawnEffect(fx, worldPos, ctrl.transform.rotation);
+            VWait_for_Des.Add(vfx);
+        }
         fired = true;
+    }
+    public override void OnBehaviourPause(Playable playable, FrameData info)
+    {
+        foreach (var i in VWait_for_Des)
+        {
+            if (i != null)
+            {
+                GameObject.Destroy(i);
+            }
+        }
+        VWait_for_Des.Clear();
     }
 }

@@ -19,15 +19,20 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
     [Header("移动动作")]
     public ActionSO walkAction;
     public ActionSO WalkStart;
+    public ActionSO WalkEnd;
     public ActionSO runAction;
 
     [Header("攻击动作")]
     public ActionSO attack1Action;
     public ActionSO attack2Action;
     public ActionSO attack3Action;
-    public ActionSO attack4Action;
+    public ActionSO attack4Action_Nor;
+    public ActionSO attack4Action_Per;
 
     public ActionSO currentAction;
+
+    [Header("翻越动作")]
+    public List<ActionSO> CrossActions;
 
     [Header("动作窗口（由 Timeline 信号控制）")]
     public int AttackLevel;
@@ -36,6 +41,7 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
 
     [Header("攻击范围盒调试用")]
     private SphereCollider hitCollider;
+    public float Hit_Force = 0;
 
     public Vector3 debugBoxOffset;
     public float debugBoxRadius;
@@ -90,7 +96,7 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
             }
         }
 
-        Debug.Log($"收到未知信号: {notification?.GetType().Name}");
+        //Debug.Log($"收到未知信号: {notification?.GetType().Name}");
     }
 
     public void PlayAction(ActionSO action)
@@ -99,11 +105,11 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
         {
             return;
         }
-        if (currentAction == attack1Action || currentAction == attack2Action || currentAction == attack3Action || currentAction == attack4Action)
+        if (currentAction == attack1Action || currentAction == attack2Action || currentAction == attack3Action || currentAction == attack4Action_Nor || currentAction==attack4Action_Per)
         {
             player.isWalking = false;
         }
-        Debug.Log("切换为" + action.actionName);
+        //Debug.Log("切换为" + action.actionName);
         if (currentAction == walkAction)
         {
             currentAction = walkAction;
@@ -117,6 +123,7 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
 
     public void OnActionEnd()
     {
+        player.IsBlock = false;
         if (currentAction == null)
         {
             return;
@@ -137,7 +144,7 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
     #region 攻击判定
     public void PlayAttackAction()
     {
-        AttackLevel = canCombo ? (AttackLevel % 2) + 1 : 1;
+        AttackLevel = canCombo ? (AttackLevel % 4) + 1 : 1;
         ActionSO attack_so;
         switch (AttackLevel)
         {
@@ -151,7 +158,8 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
                 attack_so = attack3Action;
                 break;
             case 4:
-                attack_so = attack4Action;
+                int choice = Random.Range(0, 100);
+                attack_so = choice <= 66 ? attack4Action_Nor : attack4Action_Per;
                 break;
             default:
                 attack_so = attack1Action;
@@ -203,13 +211,16 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
     public void PlaySound(AudioClip clip)
     {
         if (clip == null) return;
-        audioSource.PlayOneShot(clip);
+        AudioSource.PlayClipAtPoint(clip, player.transform.position);
     }
 
-    public void SpawnEffect(GameObject prefab, Vector3 pos, Quaternion rot)
+    public GameObject SpawnEffect(GameObject prefab, Vector3 pos, Quaternion rot)
     {
-        if (prefab == null) return;
-        Instantiate(prefab, pos, rot);
+        if (prefab == null)
+        {
+            return null;
+        }
+        return Instantiate(prefab, pos, rot);
     }
     #endregion
 
@@ -224,7 +235,12 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
     {
         if (other.TryGetComponent(out IDamageable target))
         {
-            target.TakeDamage(20f, transform.forward);
+            if(other.TryGetComponent(out DamageReceiver receiver))
+            {
+                receiver.knockForce = Hit_Force != 0 ? Hit_Force : receiver.knockForce;
+            }
+            target.TakeDamage(currentAction.damageValue, transform.forward);
+            Hit_Force = 0;
         }
     }
 }
