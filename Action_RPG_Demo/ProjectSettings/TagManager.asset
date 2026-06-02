@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Camera_Pivot
   - Enemy
+  - Cant_Vault
   layers:
   - Default
   - TransparentFX
