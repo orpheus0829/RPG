@@ -6,9 +6,14 @@ public enum MoveMode
 {
     FixedEndPos,
     SpeedAndDistance,
-    VariableSpeed
+    VariableSpeed,
+    ClimbOver,
 }
-
+public enum ClimbStage
+{
+    BeforeClimb,
+    AfterClimb,
+}
 public class TransformTimelineClip : PlayableAsset, ITimelineClipAsset
 {
     [Header("数据盒子")]
@@ -30,6 +35,14 @@ public class TransformTimelineClip : PlayableAsset, ITimelineClipAsset
     [Header("模式3;变速移动")]
     public float startSpeed;
     public float endSpeed;
+
+    [Header("模式4;翻越模式")]
+    public ClimbStage climbStage;
+    public bool climbUseVariableSpeed;
+    public float climbSpeed;
+    public float climbStartSpeed;
+    public float climbEndSpeed;
+    public float climbAfterExtraDistance;
 
     public ClipCaps clipCaps => ClipCaps.Blending;
 

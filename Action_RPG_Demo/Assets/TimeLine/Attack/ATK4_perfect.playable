@@ -418,7 +418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c38f6fa1940124db1ab7f6fe7268d1, type: 3}
   m_Name: Signal Emitter
   m_EditorClassIdentifier: 
-  m_Time: 1.2
+  m_Time: 0.7833333333333333
   m_Retroactive: 0
   m_EmitOnce: 0
   m_Asset: {fileID: 11400000, guid: 676e2778fc3743343b4648fcdcf11e48, type: 2}
@@ -464,6 +464,7 @@ MonoBehaviour:
   boxRadius: 0.5
   startTime: 0
   endTime: 2
+  HitForce: 0
 --- !u!114 &822552276363098549
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -503,6 +504,7 @@ MonoBehaviour:
   boxRadius: 0
   startTime: 0
   endTime: 0
+  HitForce: 0
 --- !u!114 &2863998911565135610
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -569,6 +571,12 @@ MonoBehaviour:
   totalDistance: 0
   startSpeed: 0
   endSpeed: 0
+  climbStage: 0
+  climbUseVariableSpeed: 0
+  climbSpeed: 0
+  climbStartSpeed: 0
+  climbEndSpeed: 0
+  climbAfterExtraDistance: 0
 --- !u!114 &6517485645825485233
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -581,7 +589,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c38f6fa1940124db1ab7f6fe7268d1, type: 3}
   m_Name: Signal Emitter
   m_EditorClassIdentifier: 
-  m_Time: 1.3833333333333333
+  m_Time: 0.8333333333333334
   m_Retroactive: 0
   m_EmitOnce: 0
   m_Asset: {fileID: 11400000, guid: c407bcfb0a7ceb2468b8d3aec5d5b0e4, type: 2}

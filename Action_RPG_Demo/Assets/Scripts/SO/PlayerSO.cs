@@ -12,4 +12,9 @@ public class PlayerSO : ScriptableObject
 
     public float DetectionRadius;
     public float LockDuration;
+    [Header("ÌøÔ¾")]
+    public float JumpScanRadius;
+    public float VaultHeight;
+    public float LowClimbHeight;
+    public float HighClimbHeight;
 }

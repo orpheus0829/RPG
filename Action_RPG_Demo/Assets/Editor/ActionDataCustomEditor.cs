@@ -86,22 +86,63 @@ public class ActionDataCustomEditor : Editor
         {
             EditorGUI.indentLevel++;
             data.moveMode = (MoveMode)EditorGUILayout.EnumPopup("位移模式", data.moveMode);
-            data.direction = EditorGUILayout.Vector3Field("移动方向", data.direction);
 
-            data.totalDistance = EditorGUILayout.FloatField("总移动距离", data.totalDistance);
+            if (data.moveMode != MoveMode.ClimbOver)
+            {
+                data.direction = EditorGUILayout.Vector3Field("移动方向", data.direction);
+            }
 
             switch (data.moveMode)
             {
                 case MoveMode.FixedEndPos:
                     data.endPos = EditorGUILayout.Vector3Field("目标终点坐标", data.endPos);
+                    data.totalDistance = EditorGUILayout.FloatField("总移动距离", data.totalDistance);
                     break;
+
                 case MoveMode.SpeedAndDistance:
                     data.moveSpeed = EditorGUILayout.FloatField("移动速度", data.moveSpeed);
-                    //data.totalDistance = EditorGUILayout.FloatField("总移动距离", data.totalDistance);
+                    data.totalDistance = EditorGUILayout.FloatField("总移动距离", data.totalDistance);
                     break;
+
                 case MoveMode.VariableSpeed:
                     data.startSpeed = EditorGUILayout.FloatField("起始速度", data.startSpeed);
                     data.endSpeed = EditorGUILayout.FloatField("结束速度", data.endSpeed);
+                    data.totalDistance = EditorGUILayout.FloatField("总移动距离", data.totalDistance);
+                    break;
+
+                case MoveMode.ClimbOver:
+                    GUI.enabled = false;
+                    EditorGUILayout.FloatField("总移动距离(禁用)", data.totalDistance);
+                    GUI.enabled = true;
+
+                    data.climbStage = (ClimbStage)EditorGUILayout.EnumPopup("翻越阶段", data.climbStage);
+                    data.climbUseVariableSpeed = EditorGUILayout.Toggle("使用变速", data.climbUseVariableSpeed);
+
+                    if (data.climbStage == ClimbStage.BeforeClimb)
+                    {
+                        if (data.climbUseVariableSpeed)
+                        {
+                            data.climbStartSpeed = EditorGUILayout.FloatField("起始速度", data.climbStartSpeed);
+                            data.climbEndSpeed = EditorGUILayout.FloatField("结束速度", data.climbEndSpeed);
+                        }
+                        else
+                        {
+                            data.climbSpeed = EditorGUILayout.FloatField("匀速", data.climbSpeed);
+                        }
+                    }
+                    else if (data.climbStage == ClimbStage.AfterClimb)
+                    {
+                        if (data.climbUseVariableSpeed)
+                        {
+                            data.climbStartSpeed = EditorGUILayout.FloatField("起始速度", data.climbStartSpeed);
+                            data.climbEndSpeed = EditorGUILayout.FloatField("结束速度", data.climbEndSpeed);
+                        }
+                        else
+                        {
+                            data.climbSpeed = EditorGUILayout.FloatField("匀速", data.climbSpeed);
+                        }
+                        data.climbAfterExtraDistance = EditorGUILayout.FloatField("翻越后前进距离", data.climbAfterExtraDistance);
+                    }
                     break;
             }
             EditorGUI.indentLevel--;

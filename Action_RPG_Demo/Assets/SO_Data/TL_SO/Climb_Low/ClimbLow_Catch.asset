@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f07cd29b8943cab4ca89a155dd596839, type: 3}
-  m_Name: Cross2
+  m_Name: ClimbLow_Catch
   m_EditorClassIdentifier: 
-  actionID: 12
-  actionName: "\u7FFB\u8D8A2"
-  timeline: {fileID: 11400000, guid: 4e7f69e095b5b4d4a94be8b90601c8ec, type: 2}
+  actionID: 16
+  actionName: "\u4E0A\u5899\u540E"
+  timeline: {fileID: 11400000, guid: 109214c5e0d70db41bdfdc0d8cfc4980, type: 2}
   actionType: 0
   damageValue: 0
   hitBoxOffset: {x: 0, y: 0, z: 0}
@@ -22,7 +22,7 @@ MonoBehaviour:
   hitStartTime: 0
   hitEndTime: 0
   hitForce: 0
-  nextAction: {fileID: 11400000, guid: 81e8fad9bf1509a4f9b2b25eb2f24ea8, type: 2}
+  nextAction: {fileID: 11400000, guid: be044214f4dddc34e968b5111f5fcae4, type: 2}
   cameraMoveMode: 0
   cameraDirection: {x: 0, y: 0, z: 1}
   cameraTotalDistance: 0
@@ -34,10 +34,16 @@ MonoBehaviour:
   soundClip: {fileID: 0}
   effectTriggerTime: 0
   effectSpawnOffset: {x: 0, y: 0, z: 0}
-  moveMode: 2
+  moveMode: 0
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
-  moveSpeed: 10000
-  totalDistance: 5
-  startSpeed: 100000
-  endSpeed: 10000
+  moveSpeed: 0
+  totalDistance: 0
+  startSpeed: 0
+  endSpeed: 0
+  climbStage: 0
+  climbUseVariableSpeed: 0
+  climbSpeed: 0
+  climbStartSpeed: 0
+  climbEndSpeed: 0
+  climbAfterExtraDistance: 0

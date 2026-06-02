@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f07cd29b8943cab4ca89a155dd596839, type: 3}
-  m_Name: Attack4_normal
+  m_Name: ClimbLow_Hang
   m_EditorClassIdentifier: 
-  actionID: 4
-  actionName: "\u653B\u51FB4"
-  timeline: {fileID: 11400000, guid: e722193659ef7a5438c21979c49c3043, type: 2}
-  actionType: 1
-  damageValue: 15
-  hitBoxOffset: {x: 0, y: 0.7, z: 1}
-  hitBoxRadius: 0.5
+  actionID: 17
+  actionName: "\u4E0A\u5899\u60AC\u6302"
+  timeline: {fileID: 11400000, guid: c3d26c60a1c644c4cb2ffadca1ac7791, type: 2}
+  actionType: 0
+  damageValue: 0
+  hitBoxOffset: {x: 0, y: 0, z: 0}
+  hitBoxRadius: 0
   hitStartTime: 0
-  hitEndTime: 2
-  hitForce: 3
-  nextAction: {fileID: 11400000, guid: 81e8fad9bf1509a4f9b2b25eb2f24ea8, type: 2}
+  hitEndTime: 0
+  hitForce: 0
+  nextAction: {fileID: 11400000}
   cameraMoveMode: 0
   cameraDirection: {x: 0, y: 0, z: 1}
   cameraTotalDistance: 0
@@ -30,17 +30,17 @@ MonoBehaviour:
   cameraMoveSpeed: 0
   cameraStartSpeed: 0
   cameraEndSpeed: 0
-  effectPrefab: {fileID: 1753931898948783255, guid: b4bf6e5812692734a935223fb843a712, type: 3}
+  effectPrefab: {fileID: 0}
   soundClip: {fileID: 0}
   effectTriggerTime: 0
   effectSpawnOffset: {x: 0, y: 0, z: 0}
-  moveMode: 2
+  moveMode: 0
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
-  moveSpeed: 10000000
-  totalDistance: 4
-  startSpeed: 1000000
-  endSpeed: 999999
+  moveSpeed: 0
+  totalDistance: 0
+  startSpeed: 0
+  endSpeed: 0
   climbStage: 0
   climbUseVariableSpeed: 0
   climbSpeed: 0

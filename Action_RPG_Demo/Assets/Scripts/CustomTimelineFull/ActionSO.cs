@@ -54,4 +54,11 @@ public class ActionSO : ScriptableObject
 
     public float startSpeed;
     public float endSpeed;
+    [Header("·­Ô½")]
+    public ClimbStage climbStage;
+    public bool climbUseVariableSpeed;
+    public float climbSpeed;
+    public float climbStartSpeed;
+    public float climbEndSpeed;
+    public float climbAfterExtraDistance;
 }

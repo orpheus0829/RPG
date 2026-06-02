@@ -20,6 +20,29 @@ public class Player : MonoBehaviour
     public bool isStopping;
     public float stopMoveLockTime;
 
+    [Header("Ã¯‘æ…»–ŒºÏ≤‚≈‰÷√")]
+    public bool IsJump;
+    public float scanAngle = 120f;
+    public float horizontalScanRange;
+    public float verticalMaxScanHeight = 3f;
+    public int fanRayCount = 7;
+
+    [Header("∑≠‘ΩºÏ≤‚")]
+    public float vaultBackCheckDist = 1.2f;
+    public float vaultBackCapsuleRadius = 0.3f;
+    public Vector3 vaultObstacleTopPoint;
+
+    [Header("∑≠‘ΩŒª“∆")]
+    public float vaultMoveDuration = 0.4f;
+    public float vaultForwardOffset = 0.6f;
+    public bool isDoingVaultMove = false;
+    public int vaultMoveMode = 0;
+    public float vaultCurrentTime;
+    public Vector3 vaultStartPos;
+    public Vector3 vaultEndPos;
+
+    public readonly float rayOriginOffset = 0.2f;
+
     [Header("π•ª˜")]
     public bool IsAttacking;
 
@@ -29,11 +52,13 @@ public class Player : MonoBehaviour
     [Header("“˝”√")]
     public Rigidbody rb;
     public Animator am;
+    public CapsuleCollider col;
 
     public void Awake()
     {
         rb = GetComponent<Rigidbody>();
         am = GetComponent<Animator>();
+        col = GetComponent<CapsuleCollider>();
         playerInput = GetComponent<PlayerInput>();
         Speed = playerSO.WalkSpeed;
     }
@@ -45,8 +70,14 @@ public class Player : MonoBehaviour
             actionControl.timelineDirector.stopped += (director) =>
             {
                 Is_Action_Playing = false;
+                rb.velocity = Vector3.zero;
+                rb.isKinematic = false;
             };
         }
+    }
+    public void Update()
+    {
+        Update_Vault();
     }
 
     public void FixedUpdate()
@@ -148,19 +179,178 @@ public class Player : MonoBehaviour
             actionControl.PlayAction(actionControl.runAction);
         }
     }
+    public void OnSlide(InputValue value)
+    {
+        if (value.isPressed)
+        {
+            if (Is_Action_Playing)
+            {
+                return;
+            }
+            isWalking = false;
+            InputMove = Vector3.zero;
+            StopCurrentAction();
+            Is_Action_Playing = true;
+            actionControl.PlayAction(actionControl.SlideAction);
+        }
+    }
 
     public void OnJump(InputValue value)
     {
         if (value.isPressed)
         {
+            if (Is_Action_Playing)
+            {
+                return;
+            }
             isWalking = false;
             InputMove = Vector3.zero;
             StopCurrentAction();
-            actionControl.PlayAction(actionControl.CrossActions[Random.Range(0, actionControl.CrossActions.Count)]);
-            Is_Action_Playing = true;
+
+            int jumpResult = JumpScan();
+            //jumpResult = 1;
+            switch (jumpResult)
+            {
+                case 0:
+                    actionControl.PlayAction(actionControl.JumpAction);
+                    Is_Action_Playing = true;
+                    Debug.Log("Ã¯‘æ");
+                    break;
+                case 1:
+                    actionControl.PlayAction(actionControl.CrossAction);
+                    Is_Action_Playing = true;
+                    Debug.Log("∑≠‘Ω");
+                    break;
+                case 2:
+                    actionControl.PlayAction(actionControl.LowClimb);
+                    Is_Action_Playing = true;
+                    Debug.Log("µÕ≈¿");
+                    break;
+                case 3:
+                    actionControl.PlayAction(actionControl.HighGrab);
+                    Is_Action_Playing = true;
+                    Debug.Log("∏ﬂ◊•");
+                    break;
+                default:
+                    Debug.Log("Ã¯‘æ±®¥Ì");
+                    break;
+            }
         }
     }
+    public int JumpScan()
+    {
+        float vaultHeight = playerSO.VaultHeight;
+        float lowClimbHeight = playerSO.LowClimbHeight;
+        float highGrabHeight = playerSO.HighClimbHeight;
+        float scanRadius = playerSO.JumpScanRadius;
 
+        float halfAngle = scanAngle / 2f;
+        float angleStep = scanAngle / (fanRayCount - 1);
+
+        if (SectorRaycast(0.05f, vaultHeight, scanRadius, halfAngle, angleStep))
+        {
+            return 1; // ∑≠‘Ω
+        }
+
+        if (SectorRaycast(vaultHeight, lowClimbHeight, scanRadius, halfAngle, angleStep))
+        {
+            return 2; // ≈¿…œ»•
+        }
+
+        if (SectorRaycast(lowClimbHeight, highGrabHeight, scanRadius, halfAngle, angleStep))
+        {
+            return 3; // ∏ﬂ«Ω
+        }
+
+        return 0; // ∆’Õ®Ã¯‘æ
+    }
+    public bool SectorRaycast(float minY, float maxY, float radius, float halfAngle, float angleStep)
+    {
+        int verticalRays = 5;
+        float yStep = (maxY - minY) / (verticalRays - 1);
+
+        for (int h = 0; h < fanRayCount; h++)
+        {
+            float currentAngle = -halfAngle + angleStep * h;
+            Vector3 dir = Quaternion.Euler(0, currentAngle, 0) * transform.forward;
+
+            for (int v = 0; v < verticalRays; v++)
+            {
+                float yPos = rayOriginOffset + minY + yStep * v;
+                Vector3 origin = transform.position + Vector3.up * yPos;
+
+                if (Physics.Raycast(origin, dir, out RaycastHit hit, radius))
+                {
+                    if (hit.collider.gameObject == gameObject)
+                    {
+                        continue;
+                    }
+                    float normalDot = Vector3.Dot(hit.normal, Vector3.up);
+                    if (Mathf.Abs(normalDot) > 0.01f)
+                    {
+                        continue;
+                    }
+
+                    Bounds b = hit.collider.bounds;
+
+                    float obstacleHeight = b.max.y - hit.point.y;
+                    if (obstacleHeight < 0.4f)
+                    {
+                        continue;
+                    }
+
+                    vaultObstacleTopPoint.x = b.center.x;
+                    vaultObstacleTopPoint.z = b.center.z;
+                    vaultObstacleTopPoint.y = b.max.y;
+                    return true;
+                }
+            }
+        }
+
+        vaultObstacleTopPoint = transform.position;
+        return false;
+    }
+    public void Update_Vault()
+    {
+        if (isDoingVaultMove)
+        {
+            rb.velocity = Vector3.zero;
+            rb.isKinematic = true;
+
+            vaultCurrentTime += Time.deltaTime;
+            float remainTime = vaultMoveDuration - vaultCurrentTime;
+            float totalDist = Vector3.Distance(vaultStartPos, vaultEndPos);
+
+            if (remainTime <= 0f)
+            {
+                transform.position = vaultEndPos;
+                isDoingVaultMove = false;
+                rb.isKinematic = false;
+                return;
+            }
+
+            Vector3 dir = vaultEndPos - transform.position;
+            float currentDist = dir.magnitude;
+
+            if (currentDist < 0.001f)
+            {
+                isDoingVaultMove = false;
+                rb.isKinematic = false;
+                return;
+            }
+
+            dir.Normalize();
+            float step = (currentDist / remainTime) * Time.deltaTime;
+            transform.position += dir * step;
+        }
+        else
+        {
+            if (rb.isKinematic)
+            {
+                rb.isKinematic = false;
+            }
+        }
+    }
     public void OnAttack(InputValue value)
     {
         if (value.isPressed)
@@ -183,13 +373,21 @@ public class Player : MonoBehaviour
     {
         Vector3 LookDir;
         float mindistance;
-        int index = 0;
+        int index = -1;
         Collider[] enemies = Physics.OverlapSphere(transform.position, playerSO.DetectionRadius, LayerMask.GetMask("Enemy"));
         if (enemies.Length > 0)
         {
-            mindistance = Vector3.Distance(enemies[0].transform.position, transform.position);
-            for(int i = 0; i < enemies.Length; i++)
+            Transform cam = Camera.main.transform;
+            Vector3 camForward = cam.forward;
+            camForward.y = 0;
+            camForward.Normalize();
+            mindistance= Mathf.Infinity;
+            for (int i = 0; i < enemies.Length; i++)
             {
+                if (Vector3.Angle(camForward, enemies[i].transform.position - transform.position ) > 90)
+                {
+                    continue;
+                }
                 float distance = Vector3.Distance(enemies[i].transform.position, transform.position);
                 if (distance < mindistance)
                 {
@@ -197,10 +395,13 @@ public class Player : MonoBehaviour
                     index = i;
                 }
             }
-            LookDir = enemies[index].transform.position - transform.position;
-            LookDir.y = 0;
-            LookDir.Normalize();
-            transform.rotation = Quaternion.LookRotation(LookDir);
+            if (index != -1)
+            {
+                LookDir = enemies[index].transform.position - transform.position;
+                LookDir.y = 0;
+                LookDir.Normalize();
+                transform.rotation = Quaternion.LookRotation(LookDir);
+            }
         }
     }
     public void Move_Follow_Camera()
@@ -221,4 +422,39 @@ public class Player : MonoBehaviour
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(moveDir), 15f * Time.fixedDeltaTime);
         }
     }
+    #region ∏®÷˙µ˜ ‘œ‘ æ
+    private void OnDrawGizmos()
+    {
+        float vaultHeight = playerSO.VaultHeight;
+        float lowClimbHeight = playerSO.LowClimbHeight;
+        float highGrabHeight = playerSO.HighClimbHeight;
+        float scanRadius = playerSO.JumpScanRadius;
+
+        float halfAngle = scanAngle / 2f;
+        float angleStep = scanAngle / (fanRayCount - 1);
+        int verticalRays = 5;
+
+        DrawSectorGizmo(0.1f, vaultHeight, scanRadius, halfAngle, angleStep, verticalRays, Color.green);
+        DrawSectorGizmo(vaultHeight, lowClimbHeight, scanRadius, halfAngle, angleStep, verticalRays, Color.yellow);
+        DrawSectorGizmo(lowClimbHeight, highGrabHeight, scanRadius, halfAngle, angleStep, verticalRays, Color.red);
+    }
+    private void DrawSectorGizmo(float minY, float maxY, float radius, float halfAngle, float angleStep, int verticalRays, Color color)
+    {
+        float yStep = (maxY - minY) / (verticalRays - 1);
+        Gizmos.color = color;
+
+        for (int h = 0; h < fanRayCount; h++)
+        {
+            float currentAngle = -halfAngle + angleStep * h;
+            Vector3 dir = Quaternion.Euler(0, currentAngle, 0) * transform.forward;
+
+            for (int v = 0; v < verticalRays; v++)
+            {
+                float yPos = rayOriginOffset + minY + yStep * v;
+                Vector3 origin = transform.position + Vector3.up * yPos;
+                Gizmos.DrawLine(origin, origin + dir * radius);
+            }
+        }
+    }
+    #endregion
 }

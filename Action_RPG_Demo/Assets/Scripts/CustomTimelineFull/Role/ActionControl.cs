@@ -31,8 +31,16 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
 
     public ActionSO currentAction;
 
+    [Header("跳跃动作")]
+    public ActionSO JumpAction;
     [Header("翻越动作")]
-    public List<ActionSO> CrossActions;
+    public ActionSO CrossAction;
+    [Header("翻越")]
+    public ActionSO LowClimb;
+    public ActionSO HighGrab;
+
+    [Header("滑铲")]
+    public ActionSO SlideAction;
 
     [Header("动作窗口（由 Timeline 信号控制）")]
     public int AttackLevel;
@@ -58,7 +66,14 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
         hitCollider.isTrigger = true;
         hitCollider.enabled = false;
     }
-
+    public void Update()
+    {
+        if (currentAction == walkAction && player.rb.velocity == Vector3.zero)
+        {
+            player.StopCurrentAction();
+            PlayAction(WalkEnd);
+        }
+    }
     public void OnNotify(Playable origin, INotification notification, object context)
     {
         if (notification is SignalEmitter emitter)
@@ -159,7 +174,7 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
                 break;
             case 4:
                 int choice = Random.Range(0, 100);
-                attack_so = choice <= 66 ? attack4Action_Nor : attack4Action_Per;
+                attack_so = choice <= 33 ? attack4Action_Nor : attack4Action_Per;
                 break;
             default:
                 attack_so = attack1Action;
