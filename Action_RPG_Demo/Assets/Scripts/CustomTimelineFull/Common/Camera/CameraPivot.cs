@@ -16,6 +16,9 @@ public class CameraPivot : MonoBehaviour
     public float minAngle = -30f;
     public float maxAngle = 85f;
 
+    [Header("Æ½»¬")]
+    public float smooth = 8f;
+
     private float rotX;
     private float rotY;
     public void Awake()
@@ -41,7 +44,7 @@ public class CameraPivot : MonoBehaviour
         Vector3 cameraDir = cameraRotation * Vector3.back;
         Vector3 cameraPos = target.position + cameraDir * distance;
         cameraPos.y += height;
-        transform.position = cameraPos;
+        transform.position = Vector3.Lerp(transform.position, cameraPos, smooth * Time.deltaTime);
         transform.rotation = cameraRotation;
     }
 }

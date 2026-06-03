@@ -22,7 +22,7 @@ MonoBehaviour:
   hitStartTime: 0
   hitEndTime: 0
   hitForce: 0
-  nextAction: {fileID: 11400000, guid: 457e274e2e2174b4f82ed72b71572ad9, type: 2}
+  nextAction: {fileID: 11400000, guid: d351fb94135fba84fa858b6231c6113f, type: 2}
   cameraMoveMode: 0
   cameraDirection: {x: 0, y: 0, z: 1}
   cameraTotalDistance: 0
@@ -34,7 +34,7 @@ MonoBehaviour:
   soundClip: {fileID: 0}
   effectTriggerTime: 0
   effectSpawnOffset: {x: 0, y: 0, z: 0}
-  moveMode: 0
+  moveMode: 4
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
   moveSpeed: 0
@@ -47,3 +47,8 @@ MonoBehaviour:
   climbStartSpeed: 0
   climbEndSpeed: 0
   climbAfterExtraDistance: 0
+  parkourClimbStage: 0
+  parkourUseVariableSpeed: 1
+  parkourSpeed: 0
+  parkourStartSpeed: 0
+  parkourEndSpeed: 100000

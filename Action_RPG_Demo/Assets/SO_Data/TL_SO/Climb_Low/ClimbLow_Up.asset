@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f07cd29b8943cab4ca89a155dd596839, type: 3}
-  m_Name: ClimbLow_Success
+  m_Name: ClimbLow_Up
   m_EditorClassIdentifier: 
-  actionID: 19
-  actionName: "\u4E0A\u5899\u6210\u529F"
-  timeline: {fileID: 11400000, guid: 11834a16d1978f948b47a0bb086c3433, type: 2}
+  actionID: 16
+  actionName: "\u4E0A\u5899\u8DD1\u6B65\u4E2D"
+  timeline: {fileID: 11400000, guid: 506ae163f923f0a48813c3a371fb26cb, type: 2}
   actionType: 0
   damageValue: 0
   hitBoxOffset: {x: 0, y: 0, z: 0}
@@ -22,7 +22,7 @@ MonoBehaviour:
   hitStartTime: 0
   hitEndTime: 0
   hitForce: 0
-  nextAction: {fileID: 11400000, guid: 81e8fad9bf1509a4f9b2b25eb2f24ea8, type: 2}
+  nextAction: {fileID: 11400000, guid: 457e274e2e2174b4f82ed72b71572ad9, type: 2}
   cameraMoveMode: 0
   cameraDirection: {x: 0, y: 0, z: 1}
   cameraTotalDistance: 0
@@ -47,8 +47,8 @@ MonoBehaviour:
   climbStartSpeed: 0
   climbEndSpeed: 0
   climbAfterExtraDistance: 0
-  parkourClimbStage: 4
-  parkourUseVariableSpeed: 1
-  parkourSpeed: 0
+  parkourClimbStage: 1
+  parkourUseVariableSpeed: 0
+  parkourSpeed: 100000
   parkourStartSpeed: 0
-  parkourEndSpeed: 100000
+  parkourEndSpeed: 0

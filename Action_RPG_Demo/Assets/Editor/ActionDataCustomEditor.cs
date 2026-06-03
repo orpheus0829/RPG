@@ -16,7 +16,10 @@ public class ActionDataCustomEditor : Editor
     public override void OnInspectorGUI()
     {
         ActionSO data = target as ActionSO;
-        if (data == null) return;
+        if (data == null)
+        {
+            return;
+        }
 
         EditorGUI.BeginChangeCheck();
 
@@ -143,6 +146,33 @@ public class ActionDataCustomEditor : Editor
                         }
                         data.climbAfterExtraDistance = EditorGUILayout.FloatField("翻越后前进距离", data.climbAfterExtraDistance);
                     }
+                    break;
+                case MoveMode.ParkourClimb:
+                    GUI.enabled = false;
+                    EditorGUILayout.FloatField("总移动距离（禁用）", data.totalDistance);
+                    GUI.enabled = true;
+
+                    data.parkourClimbStage = (ParkourClimbStage)EditorGUILayout.EnumPopup("攀爬阶段", data.parkourClimbStage);
+
+                    if (data.parkourClimbStage == ParkourClimbStage.Hang)
+                    {
+                        EditorGUILayout.HelpBox("悬挂阶段无位移", MessageType.Warning);
+                        GUI.enabled = false;
+                    }
+
+                    data.parkourUseVariableSpeed = EditorGUILayout.Toggle("使用变速", data.parkourUseVariableSpeed);
+
+                    if (data.parkourUseVariableSpeed)
+                    {
+                        data.parkourStartSpeed = EditorGUILayout.FloatField("起始速度", data.parkourStartSpeed);
+                        data.parkourEndSpeed = EditorGUILayout.FloatField("结束速度", data.parkourEndSpeed);
+                    }
+                    else
+                    {
+                        data.parkourSpeed = EditorGUILayout.FloatField("移动速度", data.parkourSpeed);
+                    }
+
+                    GUI.enabled = true;
                     break;
             }
             EditorGUI.indentLevel--;

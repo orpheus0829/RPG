@@ -61,4 +61,11 @@ public class ActionSO : ScriptableObject
     public float climbStartSpeed;
     public float climbEndSpeed;
     public float climbAfterExtraDistance;
+
+    [Header("≈ ≈¿")]
+    public ParkourClimbStage parkourClimbStage;
+    public bool parkourUseVariableSpeed;
+    public float parkourSpeed;
+    public float parkourStartSpeed;
+    public float parkourEndSpeed;
 }

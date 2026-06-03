@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
     public float vaultBackCheckDist = 1.2f;
     public float vaultBackCapsuleRadius = 0.3f;
     public Vector3 vaultObstacleTopPoint;
+    public Vector3 vaultObstacleBottomPoint;
 
     [Header("∑≠‘ΩŒª“∆")]
     public float vaultMoveDuration = 0.4f;
@@ -42,6 +43,15 @@ public class Player : MonoBehaviour
     public Vector3 vaultEndPos;
 
     public readonly float rayOriginOffset = 0.2f;
+
+    [Header("≈ ≈¿∂•—ÿÀÆ∆Ω…‰œﬂ")]
+    public float rayUpOffset = 1.2f;
+    public float rayForwardOffset = 0.3f;
+    public float rayLength = 0.5f;
+
+    [Header("≈ ≈¿ IK ƒø±Í")]
+    public Transform leftHandIKTarget;
+    public Transform rightHandIKTarget;
 
     [Header("π•ª˜")]
     public bool IsAttacking;
@@ -61,6 +71,7 @@ public class Player : MonoBehaviour
         col = GetComponent<CapsuleCollider>();
         playerInput = GetComponent<PlayerInput>();
         Speed = playerSO.WalkSpeed;
+        rb.useGravity = true;
     }
 
     public void Start()
@@ -83,7 +94,7 @@ public class Player : MonoBehaviour
     public void FixedUpdate()
     {
         Move_Follow_Camera();
-
+        Climb_Scan();
         if (stopMoveLockTime > 0)
         {
             stopMoveLockTime -= Time.fixedDeltaTime;
@@ -98,9 +109,12 @@ public class Player : MonoBehaviour
             isStopping = false;
         }
         Back_To_Move();
-        float VerticalVelocity = rb.velocity.y;
-        Vector3 HorizontalVelocity = moveDir * Speed;
-        rb.velocity = new Vector3(HorizontalVelocity.x, VerticalVelocity, HorizontalVelocity.z);
+        if (!Is_Action_Playing)
+        {
+            float VerticalVelocity = rb.velocity.y;
+            Vector3 HorizontalVelocity = moveDir * Speed;
+            rb.velocity = new Vector3(HorizontalVelocity.x, VerticalVelocity, HorizontalVelocity.z);
+        }
     }
 
     public void StopCurrentAction()
@@ -222,14 +236,9 @@ public class Player : MonoBehaviour
                     Debug.Log("∑≠‘Ω");
                     break;
                 case 2:
-                    actionControl.PlayAction(actionControl.LowClimb);
+                    actionControl.PlayAction(actionControl.WallUp_Start);
                     Is_Action_Playing = true;
-                    Debug.Log("µÕ≈¿");
-                    break;
-                case 3:
-                    actionControl.PlayAction(actionControl.HighGrab);
-                    Is_Action_Playing = true;
-                    Debug.Log("∏ﬂ◊•");
+                    Debug.Log("≈ ≈¿");
                     break;
                 default:
                     Debug.Log("Ã¯‘æ±®¥Ì");
@@ -240,29 +249,21 @@ public class Player : MonoBehaviour
     public int JumpScan()
     {
         float vaultHeight = playerSO.VaultHeight;
-        float lowClimbHeight = playerSO.LowClimbHeight;
         float highGrabHeight = playerSO.HighClimbHeight;
         float scanRadius = playerSO.JumpScanRadius;
 
         float halfAngle = scanAngle / 2f;
         float angleStep = scanAngle / (fanRayCount - 1);
 
+        if (SectorRaycast(vaultHeight, highGrabHeight, scanRadius, halfAngle, angleStep))
+        {
+            return 2; // ≈ ≈¿
+        }
         if (SectorRaycast(0.05f, vaultHeight, scanRadius, halfAngle, angleStep))
         {
             return 1; // ∑≠‘Ω
         }
-
-        if (SectorRaycast(vaultHeight, lowClimbHeight, scanRadius, halfAngle, angleStep))
-        {
-            return 2; // ≈¿…œ»•
-        }
-
-        if (SectorRaycast(lowClimbHeight, highGrabHeight, scanRadius, halfAngle, angleStep))
-        {
-            return 3; // ∏ﬂ«Ω
-        }
-
-        return 0; // ∆’Õ®Ã¯‘æ
+        return 0; // Ã¯‘æ
     }
     public bool SectorRaycast(float minY, float maxY, float radius, float halfAngle, float angleStep)
     {
@@ -299,9 +300,19 @@ public class Player : MonoBehaviour
                         continue;
                     }
 
-                    vaultObstacleTopPoint.x = b.center.x;
-                    vaultObstacleTopPoint.z = b.center.z;
-                    vaultObstacleTopPoint.y = b.max.y;
+                    vaultObstacleTopPoint = new Vector3(b.center.x, b.max.y, b.center.z);
+                    vaultObstacleBottomPoint = new Vector3(b.center.x, b.min.y, b.center.z);
+                    if (leftHandIKTarget != null && rightHandIKTarget != null)
+                    {
+                        Vector3 center = vaultObstacleTopPoint;
+                        float handWidth = 0.6f;
+
+                        Vector3 left = center - transform.right * handWidth;
+                        Vector3 right = center + transform.right * handWidth;
+
+                        leftHandIKTarget.position = left;
+                        rightHandIKTarget.position = right;
+                    }
                     return true;
                 }
             }
@@ -348,6 +359,22 @@ public class Player : MonoBehaviour
             if (rb.isKinematic)
             {
                 rb.isKinematic = false;
+            }
+        }
+    }
+    public void Climb_Scan()
+    {
+        if (actionControl.isClimbing)
+        {
+            Vector3 origin = transform.position + Vector3.up * (col.height * 0.5f + rayUpOffset) + transform.forward * rayForwardOffset;
+            Vector3 dir = transform.forward;
+            if (!Physics.Raycast(origin, dir, rayLength) && !actionControl.currentAction==actionControl.Hang)
+            {
+                Debug.Log("µΩ¥Ô«ΩÃÂ∂•∂À");
+                StopCurrentAction();
+                actionControl.PlayAction(actionControl.Hang);
+                Is_Action_Playing = true;
+                //ÃÓµ«∂•∫Ûµƒ¬ﬂº≠
             }
         }
     }
@@ -426,7 +453,6 @@ public class Player : MonoBehaviour
     private void OnDrawGizmos()
     {
         float vaultHeight = playerSO.VaultHeight;
-        float lowClimbHeight = playerSO.LowClimbHeight;
         float highGrabHeight = playerSO.HighClimbHeight;
         float scanRadius = playerSO.JumpScanRadius;
 
@@ -435,8 +461,13 @@ public class Player : MonoBehaviour
         int verticalRays = 5;
 
         DrawSectorGizmo(0.1f, vaultHeight, scanRadius, halfAngle, angleStep, verticalRays, Color.green);
-        DrawSectorGizmo(vaultHeight, lowClimbHeight, scanRadius, halfAngle, angleStep, verticalRays, Color.yellow);
-        DrawSectorGizmo(lowClimbHeight, highGrabHeight, scanRadius, halfAngle, angleStep, verticalRays, Color.red);
+        DrawSectorGizmo(vaultHeight, highGrabHeight, scanRadius, halfAngle, angleStep, verticalRays, Color.red);
+        if (actionControl.isClimbing)
+        {
+            Vector3 origin = transform.position + Vector3.up * (col.height * 0.5f + rayUpOffset) + transform.forward * rayForwardOffset;
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawRay(origin, transform.forward * rayLength);
+        }
     }
     private void DrawSectorGizmo(float minY, float maxY, float radius, float halfAngle, float angleStep, int verticalRays, Color color)
     {

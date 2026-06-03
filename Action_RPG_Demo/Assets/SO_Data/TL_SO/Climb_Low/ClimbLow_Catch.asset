@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f07cd29b8943cab4ca89a155dd596839, type: 3}
   m_Name: ClimbLow_Catch
   m_EditorClassIdentifier: 
-  actionID: 16
+  actionID: 17
   actionName: "\u4E0A\u5899\u540E"
   timeline: {fileID: 11400000, guid: 109214c5e0d70db41bdfdc0d8cfc4980, type: 2}
   actionType: 0
@@ -34,7 +34,7 @@ MonoBehaviour:
   soundClip: {fileID: 0}
   effectTriggerTime: 0
   effectSpawnOffset: {x: 0, y: 0, z: 0}
-  moveMode: 0
+  moveMode: 4
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
   moveSpeed: 0
@@ -47,3 +47,8 @@ MonoBehaviour:
   climbStartSpeed: 0
   climbEndSpeed: 0
   climbAfterExtraDistance: 0
+  parkourClimbStage: 2
+  parkourUseVariableSpeed: 1
+  parkourSpeed: 100000
+  parkourStartSpeed: 0
+  parkourEndSpeed: 1000000

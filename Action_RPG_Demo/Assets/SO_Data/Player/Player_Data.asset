@@ -17,7 +17,6 @@ MonoBehaviour:
   RunSpeed: 7
   DetectionRadius: 6
   LockDuration: 1
-  JumpScanRadius: 1.62
-  VaultHeight: 0.69
-  LowClimbHeight: 1.48
-  HighClimbHeight: 2.23
+  JumpScanRadius: 2.01
+  VaultHeight: 0.88
+  HighClimbHeight: 1.94

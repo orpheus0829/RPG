@@ -35,17 +35,27 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
     public ActionSO JumpAction;
     [Header("翻越动作")]
     public ActionSO CrossAction;
-    [Header("翻越")]
-    public ActionSO LowClimb;
-    public ActionSO HighGrab;
+    [Header("爬墙")]
+    public ActionSO WallUp_Start;
+    public ActionSO WallUp_Run;
+    public ActionSO WallUp_Catch;
+    public ActionSO Hang;
+    public ActionSO WallUp_Success;
+    public ActionSO WallClimb_Spring;
 
     [Header("滑铲")]
     public ActionSO SlideAction;
+
+    [Header("落地")]
+    public ActionSO Fall_InAir;
+    public ActionSO Fall_Roll;
+    public ActionSO Fall_Normal;
 
     [Header("动作窗口（由 Timeline 信号控制）")]
     public int AttackLevel;
     public bool canCombo;
     public bool canInterrupt;
+    public bool isClimbing;
 
     [Header("攻击范围盒调试用")]
     private SphereCollider hitCollider;
@@ -68,7 +78,7 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
     }
     public void Update()
     {
-        if (currentAction == walkAction && player.rb.velocity == Vector3.zero)
+        if (currentAction == walkAction && player.InputMove == Vector3.zero)
         {
             player.StopCurrentAction();
             PlayAction(WalkEnd);
@@ -84,6 +94,7 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
             {
                 canCombo = sig.allowCombo;
                 canInterrupt = sig.allowInterrupt;
+                isClimbing = sig.IsClimbing;
                 //Debug.Log($"收到信号: canCombo={canCombo}, canInterrupt={canInterrupt}");
                 return;
             }
@@ -107,6 +118,17 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
             {
                 canInterrupt = sig.allowInterrupt;
                 //Debug.Log($"收到信号:  canInterrupt={canInterrupt}");
+                return;
+            }
+        }
+        if (notification is SignalEmitter emitter_climb)
+        {
+            ClimbingSignal sig = emitter_climb.asset as ClimbingSignal;
+
+            if (sig != null)
+            {
+                isClimbing = sig.IsClimbing;
+                //Debug.Log($"收到信号:  isClimbing={isClimbing}");
                 return;
             }
         }

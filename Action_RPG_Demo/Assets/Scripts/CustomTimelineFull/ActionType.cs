@@ -8,3 +8,11 @@ public enum ActionType
     Attack,
     Parkour
 }
+public enum ParkourClimbStage
+{
+    RunToWall,
+    WallRunUp,
+    GrabEdge,
+    Hang,
+    ClimbToTop,
+}
