@@ -16,9 +16,11 @@ MonoBehaviour:
   actionName: "\u653B\u51FB2"
   timeline: {fileID: 11400000, guid: 002a10f7ea36b6a4fb127b4e04f6540b, type: 2}
   actionType: 1
+  hitBoxShape: 0
   damageValue: 15
   hitBoxOffset: {x: 0, y: 0.7, z: 1}
   hitBoxRadius: 0.5
+  hitBoxSize: {x: 0, y: 0, z: 0}
   hitStartTime: 0
   hitEndTime: 2
   hitForce: 1
@@ -30,10 +32,10 @@ MonoBehaviour:
   cameraMoveSpeed: 0
   cameraStartSpeed: 0
   cameraEndSpeed: 0
-  effectPrefab: {fileID: 1753931898948783255, guid: b4bf6e5812692734a935223fb843a712, type: 3}
+  effectPrefab: {fileID: 1011157772751556, guid: ca63c6ac7458764498741e0306f78528, type: 3}
   soundClip: {fileID: 0}
   effectTriggerTime: 0
-  effectSpawnOffset: {x: 0, y: 0.7, z: 1}
+  effectSpawnOffset: {x: 0, y: 0.85, z: 1.4}
   moveMode: 2
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
@@ -41,3 +43,9 @@ MonoBehaviour:
   totalDistance: 1.3
   startSpeed: 1000000
   endSpeed: 100000
+  climbStage: 0
+  climbUseVariableSpeed: 0
+  climbSpeed: 0
+  climbStartSpeed: 0
+  climbEndSpeed: 0
+  climbAfterExtraDistance: 0

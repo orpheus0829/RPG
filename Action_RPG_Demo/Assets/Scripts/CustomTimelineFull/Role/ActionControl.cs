@@ -28,6 +28,13 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
     public ActionSO attack3Action;
     public ActionSO attack4Action_Nor;
     public ActionSO attack4Action_Per;
+    [Range(0f,1f)]public float Perfect_Range = 0.33f;
+
+    [Header("特殊技")]
+    public ActionSO Related_Full_E;
+    public ActionSO Full_E;
+    public ActionSO Related_Unfilled_E;
+    public ActionSO Unfilled_E;
 
     public ActionSO currentAction;
 
@@ -35,30 +42,23 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
     public ActionSO JumpAction;
     [Header("翻越动作")]
     public ActionSO CrossAction;
-    [Header("爬墙")]
-    public ActionSO WallUp_Start;
-    public ActionSO WallUp_Run;
-    public ActionSO WallUp_Catch;
-    public ActionSO Hang;
-    public ActionSO WallUp_Success;
-    public ActionSO WallClimb_Spring;
+    public ActionSO CrossAtfAction;
+    public Vector3 Cross_Location;
 
     [Header("滑铲")]
     public ActionSO SlideAction;
 
-    [Header("落地")]
-    public ActionSO Fall_InAir;
-    public ActionSO Fall_Roll;
-    public ActionSO Fall_Normal;
+    [Header("死亡动作")]
+    public ActionSO DeathAction;
 
     [Header("动作窗口（由 Timeline 信号控制）")]
     public int AttackLevel;
     public bool canCombo;
     public bool canInterrupt;
-    public bool isClimbing;
 
     [Header("攻击范围盒调试用")]
-    private SphereCollider hitCollider;
+    private SphereCollider _sphereCollider;
+    private BoxCollider _boxCollider;
     public float Hit_Force = 0;
 
     public Vector3 debugBoxOffset;
@@ -71,10 +71,6 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
         roleAnimator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         timelineDirector = GetComponent<PlayableDirector>();
-
-        hitCollider = gameObject.AddComponent<SphereCollider>();
-        hitCollider.isTrigger = true;
-        hitCollider.enabled = false;
     }
     public void Update()
     {
@@ -83,6 +79,10 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
             player.StopCurrentAction();
             PlayAction(WalkEnd);
         }
+    }
+    public void FixedUpdate()
+    {
+
     }
     public void OnNotify(Playable origin, INotification notification, object context)
     {
@@ -94,7 +94,6 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
             {
                 canCombo = sig.allowCombo;
                 canInterrupt = sig.allowInterrupt;
-                isClimbing = sig.IsClimbing;
                 //Debug.Log($"收到信号: canCombo={canCombo}, canInterrupt={canInterrupt}");
                 return;
             }
@@ -118,17 +117,6 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
             {
                 canInterrupt = sig.allowInterrupt;
                 //Debug.Log($"收到信号:  canInterrupt={canInterrupt}");
-                return;
-            }
-        }
-        if (notification is SignalEmitter emitter_climb)
-        {
-            ClimbingSignal sig = emitter_climb.asset as ClimbingSignal;
-
-            if (sig != null)
-            {
-                isClimbing = sig.IsClimbing;
-                //Debug.Log($"收到信号:  isClimbing={isClimbing}");
                 return;
             }
         }
@@ -196,7 +184,7 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
                 break;
             case 4:
                 int choice = Random.Range(0, 100);
-                attack_so = choice <= 33 ? attack4Action_Nor : attack4Action_Per;
+                attack_so = choice <= (1 - Perfect_Range) * 100 ? attack4Action_Nor : attack4Action_Per;
                 break;
             default:
                 attack_so = attack1Action;
@@ -205,36 +193,69 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
         PlayAction(attack_so);
         player.IsAttacking = false;
     }
-    public void OpenHitBox(Vector3 offset, float radius)
+    public void OpenHitBox(Vector3 offset, float radius, Vector3 boxSize)
     {
-        if (hitCollider)
+        if (currentAction == null)
         {
-            hitCollider.isTrigger = true;
+            return;
         }
-        hitCollider.center = offset;
-        hitCollider.radius = radius;
-        hitCollider.enabled = true;
+        CloseHitBox();
 
-        debugDrawHitBox = true;
+        if (currentAction.hitBoxShape == HitBoxShape.Sphere)
+        {
+            if (_sphereCollider == null)
+            {
+                _sphereCollider = gameObject.AddComponent<SphereCollider>();
+                _sphereCollider.isTrigger = true;
+            }
+            _sphereCollider.center = offset;
+            _sphereCollider.radius = radius;
+            _sphereCollider.enabled = true;
+        }
+        else
+        {
+            if (_boxCollider == null)
+            {
+                _boxCollider = gameObject.AddComponent<BoxCollider>();
+                _boxCollider.isTrigger = true;
+            }
+            _boxCollider.center = offset;
+            _boxCollider.size = boxSize;
+            _boxCollider.enabled = true;
+        }
+
         debugBoxOffset = offset;
-        debugBoxRadius = radius;
+        debugDrawHitBox = true;
     }
     public void CloseHitBox()
     {
-        hitCollider.enabled = false;
-
+        if (_sphereCollider != null)
+        {
+            _sphereCollider.enabled = false;
+        }
+        if (_boxCollider != null)
+        {
+            _boxCollider.enabled = false;
+        }
         debugDrawHitBox = false;
     }
     public void OnDrawGizmos()
     {
-        if (!debugDrawHitBox)
+        if (!debugDrawHitBox || currentAction == null)
         {
             return;
         }
 
         Gizmos.color = Color.red;
         Vector3 worldPos = transform.TransformPoint(debugBoxOffset);
-        Gizmos.DrawWireSphere(worldPos, debugBoxRadius);
+        if (currentAction.hitBoxShape == HitBoxShape.Sphere)
+        {
+            Gizmos.DrawWireSphere(worldPos, debugBoxRadius);
+        }
+        else
+        {
+            Gizmos.DrawWireCube(worldPos, currentAction.hitBoxSize);
+        }
     }
     #endregion
 

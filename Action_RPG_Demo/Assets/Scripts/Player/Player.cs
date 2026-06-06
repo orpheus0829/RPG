@@ -44,20 +44,27 @@ public class Player : MonoBehaviour
 
     public readonly float rayOriginOffset = 0.2f;
 
-    [Header("攀爬顶沿水平射线")]
-    public float rayUpOffset = 1.2f;
-    public float rayForwardOffset = 0.3f;
-    public float rayLength = 0.5f;
-
-    [Header("攀爬 IK 目标")]
-    public Transform leftHandIKTarget;
-    public Transform rightHandIKTarget;
-
     [Header("攻击")]
     public bool IsAttacking;
+    public LayerMask EnemyLayer;
+
+    [Header("特殊技")]
+    public float Skill_PowerPool = 0;
+    public float MaxPower = 100;
 
     [Header("相机")]
     public Vector3 moveDir;
+
+    [Header("============背包相关============")]
+
+    [Header("启动资产")]
+    public int Start_Money;
+
+    [Header("背包")]
+    public Player_Bag bag;
+
+    [Header("交互")]
+    public bool Can_Interact;
 
     [Header("引用")]
     public Rigidbody rb;
@@ -71,7 +78,22 @@ public class Player : MonoBehaviour
         col = GetComponent<CapsuleCollider>();
         playerInput = GetComponent<PlayerInput>();
         Speed = playerSO.WalkSpeed;
+        bag = GetComponent<Player_Bag>();
         rb.useGravity = true;
+
+        if (PlayerPrefs.GetInt("Money", 0) <= 0)
+        {
+            PlayerPrefs.SetInt("Money", Start_Money);
+        }
+        PlayerPrefs.Save();
+    }
+    public void OnEnable()
+    {
+        Game_Event.instance.Init_Store += Set_StorePanel;
+    }
+    public void OnDisable()
+    {
+        Game_Event.instance.Init_Store -= Set_StorePanel;
     }
 
     public void Start()
@@ -94,7 +116,7 @@ public class Player : MonoBehaviour
     public void FixedUpdate()
     {
         Move_Follow_Camera();
-        Climb_Scan();
+
         if (stopMoveLockTime > 0)
         {
             stopMoveLockTime -= Time.fixedDeltaTime;
@@ -102,13 +124,13 @@ public class Player : MonoBehaviour
             {
                 actionControl.PlayAction(actionControl.WalkStart);
             }
-            //InputMove = Vector3.zero;
         }
         else
         {
             isStopping = false;
         }
         Back_To_Move();
+
         if (!Is_Action_Playing)
         {
             float VerticalVelocity = rb.velocity.y;
@@ -119,12 +141,12 @@ public class Player : MonoBehaviour
 
     public void StopCurrentAction()
     {
+        Is_Action_Playing = false;
         if (actionControl.timelineDirector != null)
         {
             actionControl.timelineDirector.Stop();
         }
-        rb.velocity = Vector3.zero;
-        Is_Action_Playing = false;
+        //rb.velocity = Vector3.zero;
     }
 
     public void Back_To_Move()
@@ -163,6 +185,7 @@ public class Player : MonoBehaviour
             actionControl.PlayAction(actionControl.idleAction);
         }
     }
+
     public void OnMove(InputValue value)
     {
         try
@@ -193,6 +216,55 @@ public class Player : MonoBehaviour
             actionControl.PlayAction(actionControl.runAction);
         }
     }
+    public void OnBackPack(InputValue value)
+    {
+        if (value.isPressed && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.TraderPanel) && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.CraftPanel))
+        {
+            if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.BagPanel))
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Panel_Mgr.instance.OpenPanel(Panel_Mgr.instance.BagPanel);
+                Introduction_Mrg.instance.gameObject.SetActive(false);
+                bag.Load_Data("Bag_Data");
+                bag.ReClean_Bag_Display();
+                bag.Refresh_Bag_Display();
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                bag.Save_Bag("Bag_Data");
+                bag.ReClean_Bag_Display();
+                //Bag_Panel.SetActive(false);
+                Panel_Mgr.instance.HideAllPanel();
+            }
+        }
+    }
+    public void OnDrop_Item(InputValue value)
+    {
+        if (value.isPressed && bag.IsDragging)
+        {
+            bag.currentDraggingItem.Throw_Item();
+            bag.ReClean_Bag_Display();
+            bag.Refresh_Bag_Display();
+        }
+    }
+    public void OnCraft(InputValue value)
+    {
+        if (value.isPressed && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.TraderPanel) && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.BagPanel))
+        {
+            if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.CraftPanel))
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Panel_Mgr.instance.OpenPanel(Panel_Mgr.instance.CraftPanel);
+                Game_Event.instance.Init_Crafting();
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Panel_Mgr.instance.HideAllPanel();
+            }
+        }
+    }
     public void OnSlide(InputValue value)
     {
         if (value.isPressed)
@@ -208,9 +280,35 @@ public class Player : MonoBehaviour
             actionControl.PlayAction(actionControl.SlideAction);
         }
     }
+    public void OnInteract(InputValue value)
+    {
+        if (value.isPressed && Can_Interact && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.BagPanel))
+        {
+            if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.TraderPanel))
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Panel_Mgr.instance.OpenTraderBuyPanel();
 
+                Game_Event.instance.Refresh_Buy_List();
+                Game_Event.instance.Refresh_Sell_List();
+                Game_Event.instance.Init_Store_Panel(true);
+                //Game_Event.instance.Current_Trader.Refresh_B();
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Panel_Mgr.instance.HideAllPanel();
+            }
+        }
+    }
+    #region 跳跃
     public void OnJump(InputValue value)
     {
+        int jumpResult = JumpScan();
+        if (jumpResult > 1)
+        {
+            return;
+        }
         if (value.isPressed)
         {
             if (Is_Action_Playing)
@@ -220,51 +318,41 @@ public class Player : MonoBehaviour
             isWalking = false;
             InputMove = Vector3.zero;
             StopCurrentAction();
-
-            int jumpResult = JumpScan();
-            //jumpResult = 1;
-            switch (jumpResult)
+            if (jumpResult == 1)
             {
-                case 0:
-                    actionControl.PlayAction(actionControl.JumpAction);
-                    Is_Action_Playing = true;
-                    Debug.Log("跳跃");
-                    break;
-                case 1:
-                    actionControl.PlayAction(actionControl.CrossAction);
-                    Is_Action_Playing = true;
-                    Debug.Log("翻越");
-                    break;
-                case 2:
-                    actionControl.PlayAction(actionControl.WallUp_Start);
-                    Is_Action_Playing = true;
-                    Debug.Log("攀爬");
-                    break;
-                default:
-                    Debug.Log("跳跃报错");
-                    break;
+                actionControl.PlayAction(actionControl.CrossAction);
+                Is_Action_Playing = true;
+                Debug.Log("翻越");
+            }
+            else
+            {
+                actionControl.PlayAction(actionControl.JumpAction);
+                Is_Action_Playing = true;
+                Debug.Log("跳跃");
             }
         }
     }
+
     public int JumpScan()
     {
+        float CantJump = playerSO.HighClimbHeight;
         float vaultHeight = playerSO.VaultHeight;
-        float highGrabHeight = playerSO.HighClimbHeight;
         float scanRadius = playerSO.JumpScanRadius;
 
         float halfAngle = scanAngle / 2f;
         float angleStep = scanAngle / (fanRayCount - 1);
-
-        if (SectorRaycast(vaultHeight, highGrabHeight, scanRadius, halfAngle, angleStep))
+        if (SectorRaycast(vaultHeight, playerSO.HighClimbHeight, scanRadius, halfAngle, angleStep))
         {
-            return 2; // 攀爬
+            return 2;
         }
+
         if (SectorRaycast(0.05f, vaultHeight, scanRadius, halfAngle, angleStep))
         {
-            return 1; // 翻越
+            return 1;
         }
-        return 0; // 跳跃
+        return 0;
     }
+
     public bool SectorRaycast(float minY, float maxY, float radius, float halfAngle, float angleStep)
     {
         int verticalRays = 5;
@@ -282,45 +370,25 @@ public class Player : MonoBehaviour
 
                 if (Physics.Raycast(origin, dir, out RaycastHit hit, radius))
                 {
-                    if (hit.collider.gameObject == gameObject)
-                    {
-                        continue;
-                    }
+                    if (hit.collider.gameObject == gameObject) continue;
+
                     float normalDot = Vector3.Dot(hit.normal, Vector3.up);
-                    if (Mathf.Abs(normalDot) > 0.01f)
-                    {
-                        continue;
-                    }
+                    if (Mathf.Abs(normalDot) > 0.01f) continue;
 
                     Bounds b = hit.collider.bounds;
-
                     float obstacleHeight = b.max.y - hit.point.y;
-                    if (obstacleHeight < 0.4f)
-                    {
-                        continue;
-                    }
+                    if (obstacleHeight < 0.4f) continue;
 
                     vaultObstacleTopPoint = new Vector3(b.center.x, b.max.y, b.center.z);
                     vaultObstacleBottomPoint = new Vector3(b.center.x, b.min.y, b.center.z);
-                    if (leftHandIKTarget != null && rightHandIKTarget != null)
-                    {
-                        Vector3 center = vaultObstacleTopPoint;
-                        float handWidth = 0.6f;
-
-                        Vector3 left = center - transform.right * handWidth;
-                        Vector3 right = center + transform.right * handWidth;
-
-                        leftHandIKTarget.position = left;
-                        rightHandIKTarget.position = right;
-                    }
                     return true;
                 }
             }
         }
-
         vaultObstacleTopPoint = transform.position;
         return false;
     }
+
     public void Update_Vault()
     {
         if (isDoingVaultMove)
@@ -357,29 +425,44 @@ public class Player : MonoBehaviour
         else
         {
             if (rb.isKinematic)
-            {
                 rb.isKinematic = false;
-            }
         }
     }
-    public void Climb_Scan()
+    public void Climb_Scan() { }
+    #endregion
+    public void OnSpecialSkill(InputValue value)
     {
-        if (actionControl.isClimbing)
+        if (value.isPressed)
         {
-            Vector3 origin = transform.position + Vector3.up * (col.height * 0.5f + rayUpOffset) + transform.forward * rayForwardOffset;
-            Vector3 dir = transform.forward;
-            if (!Physics.Raycast(origin, dir, rayLength) && !actionControl.currentAction==actionControl.Hang)
+            actionControl.AttackLevel = 0;
+            AttackDectetcion();
+            StopCurrentAction();
+            Is_Action_Playing = true;
+            if (actionControl.canCombo)
             {
-                Debug.Log("到达墙体顶端");
-                StopCurrentAction();
-                actionControl.PlayAction(actionControl.Hang);
-                Is_Action_Playing = true;
-                //填登顶后的逻辑
+                ActionSO action = MaxPower == Skill_PowerPool ? actionControl.Related_Full_E : actionControl.Related_Unfilled_E;
+                Debug.Log(action.actionName);
+                actionControl.PlayAction(action);
             }
+            else
+            {
+                ActionSO action = MaxPower == Skill_PowerPool ? actionControl.Full_E : actionControl.Unfilled_E;
+                Debug.Log(action.actionName);
+                actionControl.PlayAction(action);
+            }
+            actionControl.canCombo = false;
         }
     }
     public void OnAttack(InputValue value)
     {
+        if (Panel_Mgr.instance.IsPanelOpen)
+        {
+            return;
+        }
+        if (actionControl.canCombo)
+        {
+            Is_Action_Playing = false;
+        }
         if (value.isPressed)
         {
             IsAttacking = true;
@@ -389,29 +472,34 @@ public class Player : MonoBehaviour
             actionControl.PlayAttackAction();
         }
     }
+
     public void AfterAttack()
     {
-        IsBlock = IsBlock ? false : true;
-        //Debug.Log(IsBlock);
+        IsBlock = !IsBlock;
         InputMove = IsBlock ? Vector3.zero : InputMove;
         rb.velocity = IsBlock ? Vector3.zero : rb.velocity;
     }
+
     public void AttackDectetcion()
     {
         Vector3 LookDir;
         float mindistance;
         int index = -1;
-        Collider[] enemies = Physics.OverlapSphere(transform.position, playerSO.DetectionRadius, LayerMask.GetMask("Enemy"));
+        //LayerMask enemyLayer = LayerMask.GetMask("Enemy");
+        int mask = ~(1 << LayerMask.NameToLayer("Enemy"));
+        Collider[] enemies = Physics.OverlapSphere(transform.position, playerSO.DetectionRadius, EnemyLayer);
         if (enemies.Length > 0)
         {
             Transform cam = Camera.main.transform;
             Vector3 camForward = cam.forward;
             camForward.y = 0;
             camForward.Normalize();
-            mindistance= Mathf.Infinity;
+            mindistance = Mathf.Infinity;
             for (int i = 0; i < enemies.Length; i++)
             {
-                if (Vector3.Angle(camForward, enemies[i].transform.position - transform.position ) > 90)
+                bool BlockByObstacle = Physics.Linecast(transform.position, enemies[i].transform.position, mask);
+                bool AngleTooLarge = Vector3.Angle(camForward, enemies[i].transform.position - transform.position) > 90;
+                if (BlockByObstacle || AngleTooLarge)
                 {
                     continue;
                 }
@@ -431,6 +519,23 @@ public class Player : MonoBehaviour
             }
         }
     }
+    public void Vault_Aft()
+    {
+        StopCurrentAction();
+        Is_Action_Playing = true;
+        actionControl.PlayAction(actionControl.CrossAtfAction);
+    }
+    public void TurnDeath()
+    {
+        StopCurrentAction();
+        Is_Action_Playing = true;
+        actionControl.PlayAction(actionControl.DeathAction);
+    }
+    public void Dead()
+    {
+        //用signal receiver在死亡倒地后接收这个回调方法
+        //写死亡后慢慢黑屏然后重新重生睁眼。待施工
+    }
     public void Move_Follow_Camera()
     {
         Transform cam = Camera.main.transform;
@@ -449,43 +554,41 @@ public class Player : MonoBehaviour
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(moveDir), 15f * Time.fixedDeltaTime);
         }
     }
-    #region 辅助调试显示
-    private void OnDrawGizmos()
+    public void Set_StorePanel(bool Is_Ready)
     {
-        float vaultHeight = playerSO.VaultHeight;
-        float highGrabHeight = playerSO.HighClimbHeight;
-        float scanRadius = playerSO.JumpScanRadius;
-
-        float halfAngle = scanAngle / 2f;
-        float angleStep = scanAngle / (fanRayCount - 1);
-        int verticalRays = 5;
-
-        DrawSectorGizmo(0.1f, vaultHeight, scanRadius, halfAngle, angleStep, verticalRays, Color.green);
-        DrawSectorGizmo(vaultHeight, highGrabHeight, scanRadius, halfAngle, angleStep, verticalRays, Color.red);
-        if (actionControl.isClimbing)
-        {
-            Vector3 origin = transform.position + Vector3.up * (col.height * 0.5f + rayUpOffset) + transform.forward * rayForwardOffset;
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawRay(origin, transform.forward * rayLength);
-        }
+        Panel_Mgr.instance.TraderPanel.gameObject.SetActive(Is_Ready);
     }
-    private void DrawSectorGizmo(float minY, float maxY, float radius, float halfAngle, float angleStep, int verticalRays, Color color)
-    {
-        float yStep = (maxY - minY) / (verticalRays - 1);
-        Gizmos.color = color;
+    //#region 辅助调试显示
+    //private void OnDrawGizmos()
+    //{
+    //    float vaultHeight = playerSO.VaultHeight;
+    //    float scanRadius = playerSO.JumpScanRadius;
 
-        for (int h = 0; h < fanRayCount; h++)
-        {
-            float currentAngle = -halfAngle + angleStep * h;
-            Vector3 dir = Quaternion.Euler(0, currentAngle, 0) * transform.forward;
+    //    float halfAngle = scanAngle / 2f;
+    //    float angleStep = scanAngle / (fanRayCount - 1);
+    //    int verticalRays = 5;
 
-            for (int v = 0; v < verticalRays; v++)
-            {
-                float yPos = rayOriginOffset + minY + yStep * v;
-                Vector3 origin = transform.position + Vector3.up * yPos;
-                Gizmos.DrawLine(origin, origin + dir * radius);
-            }
-        }
-    }
-    #endregion
+    //    DrawSectorGizmo(0.1f, vaultHeight, scanRadius, halfAngle, angleStep, verticalRays, Color.green);
+    //    DrawSectorGizmo(vaultHeight, playerSO.HighClimbHeight, scanRadius, halfAngle, angleStep, verticalRays, Color.blue);
+    //}
+
+    //private void DrawSectorGizmo(float minY, float maxY, float radius, float halfAngle, float angleStep, int verticalRays, Color color)
+    //{
+    //    float yStep = (maxY - minY) / (verticalRays - 1);
+    //    Gizmos.color = color;
+
+    //    for (int h = 0; h < fanRayCount; h++)
+    //    {
+    //        float currentAngle = -halfAngle + angleStep * h;
+    //        Vector3 dir = Quaternion.Euler(0, currentAngle, 0) * transform.forward;
+
+    //        for (int v = 0; v < verticalRays; v++)
+    //        {
+    //            float yPos = rayOriginOffset + minY + yStep * v;
+    //            Vector3 origin = transform.position + Vector3.up * yPos;
+    //            Gizmos.DrawLine(origin, origin + dir * radius);
+    //        }
+    //    }
+    //}
+    //#endregion
 }

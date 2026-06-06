@@ -15,6 +15,5 @@ public class PlayerSO : ScriptableObject
     [Header("ÌøÔ¾")]
     public float JumpScanRadius;
     public float VaultHeight;
-    //public float LowClimbHeight;
     public float HighClimbHeight;
 }

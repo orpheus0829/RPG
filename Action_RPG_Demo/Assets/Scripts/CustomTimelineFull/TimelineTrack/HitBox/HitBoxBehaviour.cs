@@ -45,18 +45,26 @@ public class HitBoxBehaviour : PlayableBehaviour
             isActive = inRange;
             if (isActive)
             {
-                ctrl.OpenHitBox(offset, radius);
+                Vector3 boxSize = clip.data != null ? clip.data.hitBoxSize : Vector3.zero;
+                ctrl.OpenHitBox(offset, radius, boxSize);
             }
             else
             {
                 ctrl.CloseHitBox();
             }
         }
-        //if (isActive)
+        //if (isActive && clip.data != null)
         //{
-        //    Vector3 pos = ctrl.transform.TransformPoint(boxOffset);
+        //    Vector3 worldPos = ctrl.transform.TransformPoint(offset);
         //    Gizmos.color = Color.red;
-        //    Gizmos.DrawWireSphere(pos, boxRadius);
+        //    if (clip.data.hitBoxShape == HitBoxShape.Sphere)
+        //    {
+        //        Gizmos.DrawWireSphere(worldPos, radius);
+        //    }
+        //    else
+        //    {
+        //        Gizmos.DrawWireCube(worldPos, clip.data.hitBoxSize);
+        //    }
         //}
     }
     public override void OnBehaviourPause(Playable playable, FrameData info)

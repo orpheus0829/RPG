@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63f08684b98d78448b711cb70203875e, type: 3}
+  m_Name: RedDiamond
+  m_EditorClassIdentifier: 
+  Display_In_Backpacks: {fileID: 21300000, guid: 098d7de52aa157847b2a2ec334629c82, type: 3}
+  Drop: {fileID: 3578220384266054800, guid: 550c0c7d46296ed46b3144ab4a4c9024, type: 3}
+  item_name: "\u7EA2\u5B9D\u77F3"
+  item_id: 3
+  Height: 2
+  Width: 2
+  PriceValue: 500
+  Introduction: "\u7480\u74A8\u593A\u76EE\u7684\u7EA2\u5B9D\u77F3"
+  item_Kind: 1
+  weapon:
+    weapon_Damage: 0

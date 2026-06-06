@@ -16,9 +16,11 @@ MonoBehaviour:
   actionName: "\u653B\u51FB4"
   timeline: {fileID: 11400000, guid: e722193659ef7a5438c21979c49c3043, type: 2}
   actionType: 1
+  hitBoxShape: 0
   damageValue: 15
   hitBoxOffset: {x: 0, y: 0.7, z: 1}
   hitBoxRadius: 0.5
+  hitBoxSize: {x: 0, y: 0, z: 0}
   hitStartTime: 0
   hitEndTime: 2
   hitForce: 3
@@ -38,7 +40,7 @@ MonoBehaviour:
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
   moveSpeed: 10000000
-  totalDistance: 4
+  totalDistance: 1
   startSpeed: 1000000
   endSpeed: 999999
   climbStage: 0

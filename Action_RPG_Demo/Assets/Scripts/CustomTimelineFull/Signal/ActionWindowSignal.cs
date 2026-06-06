@@ -8,5 +8,4 @@ public class ActionWindowSignal : SignalAsset
 {
     public bool allowCombo;
     public bool allowInterrupt;
-    public bool IsClimbing;
 }

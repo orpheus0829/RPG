@@ -8,7 +8,6 @@ public enum MoveMode
     SpeedAndDistance,
     VariableSpeed,
     ClimbOver,
-    ParkourClimb,
 }
 public enum ClimbStage
 {
@@ -44,13 +43,6 @@ public class TransformTimelineClip : PlayableAsset, ITimelineClipAsset
     public float climbStartSpeed;
     public float climbEndSpeed;
     public float climbAfterExtraDistance;
-
-    [Header("Ä£Ê½5;ÅÊÅÀ")]
-    public ParkourClimbStage parkourClimbStage;
-    public bool parkourUseVariableSpeed;
-    public float parkourSpeed;
-    public float parkourStartSpeed;
-    public float parkourEndSpeed;
 
     public ClipCaps clipCaps => ClipCaps.Blending;
 

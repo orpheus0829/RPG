@@ -7,6 +7,12 @@ using UnityEngine.Timeline;
 /// 动作配置数据表
 /// 存储单套动作所有可调参数，资源复用
 /// </summary>
+/// 
+public enum HitBoxShape
+{
+    Sphere,
+    Box,
+}
 [CreateAssetMenu(fileName = "NewAction", menuName = "动作数据/动作配置")]
 public class ActionSO : ScriptableObject
 {
@@ -17,9 +23,11 @@ public class ActionSO : ScriptableObject
     public ActionType actionType;
 
     [Header("攻击专属参数")]
+    public HitBoxShape hitBoxShape;
     public float damageValue;
     public Vector3 hitBoxOffset;
     public float hitBoxRadius;
+    public Vector3 hitBoxSize;
     public float hitStartTime;
     public float hitEndTime;
 
@@ -54,6 +62,7 @@ public class ActionSO : ScriptableObject
 
     public float startSpeed;
     public float endSpeed;
+
     [Header("翻越")]
     public ClimbStage climbStage;
     public bool climbUseVariableSpeed;
@@ -62,10 +71,4 @@ public class ActionSO : ScriptableObject
     public float climbEndSpeed;
     public float climbAfterExtraDistance;
 
-    [Header("攀爬")]
-    public ParkourClimbStage parkourClimbStage;
-    public bool parkourUseVariableSpeed;
-    public float parkourSpeed;
-    public float parkourStartSpeed;
-    public float parkourEndSpeed;
 }

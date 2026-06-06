@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63f08684b98d78448b711cb70203875e, type: 3}
+  m_Name: Gold_Armor
+  m_EditorClassIdentifier: 
+  Display_In_Backpacks: {fileID: 21300000, guid: 8519b253b272b4040b1564b4432909d1, type: 3}
+  Drop: {fileID: 5888778731975603889, guid: dd9b869b2d44cff41b4fcb81390bad8d, type: 3}
+  item_name: "\u91D1\u7532"
+  item_id: 5
+  Height: 3
+  Width: 3
+  PriceValue: 200
+  Introduction: "\u6218\u75D5\u7D2F\u7D2F\u7684\u91D1\u7532"
+  item_Kind: 1
+  weapon:
+    weapon_Damage: 0

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63f08684b98d78448b711cb70203875e, type: 3}
+  m_Name: Sword
+  m_EditorClassIdentifier: 
+  Display_In_Backpacks: {fileID: 21300000, guid: f724653d129050340a1cf7b4c64bdf20, type: 3}
+  Drop: {fileID: 8797526876818695945, guid: f08e0b8aa212c7f49a7a85faa443bc52, type: 3}
+  item_name: "\u94C1\u5251"
+  item_id: 1
+  Height: 2
+  Width: 1
+  PriceValue: 2
+  Introduction: "\u4EC5\u4EC5\u53EA\u662F\u4E00\u628A\u5251"
+  item_Kind: 0
+  weapon:
+    weapon_Damage: 3

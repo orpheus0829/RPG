@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19c6fc49cc57d894ba7dd8b6fa57c452, type: 3}
+  m_Name: Gold_Armor
+  m_EditorClassIdentifier: 
+  Map_Name: "\u80F8\u7532\u8FDB\u5316"
+  crafting_Materials:
+  - Material: {fileID: 11400000, guid: 8f3595e80e984594694a39b14017b3db, type: 2}
+    Number: 2
+  - Material: {fileID: 11400000, guid: 9c1f7bc5d3d17ae4e81758049c66a634, type: 2}
+    Number: 1
+  crafting_Results:
+  - Product: {fileID: 11400000, guid: e6c28d6f45a06c842a9c4e216329367d, type: 2}
+    Res_Number: 1
+  - Product: {fileID: 11400000, guid: 9c1f7bc5d3d17ae4e81758049c66a634, type: 2}
+    Res_Number: 1

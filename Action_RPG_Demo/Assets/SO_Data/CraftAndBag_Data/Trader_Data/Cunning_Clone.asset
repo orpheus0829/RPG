@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d23a2f60b49323429404c7f1ca06cb2, type: 3}
+  m_Name: Cunning_Clone
+  m_EditorClassIdentifier: 
+  CanBuy_Count: 20
+  Can_Buy_List:
+  - {fileID: 11400000, guid: ce07d08303cb7dc47889f00d1ce0bc3c, type: 2}
+  - {fileID: 11400000, guid: e6c28d6f45a06c842a9c4e216329367d, type: 2}
+  - {fileID: 11400000, guid: 8f3595e80e984594694a39b14017b3db, type: 2}
+  CanSell_Count: 20
+  Can_Sell_List:
+  - {fileID: 11400000, guid: ce07d08303cb7dc47889f00d1ce0bc3c, type: 2}
+  - {fileID: 11400000, guid: e6c28d6f45a06c842a9c4e216329367d, type: 2}
+  - {fileID: 11400000, guid: 8f3595e80e984594694a39b14017b3db, type: 2}
+  Rrstore_Time: 10
