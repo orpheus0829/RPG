@@ -37,6 +37,10 @@ public class Game_Event : Base_mgr<Game_Event>
     protected override void Awake()
     {
         base.Awake();
+        if (instance == this)
+        {
+            DontDestroyOnLoad(this.gameObject);
+        }
     }
     #region ÉÌµêÂòÂô
     public void Send_BuyItem(Item_Data item_Data)

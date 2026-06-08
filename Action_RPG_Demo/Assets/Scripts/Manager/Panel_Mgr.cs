@@ -16,7 +16,22 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
     [Header("¡–±Ì")]
     public List<BasePanel> PanelList;
     [Header(" Ù–‘")]
-    public bool IsPanelOpen;
+    private bool _ispanelopen;
+    public bool IsPanelOpen
+    {
+        get
+        {
+            return _ispanelopen;
+        }
+        set
+        {
+            if (_ispanelopen != value)
+            {
+                _ispanelopen = value;
+                On_PanelChanged(value);
+            }
+        }
+    }
     protected override void Awake()
     {
         base.Awake();
@@ -25,6 +40,10 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
             DontDestroyOnLoad(this.gameObject);
         }
         FindAllPanel();
+    }
+    public void On_PanelChanged(bool v)
+    {
+
     }
     public void FindAllPanel()
     {
@@ -48,11 +67,11 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
     }
     public void HideAllPanel()
     {
-        foreach(var panel in PanelList)
+        IsPanelOpen = false;
+        foreach (var panel in PanelList)
         {
             panel?.HidePanel();
         }
-        IsPanelOpen = false;
     }
     public void OpenPanel(BasePanel panel)
     {

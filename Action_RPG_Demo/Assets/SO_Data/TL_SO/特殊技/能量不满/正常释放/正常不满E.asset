@@ -39,10 +39,10 @@ MonoBehaviour:
   moveMode: 2
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
-  moveSpeed: 0
-  totalDistance: 6
+  moveSpeed: 1e+14
+  totalDistance: 3.5
   startSpeed: 1e+14
-  endSpeed: 10000
+  endSpeed: 1e+20
   climbStage: 0
   climbUseVariableSpeed: 0
   climbSpeed: 0

@@ -45,11 +45,11 @@ MonoBehaviour:
   m_Name: TransformTimelineClip
   m_EditorClassIdentifier: 
   data: {fileID: 0}
-  moveMode: 2
+  moveMode: 1
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
-  moveSpeed: 0
-  totalDistance: 1
+  moveSpeed: 1000000
+  totalDistance: 1.5
   startSpeed: 1000000
   endSpeed: 999999
   climbStage: 0
@@ -93,11 +93,11 @@ MonoBehaviour:
   m_Name: TransformTimelineClip
   m_EditorClassIdentifier: 
   data: {fileID: 0}
-  moveMode: 2
+  moveMode: 1
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
-  moveSpeed: 0
-  totalDistance: 1
+  moveSpeed: 1000000
+  totalDistance: 2
   startSpeed: 1000000
   endSpeed: 999999
   climbStage: 0

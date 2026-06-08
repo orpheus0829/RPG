@@ -36,11 +36,11 @@ MonoBehaviour:
   soundClip: {fileID: 0}
   effectTriggerTime: 0
   effectSpawnOffset: {x: 0, y: 0, z: 0}
-  moveMode: 2
+  moveMode: 1
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
-  moveSpeed: 10000000
-  totalDistance: 1
+  moveSpeed: 1e+9
+  totalDistance: 1.5
   startSpeed: 1000000
   endSpeed: 999999
   climbStage: 0

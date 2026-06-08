@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d3a3c6cfdc745f4a94702d36c410017, type: 3}
+  m_Name: "\u827E\u83B2chat1"
+  m_EditorClassIdentifier: 
+  dialogueMode: 1
+  SpeakerName: "\u827E\u83B2"
+  Single_Dialogue: "\u4F60\u6765\u4E86\uFF1F"
+  Cut_Show: {fileID: 0}
+  ContinueWay: 0
+  nextDialogue: {fileID: 11400000, guid: 2ff5ac79c6e56a748a8653b2f889569e, type: 2}
+  choiceDialogues: []
+  HasNext: 0

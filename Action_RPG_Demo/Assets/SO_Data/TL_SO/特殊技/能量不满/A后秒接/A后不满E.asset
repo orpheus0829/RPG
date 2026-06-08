@@ -40,7 +40,7 @@ MonoBehaviour:
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
   moveSpeed: 0
-  totalDistance: 5
+  totalDistance: 2.8
   startSpeed: 100000000
   endSpeed: 0
   climbStage: 0

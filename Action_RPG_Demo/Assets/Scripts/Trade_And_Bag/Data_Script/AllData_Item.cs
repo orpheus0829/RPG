@@ -6,4 +6,5 @@ using UnityEngine;
 public class AllData_Item : ScriptableObject
 {
     public List<Item_Data> Data_List;
+    public string Allitem_FolderPath = "Assets/SO_Data/CraftAndBag_Data/Item_Data";
 }

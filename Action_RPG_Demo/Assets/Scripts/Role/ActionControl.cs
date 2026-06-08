@@ -13,43 +13,44 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
     public Camera mainCamera;
     public PlayableDirector timelineDirector;
 
-    [Header("待机动作")]
-    public ActionSO idleAction;
-
-    [Header("移动动作")]
-    public ActionSO walkAction;
-    public ActionSO WalkStart;
-    public ActionSO WalkEnd;
-    public ActionSO runAction;
-
-    [Header("攻击动作")]
-    public ActionSO attack1Action;
-    public ActionSO attack2Action;
-    public ActionSO attack3Action;
-    public ActionSO attack4Action_Nor;
-    public ActionSO attack4Action_Per;
-    [Range(0f,1f)]public float Perfect_Range = 0.33f;
-
-    [Header("特殊技")]
-    public ActionSO Related_Full_E;
-    public ActionSO Full_E;
-    public ActionSO Related_Unfilled_E;
-    public ActionSO Unfilled_E;
-
+    [Header("角色招式配置")]
+    public CharacterActionSO Character;
     public ActionSO currentAction;
+    //[Header("待机动作")]
+    //public ActionSO idleAction;
 
-    [Header("跳跃动作")]
-    public ActionSO JumpAction;
-    [Header("翻越动作")]
-    public ActionSO CrossAction;
-    public ActionSO CrossAtfAction;
+    //[Header("移动动作")]
+    //public ActionSO walkAction;
+    //public ActionSO WalkStart;
+    //public ActionSO WalkEnd;
+    //public ActionSO runAction;
+
+    //[Header("攻击动作")]
+    //public ActionSO attack1Action;
+    //public ActionSO attack2Action;
+    //public ActionSO attack3Action;
+    //public ActionSO attack4Action_Nor;
+    //public ActionSO attack4Action_Per;
+    //[Range(0f,1f)]public float Perfect_Range = 0.33f;
+
+    //[Header("特殊技")]
+    //public ActionSO Related_Full_E;
+    //public ActionSO Full_E;
+    //public ActionSO Related_Unfilled_E;
+    //public ActionSO Unfilled_E;
+
+    //[Header("跳跃动作")]
+    //public ActionSO JumpAction;
+    //[Header("翻越动作")]
+    //public ActionSO CrossAction;
+    //public ActionSO CrossAtfAction;
     public Vector3 Cross_Location;
 
-    [Header("滑铲")]
-    public ActionSO SlideAction;
+    //[Header("滑铲")]
+    //public ActionSO SlideAction;
 
-    [Header("死亡动作")]
-    public ActionSO DeathAction;
+    //[Header("死亡动作")]
+    //public ActionSO DeathAction;
 
     [Header("动作窗口（由 Timeline 信号控制）")]
     public int AttackLevel;
@@ -74,10 +75,10 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
     }
     public void Update()
     {
-        if (currentAction == walkAction && player.InputMove == Vector3.zero)
+        if (currentAction == Character.Walk && player.InputMove == Vector3.zero)
         {
             player.StopCurrentAction();
-            PlayAction(WalkEnd);
+            PlayAction(Character.WalkEnd);
         }
     }
     public void FixedUpdate()
@@ -123,21 +124,36 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
 
         //Debug.Log($"收到未知信号: {notification?.GetType().Name}");
     }
+    public bool IsInAttackAction(ActionSO action)
+    {
+        if (Character == null || action == null)
+        {
+            return false;
+        }
 
+        foreach (var item in Character.AtkList)
+        {
+            if (item.ATK == action || item.PerfectATK == action)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     public void PlayAction(ActionSO action)
     {
         if (action == null || action.timeline == null)
         {
             return;
         }
-        if (currentAction == attack1Action || currentAction == attack2Action || currentAction == attack3Action || currentAction == attack4Action_Nor || currentAction==attack4Action_Per)
+        if (IsInAttackAction(action))
         {
             player.isWalking = false;
         }
         //Debug.Log("切换为" + action.actionName);
-        if (currentAction == walkAction)
+        if (currentAction == Character.Walk)
         {
-            currentAction = walkAction;
+            currentAction = Character.Walk;
         }
         currentAction = action;
 
@@ -161,7 +177,7 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
         else
         {
             Debug.Log("默认转至待机");
-            PlayAction(idleAction);
+            PlayAction(Character.Idle);
         }
     }
 
@@ -169,28 +185,31 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
     #region 攻击判定
     public void PlayAttackAction()
     {
-        AttackLevel = canCombo ? (AttackLevel % 4) + 1 : 1;
-        ActionSO attack_so;
-        switch (AttackLevel)
+        AttackLevel = canCombo ? (AttackLevel % Character.AtkList.Count) + 1 : 1;
+
+        if (AttackLevel < 1 || AttackLevel > Character.AtkList.Count)
         {
-            case 1:
-                attack_so = attack1Action;
-                break;
-            case 2:
-                attack_so = attack2Action;
-                break;
-            case 3:
-                attack_so = attack3Action;
-                break;
-            case 4:
-                int choice = Random.Range(0, 100);
-                attack_so = choice <= (1 - Perfect_Range) * 100 ? attack4Action_Nor : attack4Action_Per;
-                break;
-            default:
-                attack_so = attack1Action;
-                break;
+            AttackLevel = 1;
         }
-        PlayAction(attack_so);
+        Single_ATK atkData = Character.AtkList[AttackLevel - 1];
+        ActionSO attackToPlay;
+        if (atkData.HasVariantATK)
+        {
+            float random = Random.Range(0f, 100f);
+            if (random <= atkData.Percentage)
+            {
+                attackToPlay = atkData.PerfectATK;
+            }
+            else
+            {
+                attackToPlay = atkData.ATK;
+            }
+        }
+        else
+        {
+            attackToPlay = atkData.ATK;
+        }
+        PlayAction(attackToPlay);
         player.IsAttacking = false;
     }
     public void OpenHitBox(Vector3 offset, float radius, Vector3 boxSize)

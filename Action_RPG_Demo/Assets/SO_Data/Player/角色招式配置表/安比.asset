@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36bd7a303486f024a82410c2652ec0b1, type: 3}
+  m_Name: "\u5B89\u6BD4"
+  m_EditorClassIdentifier: 
+  Idle: {fileID: 11400000, guid: 81e8fad9bf1509a4f9b2b25eb2f24ea8, type: 2}
+  AfkIdle: {fileID: 0}
+  WalkStart: {fileID: 11400000, guid: f069ec03b13df834f87a5d8909b00d9f, type: 2}
+  Walk: {fileID: 11400000, guid: 566ce85efcff818408d149838a6c3482, type: 2}
+  WalkEnd: {fileID: 11400000, guid: 2fd33e3f00313784893ad793fffa9947, type: 2}
+  Run: {fileID: 0}
+  AtkList:
+  - ATK: {fileID: 11400000, guid: a33569c2c6b17f9439c3c5cdaafd5607, type: 2}
+    ChargeNor: 2
+    HasVariantATK: 0
+    PerfectATK: {fileID: 0}
+    ChargePer: 0
+    Percentage: 0
+  - ATK: {fileID: 11400000, guid: fa1c58fe7d5d740439969e3e56f23219, type: 2}
+    ChargeNor: 2
+    HasVariantATK: 0
+    PerfectATK: {fileID: 0}
+    ChargePer: 0
+    Percentage: 0
+  - ATK: {fileID: 11400000, guid: 86cc31db246141f4c88e5de7fa324c98, type: 2}
+    ChargeNor: 2
+    HasVariantATK: 0
+    PerfectATK: {fileID: 0}
+    ChargePer: 0
+    Percentage: 0
+  - ATK: {fileID: 11400000, guid: e7c6815bf4e171640ba63308108da07b, type: 2}
+    ChargeNor: 2
+    HasVariantATK: 1
+    PerfectATK: {fileID: 11400000, guid: 770cdb21c5d904442aa22ebadb41cf5b, type: 2}
+    ChargePer: 2
+    Percentage: 50.1
+  RelatedFullE: {fileID: 11400000, guid: b95677a32e8afa64bac6921cdfeea47a, type: 2}
+  FullE: {fileID: 11400000, guid: 04dc7ebd2c546ca44983bdd98b553686, type: 2}
+  RelatedUnfilledE: {fileID: 11400000, guid: 9b043eafcbb065c4f912de89435c5022, type: 2}
+  UnfilledE: {fileID: 11400000, guid: bf3dc92e2fa3cda449de78069b2883cb, type: 2}
+  Jump: {fileID: 11400000, guid: d84ade2055b4bd34abd8def0b87d7560, type: 2}
+  PreVault: {fileID: 11400000, guid: 439c2ba6142adc944b53e8a8a3863f3a, type: 2}
+  AftVault: {fileID: 11400000, guid: 02e53aaaea6487d458a4fa62184ea914, type: 2}
+  Slide: {fileID: 11400000, guid: 7016c9c052360094780deb47b8dcc343, type: 2}
+  Death: {fileID: 11400000, guid: 2ee21f2f265c87d4c83b86ab02a919e1, type: 2}
