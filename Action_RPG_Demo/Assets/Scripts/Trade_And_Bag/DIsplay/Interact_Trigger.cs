@@ -16,7 +16,9 @@ public class Interact_Trigger : MonoBehaviour
         sc = GetComponent<SphereCollider>();
         pl = GetComponentInParent<Player>();
         playerTrans = pl.transform;
-
+    }
+    public void Start()
+    {
         if (Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.InteractPanel))
         {
             Panel_Mgr.instance.Control_InteractPanel(false);
@@ -31,6 +33,7 @@ public class Interact_Trigger : MonoBehaviour
         if (interactableTraders.Count <= 0)
         {
             Panel_Mgr.instance.TraderPanel?.HidePanel();
+            Panel_Mgr.instance.IsPanelOpen = false;
         }
     }
     private void OnTriggerEnter(Collider other)

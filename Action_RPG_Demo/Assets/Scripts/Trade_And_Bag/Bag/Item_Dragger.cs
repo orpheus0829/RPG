@@ -41,8 +41,19 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         Player_Bag.RemoveItem(sx, sy, sw, sh);
         List<Vector3> vaildpoint = FindVaildGround(Player_Bag.gameObject.transform.position, Player_Bag.DropRadius);
         Debug.Log("Œª÷√”–" + vaildpoint.Count);
-        Vector3 drop_pos = vaildpoint[Random.Range(0, vaildpoint.Count)];
-        //Vector3 drop_pos = new Vector3(Player_Bag.gameObject.transform.position.x + Random.Range(0, 2), Player_Bag.gameObject.transform.position.y, Player_Bag.gameObject.transform.position.z + Random.Range(0, 2));
+        Vector3 drop_pos;
+        if (vaildpoint.Count <= 0)
+        {
+            drop_pos = new Vector3(Player_Bag.gameObject.transform.position.x + Random.Range(-2f, 2f), Player_Bag.gameObject.transform.position.y + 0.5f, Player_Bag.gameObject.transform.position.z + Random.Range(-2f, 2f));
+            while (Vector3.Distance(drop_pos, Player_Bag.gameObject.transform.position) < 1f)
+            {
+                drop_pos = new Vector3(Player_Bag.gameObject.transform.position.x + Random.Range(-2f, 2f), Player_Bag.gameObject.transform.position.y + 0.5f, Player_Bag.gameObject.transform.position.z + Random.Range(-2f, 2f));
+            }
+        }
+        else
+        {
+            drop_pos = vaildpoint[Random.Range(0, vaildpoint.Count)];
+        }
         Instantiate(data.Drop,drop_pos , Quaternion.identity);
 
         Player_Bag.currentDraggingItem = null;

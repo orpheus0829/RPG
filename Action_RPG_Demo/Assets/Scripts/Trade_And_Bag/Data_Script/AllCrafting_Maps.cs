@@ -6,4 +6,5 @@ using UnityEngine;
 public class AllCrafting_Maps : ScriptableObject
 {
     public List<Crafting_SO> Crafting_Maps;
+    public string Allmap_FolderPath = "Assets/SO_Data/CraftAndBag_Data/Crafting_Map";
 }

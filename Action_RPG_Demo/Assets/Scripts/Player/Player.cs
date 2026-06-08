@@ -120,9 +120,9 @@ public class Player : MonoBehaviour
         if (stopMoveLockTime > 0)
         {
             stopMoveLockTime -= Time.fixedDeltaTime;
-            if (actionControl.currentAction == actionControl.WalkEnd && isWalking)
+            if (actionControl.currentAction == actionControl.Character.WalkEnd && isWalking)
             {
-                actionControl.PlayAction(actionControl.WalkStart);
+                actionControl.PlayAction(actionControl.Character.WalkStart);
             }
         }
         else
@@ -155,14 +155,14 @@ public class Player : MonoBehaviour
         {
             return;
         }
-        if (actionControl.currentAction == actionControl.WalkStart || actionControl.currentAction == actionControl.walkAction)
+        if (actionControl.currentAction == actionControl.Character.WalkStart || actionControl.currentAction == actionControl.Character.Walk)
         {
             if (InputMove.magnitude <= 0.1f)
             {
                 isWalking = false;
                 isStopping = true;
                 stopMoveLockTime = playerSO.LockDuration;
-                actionControl.PlayAction(actionControl.WalkEnd);
+                actionControl.PlayAction(actionControl.Character.WalkEnd);
                 return;
             }
             return;
@@ -170,7 +170,7 @@ public class Player : MonoBehaviour
         if (isStopping && !Is_Action_Playing)
         {
             isStopping = false;
-            actionControl.PlayAction(actionControl.idleAction);
+            actionControl.PlayAction(actionControl.Character.Idle);
             return;
         }
         if (InputMove.magnitude > 0.1f && actionControl.canInterrupt)
@@ -178,11 +178,11 @@ public class Player : MonoBehaviour
             StopCurrentAction();
             isStopping = false;
             actionControl.AttackLevel = 0;
-            actionControl.PlayAction(actionControl.WalkStart);
+            actionControl.PlayAction(actionControl.Character.WalkStart);
         }
         else if (!Is_Action_Playing && !isStopping)
         {
-            actionControl.PlayAction(actionControl.idleAction);
+            actionControl.PlayAction(actionControl.Character.Idle);
         }
     }
 
@@ -213,7 +213,7 @@ public class Player : MonoBehaviour
         {
             StopCurrentAction();
             Is_Action_Playing = true;
-            actionControl.PlayAction(actionControl.runAction);
+            actionControl.PlayAction(actionControl.Character.Run);
         }
     }
     public void OnBackPack(InputValue value)
@@ -277,7 +277,7 @@ public class Player : MonoBehaviour
             InputMove = Vector3.zero;
             StopCurrentAction();
             Is_Action_Playing = true;
-            actionControl.PlayAction(actionControl.SlideAction);
+            actionControl.PlayAction(actionControl.Character.Slide);
         }
     }
     public void OnInteract(InputValue value)
@@ -320,13 +320,13 @@ public class Player : MonoBehaviour
             StopCurrentAction();
             if (jumpResult == 1)
             {
-                actionControl.PlayAction(actionControl.CrossAction);
+                actionControl.PlayAction(actionControl.Character.PreVault);
                 Is_Action_Playing = true;
                 Debug.Log("·­Ô½");
             }
             else
             {
-                actionControl.PlayAction(actionControl.JumpAction);
+                actionControl.PlayAction(actionControl.Character.Jump);
                 Is_Action_Playing = true;
                 Debug.Log("ÌøÔ¾");
             }
@@ -432,6 +432,14 @@ public class Player : MonoBehaviour
     #endregion
     public void OnSpecialSkill(InputValue value)
     {
+        if (Panel_Mgr.instance.IsPanelOpen)
+        {
+            return;
+        }
+        if (!actionControl.canCombo && !actionControl.canInterrupt)
+        {
+            return;
+        }
         if (value.isPressed)
         {
             actionControl.AttackLevel = 0;
@@ -440,13 +448,13 @@ public class Player : MonoBehaviour
             Is_Action_Playing = true;
             if (actionControl.canCombo)
             {
-                ActionSO action = MaxPower == Skill_PowerPool ? actionControl.Related_Full_E : actionControl.Related_Unfilled_E;
+                ActionSO action = MaxPower == Skill_PowerPool ? actionControl.Character.RelatedFullE : actionControl.Character.RelatedUnfilledE;
                 Debug.Log(action.actionName);
                 actionControl.PlayAction(action);
             }
             else
             {
-                ActionSO action = MaxPower == Skill_PowerPool ? actionControl.Full_E : actionControl.Unfilled_E;
+                ActionSO action = MaxPower == Skill_PowerPool ? actionControl.Character.FullE : actionControl.Character.UnfilledE;
                 Debug.Log(action.actionName);
                 actionControl.PlayAction(action);
             }
@@ -523,13 +531,13 @@ public class Player : MonoBehaviour
     {
         StopCurrentAction();
         Is_Action_Playing = true;
-        actionControl.PlayAction(actionControl.CrossAtfAction);
+        actionControl.PlayAction(actionControl.Character.AftVault);
     }
     public void TurnDeath()
     {
         StopCurrentAction();
         Is_Action_Playing = true;
-        actionControl.PlayAction(actionControl.DeathAction);
+        actionControl.PlayAction(actionControl.Character.Death);
     }
     public void Dead()
     {
