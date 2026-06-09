@@ -12,5 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14e6a70f17d065e4d98025684ebd6090, type: 3}
   m_Name: "\u5267\u76EE1_1"
   m_EditorClassIdentifier: 
+  Episode_Title: "\u7B2C\u4E00\u5E55\u2014\u20141"
+  Episode_ID: 1
+  Episode_Introduction: 
   Quests:
   - {fileID: 11400000, guid: 95da76858c7d54445bfdb6e0511f3be8, type: 2}
+  - {fileID: 11400000, guid: 95da76858c7d54445bfdb6e0511f3be8, type: 2}
+  Episode_Rewards: []
