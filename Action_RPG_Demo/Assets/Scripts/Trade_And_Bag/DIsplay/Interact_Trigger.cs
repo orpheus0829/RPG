@@ -16,6 +16,7 @@ public class Interact_Trigger : MonoBehaviour
         sc = GetComponent<SphereCollider>();
         pl = GetComponentInParent<Player>();
         playerTrans = pl.transform;
+
     }
     public void Start()
     {
@@ -38,7 +39,10 @@ public class Interact_Trigger : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("NPC"))
+        bool HasDialogue = other.TryGetComponent<Dialogue_Set>(out Dialogue_Set dialogue_Set);
+        bool HasTrade = other.TryGetComponent<Trader>(out Trader istrader);
+        bool IsNPC = other.CompareTag("NPC");
+        if (IsNPC && (HasDialogue || HasTrade))
         {
             Trader trader = other.GetComponent<Trader>();
             if (trader != null && !interactableTraders.Contains(trader))
@@ -50,7 +54,10 @@ public class Interact_Trigger : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("NPC"))
+        bool HasDialogue = other.TryGetComponent<Dialogue_Set>(out Dialogue_Set dialogue_Set);
+        bool HasTrade = other.TryGetComponent<Trader>(out Trader istrader);
+        bool IsNPC = other.CompareTag("NPC");
+        if (IsNPC && (HasDialogue || HasTrade))
         {
             Trader trader = other.GetComponent<Trader>();
             if (trader != null && interactableTraders.Contains(trader))

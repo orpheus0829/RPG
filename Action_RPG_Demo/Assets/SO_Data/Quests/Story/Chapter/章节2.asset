@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3961f387527578c498a213f53615ab61, type: 3}
   m_Name: "\u7AE0\u82822"
   m_EditorClassIdentifier: 
-  Chapters:
+  Chapter_Title: "\u7AE0\u82822"
+  Chapter_ID: 2
+  Chapter_Introduction: 
+  Episodes:
   - {fileID: 11400000, guid: 83e228587b8956b4e87e1221ac87a4a9, type: 2}

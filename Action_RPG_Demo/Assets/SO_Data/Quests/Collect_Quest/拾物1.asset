@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f17c5a9963ff3cc4fa2e4f09baa7811f, type: 3}
   m_Name: "\u62FE\u72691"
   m_EditorClassIdentifier: 
+  Quest_Title: "\u52A9\u4EBA\u4E3A\u4E50"
   single_QuestItems:
   - Loaction: {x: 0, y: 0, z: 0}
     QuestItem: {fileID: 0}
