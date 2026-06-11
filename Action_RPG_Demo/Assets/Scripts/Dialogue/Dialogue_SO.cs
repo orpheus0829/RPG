@@ -28,7 +28,8 @@ public class Dialogue_SO : QuestBase_SO
     public DialogueMode dialogueMode;
     [Header("发言人")]
     public string SpeakerName;
-
+    [EntityId]
+    public string SpeakerId;
     [Header("发言内容")]
     [TextArea(0, 5)] public string Single_Dialogue;
 

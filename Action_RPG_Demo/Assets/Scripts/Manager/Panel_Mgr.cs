@@ -9,14 +9,16 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
     public BasePanel BagPanel;
     public BasePanel TraderPanel;
     public BasePanel CraftPanel;
-    public BasePanel InteractPanel;
+    public BasePanel InteractTradePanel;
+    public BasePanel InteractChatPanel;
+    public BasePanel DialoguePanel;
 
     public BasePanel BuyPanel;
     public BasePanel SellPanel;
     [Header("列表")]
     public List<BasePanel> PanelList;
     [Header("属性")]
-    private bool _ispanelopen;
+    public bool _ispanelopen;
     public bool IsPanelOpen
     {
         get
@@ -43,7 +45,17 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
     }
     public void On_PanelChanged(bool v)
     {
-
+        if (v)
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        Debug.Log($"当前面板为{v}");
     }
     public void FindAllPanel()
     {
@@ -93,9 +105,9 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
         SellPanel.ShowPanel();
         IsPanelOpen = true;
     }
-    public void Control_InteractPanel(bool open)
+    public void Control_InteractPanel(bool open, BasePanel panel)
     {
-        InteractPanel.gameObject.SetActive(open);
+        panel.gameObject.SetActive(open);
     }
     public bool IsPanelVisible(BasePanel panel)
     {

@@ -64,12 +64,14 @@ public class Player : MonoBehaviour
     public Player_Bag bag;
 
     [Header("½»»¥")]
-    public bool Can_Interact;
+    public bool Can_Trade;
+    public bool Can_Chat;
 
     [Header("ÒýÓÃ")]
     public Rigidbody rb;
     public Animator am;
     public CapsuleCollider col;
+    public Interact_Trigger Interact_Trigger;
 
     public void Awake()
     {
@@ -79,6 +81,7 @@ public class Player : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         Speed = playerSO.WalkSpeed;
         bag = GetComponent<Player_Bag>();
+        Interact_Trigger = GetComponentInChildren<Interact_Trigger>();
         rb.useGravity = true;
 
         if (PlayerPrefs.GetInt("Money", 0) <= 0)
@@ -111,6 +114,10 @@ public class Player : MonoBehaviour
     public void Update()
     {
         Update_Vault();
+        if (Panel_Mgr.instance.IsPanelOpen)
+        {
+            InputMove = Vector3.zero;
+        }
     }
 
     public void FixedUpdate()
@@ -190,6 +197,10 @@ public class Player : MonoBehaviour
     {
         try
         {
+            if (Panel_Mgr.instance.IsPanelOpen)
+            {
+                return;
+            }
             if (IsBlock)
             {
                 IsBlock = false;
@@ -267,6 +278,10 @@ public class Player : MonoBehaviour
     }
     public void OnSlide(InputValue value)
     {
+        if (Panel_Mgr.instance.IsPanelOpen)
+        {
+            return;
+        }
         if (value.isPressed)
         {
             if (Is_Action_Playing)
@@ -280,9 +295,9 @@ public class Player : MonoBehaviour
             actionControl.PlayAction(actionControl.Character.Slide);
         }
     }
-    public void OnInteract(InputValue value)
+    public void OnTrade(InputValue value)
     {
-        if (value.isPressed && Can_Interact && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.BagPanel))
+        if (value.isPressed && Can_Trade && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.BagPanel))
         {
             if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.TraderPanel))
             {
@@ -301,9 +316,51 @@ public class Player : MonoBehaviour
             }
         }
     }
+    public void OnChat(InputValue value)
+    {
+        if (value.isPressed && Can_Chat && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.BagPanel))
+        {
+            DialogueWriter dialogueWriter = Panel_Mgr.instance.DialoguePanel.GetComponent<DialogueWriter>();
+            if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.DialoguePanel))
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Panel_Mgr.instance.OpenPanel(Panel_Mgr.instance.DialoguePanel);
+                dialogueWriter.CurDialogue = Interact_Trigger.interactableChatNPCS[0].Cur_Dialogue;
+                dialogueWriter.WriteDialogue();
+                Panel_Mgr.instance.Control_InteractPanel(false, Panel_Mgr.instance.InteractChatPanel);
+                Panel_Mgr.instance.Control_InteractPanel(false, Panel_Mgr.instance.TraderPanel);
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Panel_Mgr.instance.HideAllPanel();
+                Interact_Trigger.ResetButton();
+            }
+        }
+    }
     #region ÌøÔ¾
     public void OnJump(InputValue value)
     {
+        if (Panel_Mgr.instance.DialoguePanel.gameObject.activeSelf)
+        {
+            DialogueWriter writer = Panel_Mgr.instance.DialoguePanel.GetComponent<DialogueWriter>();
+            if (writer.IsTyping)
+            {
+                return;
+            }
+            else
+            {
+                if (writer.CurDialogue.ContinueWay != WayToNextDialogue.Choice)
+                {
+                    Game_Event.instance.NextDialogue();
+                }
+            }
+            return;
+        }
+        if (Panel_Mgr.instance.IsPanelOpen)
+        {
+            return;
+        }
         int jumpResult = JumpScan();
         if (jumpResult > 1)
         {

@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Chapter_Title: "\u7AE0\u82822"
   Chapter_ID: 2
-  Chapter_Introduction: 
+  Chapter_Introduction: "\u6DF1\u6F5C\u800C\u4E0B"
   Episodes:
   - {fileID: 11400000, guid: 83e228587b8956b4e87e1221ac87a4a9, type: 2}

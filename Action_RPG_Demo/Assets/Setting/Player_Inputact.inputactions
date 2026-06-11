@@ -61,7 +61,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Interact",
+                    "name": "Trade",
                     "type": "Button",
                     "id": "a0e67f61-997d-4bc4-b3f3-52e11638297e",
                     "expectedControlType": "",
@@ -91,6 +91,15 @@
                     "name": "Drop_Item",
                     "type": "Button",
                     "id": "aeab351e-5fef-4afc-96f4-a514817e48cb",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Chat",
+                    "type": "Button",
+                    "id": "eeaeed4e-7d94-42b5-82aa-297e1525298f",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -233,11 +242,11 @@
                 {
                     "name": "",
                     "id": "54a9de2b-2a06-4a18-b042-743c271b9d40",
-                    "path": "<Keyboard>/f",
+                    "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Interact",
+                    "action": "Trade",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -271,6 +280,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Drop_Item",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "45f97cc6-f2a7-41a6-84ab-d5348af6393d",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Chat",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

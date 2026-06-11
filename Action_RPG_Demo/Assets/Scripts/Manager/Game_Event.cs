@@ -22,6 +22,7 @@ public class Game_Event : Base_mgr<Game_Event>
     public Func<Item_Data, int> Last_Item_By_ID;
     //初始化商店
     public Trader Current_Trader;
+    public Dialogue_Set Current_Chater;
     public event Action<bool> Init_Store;
     //刷新商店
     public event Action Refresh_Buy;
@@ -34,6 +35,11 @@ public class Game_Event : Base_mgr<Game_Event>
     public event Action<Crafting_SO> Crafting_Start;
     //生成合成列表
     public event Action Init_Craft;
+    //打字相关
+    public event Action<Dialogue_SO> LoadDialogueChoice;
+    public event Action PressChoice1;
+    public event Action<Dialogue_SO> PressChoice2;
+    public event Action DirectNextDialogue;
     protected override void Awake()
     {
         base.Awake();
@@ -41,6 +47,10 @@ public class Game_Event : Base_mgr<Game_Event>
         {
             DontDestroyOnLoad(this.gameObject);
         }
+    }
+    public int Get_InitStore_ListenerCount()
+    {
+        return Init_Store?.GetInvocationList().Length ?? 0;
     }
     #region 商店买卖
     public void Send_BuyItem(Item_Data item_Data)
@@ -120,8 +130,20 @@ public class Game_Event : Base_mgr<Game_Event>
         Init_Craft?.Invoke();
     }
     #endregion
-    public int Get_InitStore_ListenerCount()
+    #region 对话
+    public void LoadChoice(Dialogue_SO dialogue)
     {
-        return Init_Store?.GetInvocationList().Length ?? 0;
+        LoadDialogueChoice?.Invoke(dialogue);
     }
+    public void PressNextChoice(Dialogue_SO dialogue,Action onComplete = null)
+    {
+        PressChoice2?.Invoke(dialogue);
+        PressChoice1?.Invoke();
+        onComplete?.Invoke();
+    }
+    public void NextDialogue()
+    {
+        DirectNextDialogue?.Invoke();
+    }
+    #endregion
 }

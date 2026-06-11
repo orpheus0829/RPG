@@ -2,10 +2,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Timeline;
 
-/// <summary>
-/// 自定义动作配置面板
-/// 切换枚举自动显隐对应参数，场景攻击范围预览，自动保存配置
-/// </summary>
 [CustomEditor(typeof(ActionSO))]
 public class ActionDataCustomEditor : Editor
 {
