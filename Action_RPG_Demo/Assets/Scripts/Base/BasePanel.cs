@@ -11,6 +11,10 @@ public class BasePanel : MonoBehaviour
     }
     public virtual void HidePanel()
     {
+        if (this == null || !gameObject.activeInHierarchy)
+        {
+            return;
+        }
         gameObject.SetActive(false);
     }
     public virtual  bool IsVisible()

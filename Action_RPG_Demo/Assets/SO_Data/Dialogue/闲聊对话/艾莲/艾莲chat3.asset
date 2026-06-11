@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3a3c6cfdc745f4a94702d36c410017, type: 3}
   m_Name: "\u827E\u83B2chat3"
   m_EditorClassIdentifier: 
+  Quest_Title: 
   dialogueMode: 1
   SpeakerName: "\u827E\u83B2"
-  Single_Dialogue: "\u90A3\u5C31\u770B\u4F60\u7684\u54AF\uFF1F"
+  SpeakerId: "\u827E\u83B2"
+  Single_Dialogue: "\u90A3\u5C31,\u770B\u4F60\u7684\u54AF\uFF1F"
   Cut_Show: {fileID: 0}
   ContinueWay: 2
   nextDialogue: {fileID: 0}

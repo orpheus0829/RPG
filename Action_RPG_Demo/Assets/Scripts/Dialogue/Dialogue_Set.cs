@@ -7,9 +7,15 @@ public class Dialogue_Set : MonoBehaviour
     public Dialogue_SO Story_Dialogue;
     public Dialogue_SO Chat_Dialogue;
     public Dialogue_SO Cur_Dialogue;
+    [EntityId]
+    public string CharacterId;
     public void Awake()
     {
-        Cur_Dialogue = Story_Dialogue ? Story_Dialogue : Chat_Dialogue;
+
+    }
+    public void Start()
+    {
+        Switch_DialogueSO();
     }
     public void Update()
     {
@@ -18,5 +24,7 @@ public class Dialogue_Set : MonoBehaviour
     {
         Panel_Mgr.instance.HideAllPanel();
         Cur_Dialogue = Story_Dialogue ? Story_Dialogue : Chat_Dialogue;
+        DialogueWriter writer = Panel_Mgr.instance.DialoguePanel.GetComponent<DialogueWriter>();
+        writer.ClearAllChoice();
     }
 }

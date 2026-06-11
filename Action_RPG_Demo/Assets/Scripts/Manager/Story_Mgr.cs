@@ -16,6 +16,10 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
     public Story_SO Story;
     private string StoryPath = "WorldStory";
     public MainStoryData CurStory = new MainStoryData();
+    [Header("可对话角色缓存")]
+    public List<Dialogue_Set> DialogActor = new List<Dialogue_Set>();
+    public Dictionary<Dialogue_Set, string> DialogueActorToIdDict = new Dictionary<Dialogue_Set, string>();
+    public Dictionary<string, Dialogue_Set> IdToDialogueActorDict = new Dictionary<string, Dialogue_Set>();
     [Header("数据盒debug")]
     public bool StoryDebug;
     public bool Advance;
@@ -34,6 +38,31 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
     public void Start()
     {
         Load_WorldStory(StoryPath);
+        DialogActor.Clear();
+        GameObject[] npcs = GameObject.FindGameObjectsWithTag("NPC");
+        foreach(var i in npcs)
+        {
+            if(i.TryGetComponent(out Dialogue_Set set))
+            {
+                DialogActor.Add(set);
+            }
+        }
+        DialogueActorToIdDict.Clear();
+        IdToDialogueActorDict.Clear();
+        foreach (var actor in DialogActor)
+        {
+            string curActorId = actor.CharacterId;
+            if (string.IsNullOrWhiteSpace(curActorId))
+            {
+                Debug.Log($"NPC {actor.gameObject.name}未配置角色ID");
+                continue;
+            }
+            DialogueActorToIdDict.Add(actor, curActorId);
+            if (!IdToDialogueActorDict.ContainsKey(curActorId))
+            {
+                IdToDialogueActorDict.Add(curActorId, actor);
+            }
+        }
     }
     public void Update()
     {
@@ -47,6 +76,16 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
             Save_WorldStory(StoryPath);
             Save = false;
         }
+        if (StoryDebug)
+        {
+            Debug_Story();
+            StoryDebug = false;
+        }
+    }
+    private void OnDestroy()
+    {
+        DialogueActorToIdDict.Clear();
+        IdToDialogueActorDict.Clear();
     }
     #region 设置数据
     public void Init_Story()
@@ -92,7 +131,6 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
             Debug.Log("找不到当前章节");
             return;
         }
-        //Episode_SO curepisode = curchapter.Episodes.Find(t => t.Episode_ID == CurStory.EpisodeID);
         bool IsLastEpisodeInChapter = CurStory.EpisodeID >= curchapter.Episodes.Count;
         if (IsLastEpisodeInChapter)
         {
@@ -156,11 +194,59 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
     }
     public void Refresh_StoryProgress()
     {
+        QuestBase_SO curQuest = GetCurrentQuest();
+        if (curQuest == null)
+        {
+            return;
+        }
+        foreach (var i in DialogActor)
+        {
+            i.Story_Dialogue = null;
+            i.Switch_DialogueSO();
+        }
+        if (curQuest is Dialogue_SO curDialogueQuest)
+        {
+            Dialogue_Set targetActor = GetDialogueActorByDialogueSO(curDialogueQuest);
+            targetActor.Story_Dialogue = curDialogueQuest;
+            targetActor.Switch_DialogueSO();
+            Debug.Log($"找到对话角色{targetActor.gameObject.name},对话SO为{curDialogueQuest.Single_Dialogue}");
+            // 下方写逻辑赋值触发对话UI等
+        }
+        else
+        {
 
+        }
     }
     public void Refresh_StoryUI()
     {
 
+    }
+    public Dialogue_Set GetDialogueActorByDialogueSO(Dialogue_SO curDialogueSO)
+    {
+        if (curDialogueSO == null)
+        {
+            return null;
+        }
+        string curSpeakerId = curDialogueSO.SpeakerId;
+        if (string.IsNullOrEmpty(curSpeakerId))
+        {
+            Debug.Log("当前对话SO的SpeakerId为空");
+            return null;
+        }
+        if (IdToDialogueActorDict.TryGetValue(curSpeakerId, out Dialogue_Set targetActor))
+        {
+            return targetActor;
+        }
+        Debug.Log($"未找到ID为{curSpeakerId}的对话角色");
+        return null;
+    }
+    public Dialogue_Set GetDialogueActorById(string curActorId)
+    {
+        if (IdToDialogueActorDict.TryGetValue(curActorId, out Dialogue_Set targetActor))
+        {
+            return targetActor;
+        }
+        return null;
     }
     #endregion
     public void Debug_Story()

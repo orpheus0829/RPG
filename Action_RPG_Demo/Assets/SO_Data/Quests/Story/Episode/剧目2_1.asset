@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Episode_Title: "\u7B2C\u4E8C\u5E55\u2014\u20141"
   Episode_ID: 1
-  Episode_Introduction: 
+  Episode_Introduction: "\u6211\u9010\u6E10\u4E86\u89E3\u4E86\u8FD9\u4E2A\u5730\u65B9"
   Quests:
   - {fileID: 11400000, guid: 305f424d10ff5d84daf15a3d56d4a390, type: 2}
   - {fileID: 11400000, guid: 95da76858c7d54445bfdb6e0511f3be8, type: 2}

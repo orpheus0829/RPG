@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3a3c6cfdc745f4a94702d36c410017, type: 3}
   m_Name: "\u827E\u83B2chat2"
   m_EditorClassIdentifier: 
+  Quest_Title: 
   dialogueMode: 1
   SpeakerName: "\u827E\u83B2"
+  SpeakerId: "\u827E\u83B2"
   Single_Dialogue: "\u8FD9\u7247\u8857\u533A\u6700\u8FD1\u5F88\u662F\u4E0D\u592A\u5E73\uFF0C\u60F3\u4E0D\u60F3\u6E05\u7406\u4E00\u4E0B\uFF1F"
   Cut_Show: {fileID: 0}
   ContinueWay: 1
@@ -21,4 +23,6 @@ MonoBehaviour:
   choiceDialogues:
   - NextDialogue: {fileID: 11400000, guid: d022fab9d2795904691cb5ca920dd7f6, type: 2}
     ChoiceText: "\u597D\uFF0C\u6211\u63A5\u53D7\u4E86"
+  - NextDialogue: {fileID: 11400000, guid: d3e1e5bbe76fa9c4799d96570df7f53b, type: 2}
+    ChoiceText: "\u7B97\u4E86\u5427"
   HasNext: 0

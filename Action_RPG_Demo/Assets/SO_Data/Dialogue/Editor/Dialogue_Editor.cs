@@ -17,6 +17,7 @@ public class Dialogue_Editor : Editor
 
         // 发言人
         EditorGUILayout.PropertyField(serializedObject.FindProperty("SpeakerName"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("SpeakerId"));
         EditorGUILayout.Space(10);
 
         // 台词
@@ -31,7 +32,6 @@ public class Dialogue_Editor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("ContinueWay"));
         EditorGUILayout.Space(10);
 
-        // ====================== 核心：根据枚举显示不同内容 ======================
         switch (so.ContinueWay)
         {
             case WayToNextDialogue.Next:
