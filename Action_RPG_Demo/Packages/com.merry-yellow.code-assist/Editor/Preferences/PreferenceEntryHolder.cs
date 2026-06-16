@@ -56,8 +56,8 @@ namespace Meryel.UnityCodeAssist.Editor.Preferences
             return m_typeSelection switch
             {
                 PrefTypes.String => m_strValue,
-                PrefTypes.Int => m_intValue.ToString(),
-                PrefTypes.Float => m_floatValue.ToString(),
+                PrefTypes.Int => m_intValue.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                PrefTypes.Float => m_floatValue.ToString(System.Globalization.CultureInfo.InvariantCulture),
                 _ => string.Empty,
             };
         }

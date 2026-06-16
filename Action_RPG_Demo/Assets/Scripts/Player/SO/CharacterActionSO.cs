@@ -23,7 +23,7 @@ public class CharacterActionSO : ScriptableObject
     public ActionSO WalkStart;
     public ActionSO Walk;
     public ActionSO WalkEnd;
-    public ActionSO Run;
+    public ActionSO Dodge;
     [Header("¹¥»÷")]
     public List<Single_ATK> AtkList = new List<Single_ATK>();
     [Header("ÌØÊâ¼¼")]
@@ -38,6 +38,8 @@ public class CharacterActionSO : ScriptableObject
     public ActionSO AftVault;
     [Header("»¬²ù")]
     public ActionSO Slide;
+    [Header("ÊÜ»÷")]
+    public ActionSO GetHit;
     [Header("ËÀÍö")]
     public ActionSO Death;
 }

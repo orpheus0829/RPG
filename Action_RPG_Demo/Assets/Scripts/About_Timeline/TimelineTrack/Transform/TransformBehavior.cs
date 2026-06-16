@@ -6,13 +6,12 @@ public class TransformBehaviour : PlayableBehaviour
 {
     public TransformTimelineClip clip;
     public Quaternion Rot;
-
     private Vector3 _startPos;
-    private Vector3 _endPos;
+    private Vector3 _curPos;
+    private Vector3 _moveDir;
     private Vector3 _obstacleTopPos;
     private bool _inited;
     private bool _isBlocked;
-
     private Vector3 _climbFinalPosition;
 
     public float checkRadius = 0.5f;
@@ -27,7 +26,10 @@ public class TransformBehaviour : PlayableBehaviour
         _isBlocked = false;
         _rb = null;
         _climbFinalPosition = Vector3.zero;
+        _curPos = Vector3.zero;
+        _moveDir = Vector3.zero;
     }
+
     public override void OnBehaviourPause(Playable playable, FrameData info)
     {
         if (clip.moveMode == MoveMode.ClimbOver && _player != null)
@@ -39,20 +41,17 @@ public class TransformBehaviour : PlayableBehaviour
             }
         }
     }
-
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {
         if (_isBlocked)
         {
             return;
         }
-
         Transform trans = playerData as Transform;
         if (trans == null || clip == null)
         {
             return;
         }
-
         if (_player == null)
         {
             _player = trans.GetComponent<Player>();
@@ -64,148 +63,102 @@ public class TransformBehaviour : PlayableBehaviour
 
         float curTime = (float)playable.GetTime();
         float duration = (float)playable.GetDuration();
-        if (duration <= 0) return;
-
+        float deltaTime = (float)info.deltaTime;
+        if (duration <= 0 || deltaTime <= 0)
+        {
+            return;
+        }
         if (!_inited)
         {
             Rot = trans.rotation;
             _startPos = trans.position;
-
-            if (clip.moveMode == MoveMode.ClimbOver)
+            _curPos = _startPos;
+            if (clip.moveMode != MoveMode.ClimbOver)
             {
-                _obstacleTopPos = _player.vaultObstacleTopPoint;
-                if (_obstacleTopPos.magnitude < 0.01f)
-                    _obstacleTopPos = _startPos;
-            }
-
-            if (clip.moveMode == MoveMode.ClimbOver)
-            {
-                if (clip.climbStage == ClimbStage.BeforeClimb)
-                    _endPos = _obstacleTopPos;
-                else
-                {
-                    Vector3 f = trans.forward;
-                    f.y = 0; f.Normalize();
-                    _endPos = _obstacleTopPos + f * clip.climbAfterExtraDistance;
-                }
+                ReadParams(out _, out Vector3 localDir, out _, out _);
+                _moveDir = trans.TransformDirection(localDir);
+                _moveDir.y = 0;
+                _moveDir.Normalize();
             }
             else
             {
-                InitNormalMode(trans);
+                _obstacleTopPos = _player.vaultObstacleTopPoint;
+                if (_obstacleTopPos.magnitude < 0.01f)
+                {
+                    _obstacleTopPos = _startPos;
+                }
+
+                Vector3 flatForward = trans.forward;
+                flatForward.y = 0;
+                flatForward.Normalize();
+                if (clip.climbStage == ClimbStage.BeforeClimb)
+                {
+                    _moveDir = (_obstacleTopPos - _startPos).normalized;
+                }
+                else
+                {
+                    _moveDir = flatForward;
+                }
             }
             _inited = true;
         }
 
-        //float progress = CalculateProgress(playable, curTime, duration);
-        //Vector3 targetPos = Vector3.Lerp(_startPos, _endPos, progress);
-        //Vector3 moveDelta = targetPos - trans.position;
-        //float moveLen = moveDelta.magnitude;
-        //Vector3 finalPos = targetPos;
-
-        //if (clip.moveMode != MoveMode.ClimbOver && moveLen > 0.001f)
-        //{
-        //    Vector3 rayDir = moveDelta.normalized;
-        //    Vector3 flatDir = new Vector3(rayDir.x, 0, rayDir.z).normalized;
-        //    float rayDist = moveLen;
-        //    float castR = _player.col.radius;
-        //    Vector3 rayStart = trans.position + Vector3.up * castR;
-
-        //    if (Physics.SphereCast(rayStart, checkRadius, flatDir, out RaycastHit hit, rayDist, Physics.AllLayers, QueryTriggerInteraction.Ignore))
-        //    {
-        //        finalPos = hit.point - flatDir * 0.01f;
-        //        _isBlocked = true;
-        //    }
-        //}
-        float progress = CalculateProgress(playable, curTime, duration);
-        Vector3 targetPos = Vector3.Lerp(_startPos, _endPos, progress);
-        Vector3 finalPos = targetPos;
-
+        float frameSpeed = GetCurrentFrameSpeed(curTime, duration);
+        Vector3 frameDelta = _moveDir * frameSpeed * deltaTime;
+        Vector3 targetNextPos = _curPos + frameDelta;
         if (clip.moveMode != MoveMode.ClimbOver)
         {
-            Vector3 moveDelta = targetPos - trans.position;
-            float moveLen = moveDelta.magnitude;
-
-            if (moveLen > 0.001f)
+            float castR = _player.col.radius;
+            Vector3 rayStart = _curPos + Vector3.up * castR;
+            Vector3 flatDir = frameDelta.normalized;
+            float rayDist = frameDelta.magnitude;
+            if (rayDist > 0.001f && Physics.SphereCast( rayStart, checkRadius, flatDir, out RaycastHit hit, rayDist, Physics.AllLayers, QueryTriggerInteraction.Ignore))
             {
-                Vector3 rayDir = moveDelta.normalized;
-                Vector3 flatDir = new Vector3(rayDir.x, 0, rayDir.z).normalized;
-                float rayDist = moveLen;
-                float castR = _player.col.radius;
-                Vector3 rayStart = trans.position + Vector3.up * castR;
-
-                if (Physics.SphereCast(rayStart, checkRadius, flatDir, out RaycastHit hit, rayDist, Physics.AllLayers, QueryTriggerInteraction.Ignore))
-                {
-                    finalPos = hit.point - flatDir * 0.01f;
-                    _isBlocked = true;
-                }
+                targetNextPos = hit.point - flatDir * 0.01f;
+                _isBlocked = true;
             }
         }
         else
         {
-            _climbFinalPosition = finalPos;
+            _climbFinalPosition = targetNextPos;
         }
-
+        _curPos = targetNextPos;
         if (_rb != null)
         {
-            _rb.MovePosition(finalPos);
+            _rb.MovePosition(_curPos);
         }
-
         trans.rotation = Rot;
     }
-
-    private void InitNormalMode(Transform trans)
+    private float GetCurrentFrameSpeed(float curTime, float duration)
     {
-        ReadParams(out var mode, out var dir, out var endPos, out var dist);
-        Vector3 finalDir = trans.TransformDirection(dir);
-        finalDir.Normalize();
-
-        switch (mode)
+        float t = Mathf.Clamp01(curTime / duration);
+        switch (clip.moveMode)
         {
-            case MoveMode.FixedEndPos:
-                _endPos = endPos;
-                break;
             case MoveMode.SpeedAndDistance:
-            case MoveMode.VariableSpeed:
-                _endPos = _startPos + finalDir * dist;
-                break;
-        }
-    }
+                return clip.moveSpeed;
 
-    private float CalculateProgress(Playable playable, float curTime, float duration)
-    {
-        if (clip.moveMode == MoveMode.ClimbOver)
-        {
-            if (clip.climbStage == ClimbStage.BeforeClimb)
-                return Mathf.Clamp01(curTime / duration);
-            else
-            {
+            case MoveMode.VariableSpeed:
+                return Mathf.Lerp(clip.startSpeed, clip.endSpeed, t);
+
+            case MoveMode.ClimbOver:
                 if (clip.climbUseVariableSpeed)
                 {
-                    float v0 = clip.climbStartSpeed;
-                    float v1 = clip.climbEndSpeed;
-                    float total = (v0 + v1) * 0.5f * duration;
-                    if (total <= 0) return 0;
-                    float covered = v0 * curTime + (v1 - v0) * curTime * curTime / 2;
-                    return Mathf.Clamp01(covered / total);
+                    return Mathf.Lerp(clip.climbStartSpeed, clip.climbEndSpeed, t);
                 }
                 else
                 {
-                    return Mathf.Clamp01(curTime / duration);
+                    return clip.climbSpeed;
                 }
-            }
-        }
-        else if (clip.moveMode == MoveMode.VariableSpeed)
-        {
-            float v0 = clip.startSpeed;
-            float v1 = clip.endSpeed;
-            float total = (v0 + v1) * 0.5f * duration;
-            if (total <= 0) return 0;
-            float covered = v0 * curTime + (v1 - v0) * curTime * curTime / 2;
-            return Mathf.Clamp01(covered / total);
-        }
-        else
-        {
-            return Mathf.Clamp01(curTime / duration);
+
+            case MoveMode.FixedEndPos:
+                Vector3 remainVec = clip.endPos - _curPos;
+                float remainDist = remainVec.magnitude;
+                float remainTime = duration - curTime;
+                if (remainTime < 0.001f) return 0;
+                return remainDist / remainTime;
+
+            default:
+                return clip.moveSpeed;
         }
     }
 

@@ -9,6 +9,8 @@ TagManager:
   - Cant_Vault
   - Drop_Item
   - NPC
+  - DeadPlayer
+  - DeadEnemy
   layers:
   - Default
   - TransparentFX

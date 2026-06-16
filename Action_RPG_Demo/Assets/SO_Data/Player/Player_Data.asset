@@ -15,6 +15,9 @@ MonoBehaviour:
   Player_Name: Player
   WalkSpeed: 5
   RunSpeed: 7
+  PlayerMaxHP: 500
+  Deadline: 1000000
+  AFKInterval: 15
   DetectionRadius: 6
   LockDuration: 1
   JumpScanRadius: 2.01

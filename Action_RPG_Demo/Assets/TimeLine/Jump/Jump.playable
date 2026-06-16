@@ -74,11 +74,11 @@ MonoBehaviour:
   m_Name: TransformTimelineClip
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: d84ade2055b4bd34abd8def0b87d7560, type: 2}
-  moveMode: 0
+  moveMode: 1
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
-  moveSpeed: 0
-  totalDistance: 0
+  moveSpeed: 6
+  totalDistance: 8
   startSpeed: 0
   endSpeed: 0
   climbStage: 0

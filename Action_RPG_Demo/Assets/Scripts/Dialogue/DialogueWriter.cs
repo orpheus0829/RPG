@@ -16,7 +16,7 @@ public class DialogueWriter : MonoBehaviour
     public TextMeshProUGUI Speaker;
     public TextMeshProUGUI Content;
     public Dialogue_SO CurDialogue;
-    private Coroutine typ;
+    public Coroutine typ;
     [Header("debug")]
     public bool Write;
     public void Awake()

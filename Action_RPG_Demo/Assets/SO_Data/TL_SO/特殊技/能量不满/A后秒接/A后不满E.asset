@@ -15,15 +15,15 @@ MonoBehaviour:
   actionID: 17
   actionName: "\u666E\u653B\u540E\u4E0D\u6EE1\u7279\u6B8A\u6280"
   timeline: {fileID: 11400000, guid: 9c52678602e1a45418196766e0abae7a, type: 2}
-  actionType: 0
+  actionType: 1
   hitBoxShape: 0
-  damageValue: 0
-  hitBoxOffset: {x: 0, y: 0, z: 0}
-  hitBoxRadius: 0
+  damageValue: 12
+  hitBoxOffset: {x: 0, y: 0, z: 1}
+  hitBoxRadius: 2
   hitBoxSize: {x: 0, y: 0, z: 0}
   hitStartTime: 0
   hitEndTime: 0
-  hitForce: 0
+  hitForce: 3
   nextAction: {fileID: 11400000, guid: 81e8fad9bf1509a4f9b2b25eb2f24ea8, type: 2}
   cameraMoveMode: 0
   cameraDirection: {x: 0, y: 0, z: 1}

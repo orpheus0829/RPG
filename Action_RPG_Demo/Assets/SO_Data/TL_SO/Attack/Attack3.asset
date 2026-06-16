@@ -32,17 +32,17 @@ MonoBehaviour:
   cameraMoveSpeed: 0
   cameraStartSpeed: 0
   cameraEndSpeed: 0
-  effectPrefab: {fileID: 3593040352138873559, guid: 226b9715f394a3241993d9e854e18d5b, type: 3}
+  effectPrefab: {fileID: 0}
   soundClip: {fileID: 0}
   effectTriggerTime: 0
   effectSpawnOffset: {x: 0, y: 0, z: 0}
   moveMode: 1
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
-  moveSpeed: 10000000
-  totalDistance: 2.4
-  startSpeed: 1000000
-  endSpeed: 100000
+  moveSpeed: 6
+  totalDistance: 6
+  startSpeed: 0
+  endSpeed: 0
   climbStage: 0
   climbUseVariableSpeed: 0
   climbSpeed: 0

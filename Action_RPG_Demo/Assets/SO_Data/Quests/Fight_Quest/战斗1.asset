@@ -14,9 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Quest_Title: "\u6E05\u626B\u884C\u52A8"
   Quest_Enemys:
-  - Location: {x: 0, y: 0, z: 0}
-    Enemy: {fileID: 0}
-    MaxHp: 0
-    CurHp: 0
+  - Location: {x: -6.37, y: -0.9456704, z: -1.82}
+    Enemy: {fileID: 5367068801840102312, guid: c046a9f203f518249a0bfbfa589c764d, type: 3}
+    MaxHp: 1
     Damage: 0
-    Rewards: []
+  Rewards: []

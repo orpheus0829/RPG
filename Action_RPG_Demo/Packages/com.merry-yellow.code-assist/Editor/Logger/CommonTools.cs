@@ -64,6 +64,13 @@ namespace Meryel.UnityCodeAssist.Editor
             return inputManagerPath;
         }
 
+        public static string GetNavMeshAreasFilePath()
+        {
+            var projectPath = GetProjectPathRaw();
+            var navMeshAreasPath = Combine(projectPath, "ProjectSettings/NavMeshAreas.asset");
+            return navMeshAreasPath;
+        }
+
         public static string GetProjectPath()
         {
             var rawPath = GetProjectPathRaw();

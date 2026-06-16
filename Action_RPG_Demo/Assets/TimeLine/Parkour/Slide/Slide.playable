@@ -22,10 +22,10 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 0.11666666666666667
+    m_Start: 0.09523809523809534
     m_ClipIn: 0
-    m_Asset: {fileID: 5091403357507014255}
-    m_Duration: 1.2166666666666666
+    m_Asset: {fileID: 4371505125256625197}
+    m_Duration: 1.0047619047619047
     m_TimeScale: 1
     m_ParentTrack: {fileID: -4112567385855978507}
     m_EaseInDuration: 0
@@ -429,6 +429,32 @@ MonoBehaviour:
   m_OpenClipOffsetRotation: {x: 0, y: 0, z: 0, w: 1}
   m_Rotation: {x: 0, y: 0, z: 0, w: 1}
   m_ApplyOffsets: 0
+--- !u!114 &4371505125256625197
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6149976e4f74a94a869741bf5df169b, type: 3}
+  m_Name: TransformTimelineClip
+  m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: 7016c9c052360094780deb47b8dcc343, type: 2}
+  moveMode: 2
+  direction: {x: 0, y: 0, z: 1}
+  endPos: {x: 0, y: 0, z: 0}
+  moveSpeed: 0
+  totalDistance: 0
+  startSpeed: 12
+  endSpeed: 3
+  climbStage: 0
+  climbUseVariableSpeed: 0
+  climbSpeed: 0
+  climbStartSpeed: 0
+  climbEndSpeed: 0
+  climbAfterExtraDistance: 0
 --- !u!114 &4795023495608545465
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -445,32 +471,6 @@ MonoBehaviour:
   m_Retroactive: 0
   m_EmitOnce: 0
   m_Asset: {fileID: 11400000, guid: 058d65e9abeed9c479ecff5838782e95, type: 2}
---- !u!114 &5091403357507014255
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6149976e4f74a94a869741bf5df169b, type: 3}
-  m_Name: TransformTimelineClip
-  m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: 7016c9c052360094780deb47b8dcc343, type: 2}
-  moveMode: 0
-  direction: {x: 0, y: 0, z: 1}
-  endPos: {x: 0, y: 0, z: 0}
-  moveSpeed: 0
-  totalDistance: 0
-  startSpeed: 0
-  endSpeed: 0
-  climbStage: 0
-  climbUseVariableSpeed: 0
-  climbSpeed: 0
-  climbStartSpeed: 0
-  climbEndSpeed: 0
-  climbAfterExtraDistance: 0
 --- !u!114 &8208177592148319713
 MonoBehaviour:
   m_ObjectHideFlags: 1

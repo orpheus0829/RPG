@@ -260,10 +260,7 @@ namespace Meryel.UnityCodeAssist.Editor.Shell
             _shellCommandEditorToken = shellCommandEditorToken;
         }
 
-        public int GetResult()
-        {
-            return _shellCommandEditorToken.ExitCode;
-        }
+        public int GetResult() => _shellCommandEditorToken.ExitCode;
 
         public bool IsCompleted => _shellCommandEditorToken.IsDone;
 

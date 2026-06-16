@@ -26,6 +26,7 @@ namespace Meryel.UnityCodeAssist.Editor
 
         private static bool isAppFocused;
         private static bool isAppFocusedOnTagManager;
+        private static bool isAppFocusedOnNavMeshAreas;
 
         private static int dirtyCounter;
         private static readonly Dictionary<GameObject, int> dirtyDict;
@@ -41,6 +42,7 @@ namespace Meryel.UnityCodeAssist.Editor
             {
                 Serilog.Log.Debug(ex, "Exception at {Location}", nameof(System.IO.File.GetLastWriteTime));
             }
+
             dirtyDict = new Dictionary<GameObject, int>();
             dirtyCounter = 0;
 
@@ -94,13 +96,18 @@ namespace Meryel.UnityCodeAssist.Editor
             OnHierarchyChanged();
         }
 
-        static void OnUpdate()
+        private static double lastCheckTime;
+        private static void TickTagManagerMonitor()
         {
-            string? currentEditorFocus = null;
-            if (Selection.activeObject)
-                currentEditorFocus = Selection.activeObject.GetType().ToString();
+            // ⬇ throttle to 0.1s
+            var now = EditorApplication.timeSinceStartup;
+            if (now - lastCheckTime < Monitors.FileMonitor.CheckInterval)
+                return;
 
-            //**-- use this instead? https://learn.microsoft.com/en-us/dotnet/api/system.io.filesystemwatcher?view=net-8.0
+            lastCheckTime = now;
+
+            // this can be used in the future if many files to be watched, setup cost for each domain reload does not addup for now: https://learn.microsoft.com/en-us/dotnet/api/system.io.filesystemwatcher?view=net-8.0
+            //   or we can use it to watch projectSettings directory if we switch to seperate process, unaffected by domain reloads
             // there is also this approach, but need to check OnUpdate anyways for focus checking, https://github.com/AlkimeeGames/TagLayerTypeGenerator/blob/main/Editor/TypeGenerator.cs#L36
             var currentTagManagerLastWrite = previousTagManagerLastWrite;
             try
@@ -110,18 +117,40 @@ namespace Meryel.UnityCodeAssist.Editor
             catch (System.Exception ex)
             {
                 Serilog.Log.Debug(ex, "Exception at {Location}", nameof(System.IO.File.GetLastWriteTime));
+                return;
             }
+
             if (currentTagManagerLastWrite != previousTagManagerLastWrite)
             {
                 previousTagManagerLastWrite = currentTagManagerLastWrite;
                 OnTagsOrLayersModified();
             }
-            else if (currentEditorFocus == "UnityEditor.TagManager")
+        }
+
+        static void OnUpdate()
+        {
+            TickTagManagerMonitor();
+
+
+            string? currentEditorFocus = null;
+            if (Selection.activeObject)
+                currentEditorFocus = Selection.activeObject.GetType().FullName;
+            if (currentEditorFocus == "UnityEditor.TagManager")
             {
                 // since unity does not commit changes to the file immediately, checking if user is displaying and focusing on tag manager (tags & layers) inspector
                 isAppFocusedOnTagManager = true;
             }
-            
+
+
+            string? currentEditorWindow = null;
+            if (EditorWindow.focusedWindow)
+                currentEditorWindow = EditorWindow.focusedWindow.GetType().FullName;
+            if (currentEditorWindow == "UnityEditor.NavMeshEditorWindow" ||
+                currentEditorWindow == "Unity.AI.Navigation.Editor.NavigationWindow") // Unity 6+
+            {
+                isAppFocusedOnNavMeshAreas = true;
+            }
+
 
             if (isAppFocused != UnityEditorInternal.InternalEditorUtility.isApplicationActive)
             {
@@ -210,6 +239,12 @@ namespace Meryel.UnityCodeAssist.Editor
                 {
                     isAppFocusedOnTagManager = false;
                     OnTagsOrLayersModified();
+                }
+
+                if (isAppFocusedOnNavMeshAreas)
+                {
+                    isAppFocusedOnNavMeshAreas = false;
+                    Monitors.NavMeshAreasMonitor.Instance.Bump();
                 }
 
                 OnSelectionChanged();
@@ -321,6 +356,10 @@ namespace Meryel.UnityCodeAssist.Editor
             else if (category == "ShaderGlobalKeywords")
             {
                 MQTTnetInitializer.Publisher?.SendShaderGlobalKeywords();
+            }
+            else if (category == "NavMeshAreas")
+            {
+                Monitors.NavMeshAreasMonitor.Instance.Bump();
             }
             else
             {

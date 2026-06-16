@@ -15,11 +15,11 @@ MonoBehaviour:
   actionID: 15
   actionName: "\u666E\u653B\u540E\u6EE1\u7279\u6B8A\u6280"
   timeline: {fileID: 11400000, guid: f918f431922028a429bf08400bfe677c, type: 2}
-  actionType: 0
+  actionType: 1
   hitBoxShape: 0
-  damageValue: 0
-  hitBoxOffset: {x: 0, y: 0, z: 0}
-  hitBoxRadius: 0
+  damageValue: 40
+  hitBoxOffset: {x: 0, y: 0, z: 1}
+  hitBoxRadius: 2
   hitBoxSize: {x: 0, y: 0, z: 0}
   hitStartTime: 0
   hitEndTime: 0

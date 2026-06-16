@@ -7,7 +7,7 @@
             "id": "88a31f8d-7894-4e97-b817-b0bdeb825d61",
             "actions": [
                 {
-                    "name": "Run",
+                    "name": "Dodge",
                     "type": "Button",
                     "id": "781b8c52-5446-4c57-abff-6762fc12223f",
                     "expectedControlType": "",
@@ -114,7 +114,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Run",
+                    "action": "Dodge",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

@@ -39,7 +39,7 @@ MonoBehaviour:
   moveMode: 1
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
-  moveSpeed: 1000000
+  moveSpeed: 3
   totalDistance: 6
   startSpeed: 1000000
   endSpeed: 999999
