@@ -26,14 +26,14 @@ using Serilog = Meryel.Serilog;
 //namespace BgTools.PlayerPrefsEditor
 namespace Meryel.UnityCodeAssist.Editor.Preferences
 {
-    public abstract class PreferanceStorageAccessor
+    public abstract class PreferenceStorageAccessor
     {
         protected string prefPath;
-        protected string[] cachedData = new string[0];
+        protected string[] cachedData = Array.Empty<string>();
 
         protected abstract void FetchKeysFromSystem();
 
-        protected PreferanceStorageAccessor(string pathToPrefs)
+        protected PreferenceStorageAccessor(string pathToPrefs)
         {
             prefPath = pathToPrefs;
         }
@@ -77,7 +77,7 @@ namespace Meryel.UnityCodeAssist.Editor.Preferences
 
 #if UNITY_EDITOR_WIN
 
-    public class WindowsPrefStorage : PreferanceStorageAccessor
+    public class WindowsPrefStorage : PreferenceStorageAccessor
     {
         readonly RegistryMonitor monitor;
 
@@ -94,7 +94,7 @@ namespace Meryel.UnityCodeAssist.Editor.Preferences
 
         protected override void FetchKeysFromSystem()
         {
-            cachedData = new string[0];
+            cachedData = Array.Empty<string>();
 
             using (RegistryKey rootKey = Registry.CurrentUser.OpenSubKey(prefPath))
             {

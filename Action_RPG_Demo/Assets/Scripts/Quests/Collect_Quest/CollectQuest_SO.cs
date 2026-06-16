@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class PickResult
 {
-    public int Count;
+    public int CountGet;
     public GameObject ItemGet;
 }
 [System.Serializable]

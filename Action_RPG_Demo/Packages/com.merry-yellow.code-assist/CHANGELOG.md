@@ -1,7 +1,20 @@
 List of new features, bug fixes and improvements
 
+# Version 1.4.22
+* Usability improvements for CodeLens for Visual Studio's generative AI
+
+# Version 1.4.21
+* Hotfix for exporter for Visual Studio 2026
+
+# Version 1.4.20
+* New code completions: NavMesh
+* New inline visuals: NavMesh
+* Unity 6.2-6.6 changes are reflected
+* Bugfix for inline text visuals with multiple documents in VS Code
+* Stability improvements for Visual Studio and VS Code
+
 # Version 1.4.19
-* AGENTS.md support for agentic AI, copilot-instructions.md support is deprecated
+* AGENTS.md support for AI coding agents, copilot-instructions.md support is deprecated
 * Visual Studio 2026 compatibility
 * Bugfix for completions and inline visuals for sorting layer related members
 * Can unspecify max_tokens,temperature and top_p in the gpt request options

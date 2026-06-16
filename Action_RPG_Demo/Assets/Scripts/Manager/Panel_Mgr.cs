@@ -55,7 +55,7 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
-        Debug.Log($"当前面板为{v}");
+        //Debug.Log($"当前面板为{v}");
     }
     public void FindAllPanel()
     {

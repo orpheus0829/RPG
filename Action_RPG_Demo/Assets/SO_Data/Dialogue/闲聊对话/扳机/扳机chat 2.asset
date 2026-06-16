@@ -21,4 +21,4 @@ MonoBehaviour:
   ContinueWay: 0
   nextDialogue: {fileID: 11400000, guid: c043e90df87715f46b990b8904a72a93, type: 2}
   choiceDialogues: []
-  HasNext: 0
+  HasNext: 1

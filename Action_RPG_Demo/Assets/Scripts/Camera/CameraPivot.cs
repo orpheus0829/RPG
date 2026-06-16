@@ -8,6 +8,20 @@ public class CameraPivot : MonoBehaviour
     public Transform target;
     [Header("ª∑»∆æ‡¿Î")]
     public float distance = 4f;
+    [Header("Àı∑≈")]
+    public float ZoomMax;
+    public float ZoomMin;
+    public float ZoomSmooth = 12f;
+    public float ZoomSpeed;
+    private float _targetDistance;
+    public float TargetDistance
+    {
+        get => _targetDistance;
+        set
+        {
+            _targetDistance = Mathf.Clamp(value, ZoomMin, ZoomMax);
+        }
+    }
     [Header("∏ﬂ∂»∆´“∆")]
     public float height = 1.5f;
     [Header("¡È√Ù∂»")]
@@ -31,16 +45,25 @@ public class CameraPivot : MonoBehaviour
         //Cursor.lockState = CursorLockMode.None;
         Cursor.lockState = CursorLockMode.Locked;
         rotY = transform.eulerAngles.y;
+        TargetDistance = distance;
     }
-
+    public void AddZoomDelta(float scrollDelta)
+    {
+        TargetDistance -= scrollDelta * ZoomSpeed;
+    }
     void LateUpdate()
     {
+        if (!target)
+        {
+            return;
+        }
         float mX = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
         float mY = Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;
         rotY += mX;
         rotX -= mY;
         rotX = Mathf.Clamp(rotX, minAngle, maxAngle);
         Quaternion cameraRotation = Quaternion.Euler(rotX, rotY, 0);
+        distance = Mathf.Lerp(distance, _targetDistance, ZoomSmooth * Time.deltaTime);
         Vector3 cameraDir = cameraRotation * Vector3.back;
         Vector3 cameraPos = target.position + cameraDir * distance;
         cameraPos.y += height;

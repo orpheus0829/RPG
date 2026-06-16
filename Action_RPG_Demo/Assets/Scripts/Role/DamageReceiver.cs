@@ -8,20 +8,40 @@ using UnityEngine;
 /// </summary>
 public class DamageReceiver : MonoBehaviour, IDamageable
 {
-    public float maxHp = 100f;
-    private float currentHp;
+    public EnemySO enemydata;
+    public Enemy em;
+    public PlayerSO playerdata;
+    public Player pl;
+    public float currentHp;
     [Header("ÊÜ»÷»÷ÍË")]
     public float knockForce = 5f;
+    public float SmoothLerp;
     [Header("ÊÜ»÷ÀäÈ´")]
     public float stiffDuration = 0.3f;
     public float stiffTimer;
     public bool isStiff;
-    private Rigidbody enemyRb;
+    public Rigidbody Rb;
 
     private void Awake()
     {
-        enemyRb = GetComponent<Rigidbody>();
-        currentHp = maxHp;
+        Rb = GetComponent<Rigidbody>();
+        if(this.gameObject.TryGetComponent(out Enemy enemy))
+        {
+            enemydata = enemy.enemySO;
+            em = enemy;
+            playerdata = null;
+            pl = null;
+            Rb = enemy.rb;
+        }
+        else if(this.gameObject.TryGetComponent(out Player player))
+        {
+            playerdata = player.playerSO;
+            pl = player;
+            enemydata = null;
+            em = null;
+            currentHp = playerdata.PlayerMaxHP;
+            Rb = player.rb;
+        }
     }
 
     private void Update()
@@ -41,17 +61,70 @@ public class DamageReceiver : MonoBehaviour, IDamageable
     /// </summary>
     public void TakeDamage(float damage, Vector3 attackDir)
     {
-        if (isStiff) return;
-
+        if (damage <= 0)
+        {
+            return;
+        }
+        if (isStiff)
+        {
+            return;
+        }
         currentHp -= damage;
+        CheckDead();
+        if(em && !pl)
+        {
+            if (em.IsDead)
+            {
+                return;
+            }
+            if (damage > 0)
+            {
+                em.TransitionState(EnemyStateType.Hurt);
+            }
+        }
         isStiff = true;
         stiffTimer = stiffDuration;
 
-        if (enemyRb != null)
+        if (Rb != null)
         {
-            enemyRb.velocity = Vector3.zero;
-            enemyRb.AddForce(attackDir.normalized * knockForce, ForceMode.Impulse);
+            Rb.velocity = Vector3.zero;
+            Rb.AddForce(attackDir.normalized * knockForce, ForceMode.Impulse);
         }
         Debug.Log($"{gameObject.name} ÊÜµ½ÉËº¦£º{damage}");
+    }
+    public void CheckDead()
+    {
+        if ((em && em.IsDead) || pl && pl.IsDead)
+        {
+            return;
+        }
+        if (currentHp > 0)
+        {
+            return;
+        }
+        if (pl && !em)
+        {
+            pl.IsDead = true;
+            pl.StopCurrentAction();
+            pl.Is_Action_Playing = true;
+            pl.actionControl.PlayAction(pl.actionControl.Character.Death);
+            GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
+            foreach (var i in enemys)
+            {
+                DamageTrigger trigger = i.GetComponent<Enemy>().damageTrigger;
+                if (trigger.WaitHurt.Contains(pl))
+                {
+                    trigger.WaitHurt.Remove(pl);
+                }
+            }
+        }
+        else if (em && !pl)
+        {
+            Debug.Log("¹ÖÎïËÀÍö");
+            em.damageTrigger.WaitHurt.Clear();
+            em.IsDead = true;
+            em.col.isTrigger = true;
+            em.TransitionState(EnemyStateType.Dead);
+        }
     }
 }

@@ -16,10 +16,14 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
     public Story_SO Story;
     private string StoryPath = "WorldStory";
     public MainStoryData CurStory = new MainStoryData();
+    public QuestBase_SO CurQuest;
     [Header("可对话角色缓存")]
     public List<Dialogue_Set> DialogActor = new List<Dialogue_Set>();
     public Dictionary<Dialogue_Set, string> DialogueActorToIdDict = new Dictionary<Dialogue_Set, string>();
     public Dictionary<string, Dialogue_Set> IdToDialogueActorDict = new Dictionary<string, Dialogue_Set>();
+    [Header("任务对象缓存")]
+    public List<GameObject> CurEnemys = new List<GameObject>();
+    public List<GameObject> CurDrops = new List<GameObject>();
     [Header("数据盒debug")]
     public bool StoryDebug;
     public bool Advance;
@@ -39,10 +43,12 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
     {
         Load_WorldStory(StoryPath);
         DialogActor.Clear();
+        CurEnemys.Clear();
+        CurDrops.Clear();
         GameObject[] npcs = GameObject.FindGameObjectsWithTag("NPC");
-        foreach(var i in npcs)
+        foreach (var i in npcs)
         {
-            if(i.TryGetComponent(out Dialogue_Set set))
+            if (i.TryGetComponent(out Dialogue_Set set))
             {
                 DialogActor.Add(set);
             }
@@ -63,6 +69,18 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
                 IdToDialogueActorDict.Add(curActorId, actor);
             }
         }
+        //CurQuest = Story.Chapters[CurStory.ChapterID].Episodes[CurStory.EpisodeID].Quests[CurStory.QuestID - 1];
+        Refresh_StoryProgress();
+    }
+    public void OnEnable()
+    {
+        Game_Event.instance.ModifyEnemyDamage += ModifyD;
+        Game_Event.instance.ModifyEnemyMaxHP += ModifyH;
+    }
+    public void OnDisable()
+    {
+        Game_Event.instance.ModifyEnemyDamage -= ModifyD;
+        Game_Event.instance.ModifyEnemyMaxHP -= ModifyH;
     }
     public void Update()
     {
@@ -115,10 +133,11 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
             Init_Story();
             Debug.Log("找不到剧情存档数据，新建立剧情节点");
         }
-        Refresh_StoryProgress();
+        //Refresh_StoryProgress();
     }
     public void StoryAdvance()
     {
+        Debug.Log("storyadvance");
         bool isLastChapter = Story.Chapters.Find(t => t.Chapter_ID == CurStory.ChapterID + 1) == null;
         if (isLastChapter)
         {
@@ -148,6 +167,7 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
     }
     public void QuestAdvance()
     {
+        Debug.Log("questadvance");
         Chapter_SO curChap = Story.Chapters.Find(c => c.Chapter_ID == CurStory.ChapterID);
         if (curChap == null)
         {
@@ -169,6 +189,7 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
         else
         {
             CurStory.QuestID++;
+            Debug.Log("增加任务");
             Save_WorldStory(StoryPath);
         }
 
@@ -190,11 +211,30 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
         {
             return null;
         }
+        //Debug.Log($"{GetcurEp.Quests[CurStory.QuestID]}");
         return GetcurEp.Quests[CurStory.QuestID];
     }
     public void Refresh_StoryProgress()
     {
+        //foreach (var oldEnemy in CurEnemys)
+        //{
+        //    if (oldEnemy != null)
+        //    {
+        //        ObjectPoolMgr.instance.PushObj(oldEnemy);
+        //    }
+        //}
+        //CurEnemys.Clear();
+        //foreach (var oldDrop in CurDrops)
+        //{
+        //    if (oldDrop != null)
+        //    {
+        //        ObjectPoolMgr.instance.PushObj(oldDrop);
+        //    }
+        //}
+        //CurDrops.Clear();
+        //Debug.Log($"{CurStory.ChapterID},{CurStory.EpisodeID},{CurStory.QuestID}");
         QuestBase_SO curQuest = GetCurrentQuest();
+        CurQuest = curQuest;
         if (curQuest == null)
         {
             return;
@@ -212,10 +252,71 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
             Debug.Log($"找到对话角色{targetActor.gameObject.name},对话SO为{curDialogueQuest.Single_Dialogue}");
             // 下方写逻辑赋值触发对话UI等
         }
-        else
+        else if (curQuest is FightQuest_SO curFightQuest)
         {
-
+            foreach (var i in curFightQuest.Quest_Enemys)
+            {
+                //GameObject e = Instantiate(i.Enemy, i.Location, Quaternion.identity);
+                GameObject e = ObjectPoolMgr.instance.GetObj(i.Enemy, i.Location);
+                if (e.TryGetComponent(out Enemy enemyprefab))
+                {
+                    enemyprefab.IsQuest = true;
+                    Game_Event.instance.ModifyDamage(i.Damage, enemyprefab);
+                    Game_Event.instance.ModifyHP(i.MaxHp, enemyprefab);
+                }
+                CurEnemys.Add(e);
+                //设置特殊血量啥的,待施工
+            }
         }
+        else if (curQuest is CollectQuest_SO curCollectQuest)
+        {
+            foreach (var i in curCollectQuest.single_QuestItems)
+            {
+                GameObject d = ObjectPoolMgr.instance.GetObj(i.QuestItem, i.Loaction);
+                if(d.TryGetComponent(out Drop_gameObject dropprefab))
+                {
+                    dropprefab.IsQuestItem = true;
+                    dropprefab.bindQuestItem = i;
+                }
+                CurDrops.Add(d);
+            }
+        }
+    }
+    public void CheckAllEnemyDead()
+    {
+        if (CurQuest is FightQuest_SO)
+        {
+            if (CurEnemys.Count <= 0)
+            {
+                QuestAdvance();
+            }
+        }
+    }
+    public void CheckAllDrop()
+    {
+        if (CurQuest is CollectQuest_SO)
+        {
+            if (CurDrops.Count <= 0)
+            {
+                QuestAdvance();
+            }
+        }
+    }
+    public void ModifyD(float property, Enemy e)
+    {
+        if (property == 0)
+        {
+            return;
+        }
+        e.damage = property;
+    }
+    public void ModifyH(float property, Enemy e)
+    {
+        if (property == 0)
+        {
+            return;
+        }
+        e.damageReceiver.currentHp = property;
     }
     public void Refresh_StoryUI()
     {

@@ -58,8 +58,8 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
     public bool canInterrupt;
 
     [Header("攻击范围盒调试用")]
-    private SphereCollider _sphereCollider;
-    private BoxCollider _boxCollider;
+    public SphereCollider _sphereCollider;
+    public BoxCollider _boxCollider;
     public float Hit_Force = 0;
 
     public Vector3 debugBoxOffset;
@@ -75,11 +75,11 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
     }
     public void Update()
     {
-        if (currentAction == Character.Walk && player.InputMove == Vector3.zero)
-        {
-            player.StopCurrentAction();
-            PlayAction(Character.WalkEnd);
-        }
+        //if (currentAction == Character.Walk && player.InputMove == Vector3.zero)
+        //{
+        //    player.StopCurrentAction();
+        //    PlayAction(Character.WalkEnd);
+        //}
     }
     public void FixedUpdate()
     {
@@ -150,7 +150,7 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
         {
             player.isWalking = false;
         }
-        //Debug.Log("切换为" + action.actionName);
+        Debug.Log("切换为" + action.actionName);
         if (currentAction == Character.Walk)
         {
             currentAction = Character.Walk;
@@ -171,8 +171,13 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
         }
         if (currentAction.nextAction != null)
         {
-            Debug.Log("转至" + currentAction.nextAction);
+            //Debug.Log("转至" + currentAction.nextAction);
             PlayAction(currentAction.nextAction);
+            return;
+        }
+        if (player.InputMove.magnitude > 0.01f)
+        {
+            PlayAction(Character.Walk);
         }
         else
         {
@@ -300,21 +305,24 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
         return Instantiate(prefab, pos, rot);
     }
     #endregion
-
     #region 相机
     public CameraMotion GetCameraMotion()
     {
         return mainCamera.GetComponent<CameraMotion>();
     }
     #endregion
-
     private void OnTriggerEnter(Collider other)
     {
+        if (other.tag != "Enemy")
+        {
+            return;
+        }
         if (other.TryGetComponent(out IDamageable target))
         {
             if(other.TryGetComponent(out DamageReceiver receiver))
             {
                 receiver.knockForce = Hit_Force != 0 ? Hit_Force : receiver.knockForce;
+                //receiver.em.TransitionState(EnemyStateType.Hurt);
             }
             target.TakeDamage(currentAction.damageValue, transform.forward);
             Hit_Force = 0;

@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
     public ActionControl actionControl;
     public PlayerInput playerInput;
     public bool Is_Action_Playing;
+    public float AFKTime;
+    public float CurAFKCount;
 
     [Header("“∆∂Ø")]
     public Vector3 InputMove;
@@ -48,6 +50,10 @@ public class Player : MonoBehaviour
     public bool IsAttacking;
     public LayerMask EnemyLayer;
 
+    [Header("À¿Õˆ")]
+    public bool IsDead;
+    public float DeadTime;
+
     [Header("Ãÿ ‚ºº")]
     public float Skill_PowerPool = 0;
     public float MaxPower = 100;
@@ -72,6 +78,9 @@ public class Player : MonoBehaviour
     public Animator am;
     public CapsuleCollider col;
     public Interact_Trigger Interact_Trigger;
+    public DamageReceiver damageReceiver;
+    public Mouse mouse;
+    public CameraPivot cameraPivot;
 
     public void Awake()
     {
@@ -79,9 +88,14 @@ public class Player : MonoBehaviour
         am = GetComponent<Animator>();
         col = GetComponent<CapsuleCollider>();
         playerInput = GetComponent<PlayerInput>();
+        cameraPivot = GameObject.FindGameObjectWithTag("Camera_Pivot").GetComponent<CameraPivot>();
         Speed = playerSO.WalkSpeed;
         bag = GetComponent<Player_Bag>();
         Interact_Trigger = GetComponentInChildren<Interact_Trigger>();
+        damageReceiver = GetComponent<DamageReceiver>();
+        DeadTime = playerSO.Deadline;
+        AFKTime = playerSO.AFKInterval;
+        mouse = Mouse.current;
         rb.useGravity = true;
 
         if (PlayerPrefs.GetInt("Money", 0) <= 0)
@@ -118,12 +132,54 @@ public class Player : MonoBehaviour
         {
             InputMove = Vector3.zero;
         }
+        if (actionControl.canCombo)
+        {
+            AttackDectetcion();
+        }
+        if (InputMove.magnitude < 0.1f)
+        {
+            if (actionControl.currentAction == actionControl.Character.WalkStart
+                || actionControl.currentAction == actionControl.Character.Walk)
+            {
+                isWalking = false;
+                isStopping = true;
+                stopMoveLockTime = playerSO.LockDuration;
+                StopCurrentAction();
+                actionControl.PlayAction(actionControl.Character.WalkEnd);
+            }
+        }
+        if (mouse != null && !Panel_Mgr.instance.IsPanelOpen)
+        {
+            Vector2 mouseScroll = mouse.scroll.ReadValue();
+            float verticalScroll = mouseScroll.y;
+            if (Mathf.Abs(verticalScroll) > 0.01f)
+            {
+                cameraPivot.AddZoomDelta(verticalScroll);
+            }
+        }
     }
 
     public void FixedUpdate()
     {
         Move_Follow_Camera();
-
+        if (actionControl.currentAction != actionControl.Character.Idle
+    /*&& actionControl.currentAction != actionControl.Character.AfkIdle*/)
+        {
+            CurAFKCount = 0;
+        }
+        if(actionControl.currentAction == actionControl.Character.Idle)
+        {
+            if (CurAFKCount < AFKTime)
+            {
+                CurAFKCount += Time.fixedDeltaTime;
+            }
+            else
+            {
+                Is_Action_Playing = true;
+                StopCurrentAction();
+                actionControl.PlayAction(actionControl.Character.AfkIdle);
+            }
+        }
         if (stopMoveLockTime > 0)
         {
             stopMoveLockTime -= Time.fixedDeltaTime;
@@ -144,6 +200,14 @@ public class Player : MonoBehaviour
             Vector3 HorizontalVelocity = moveDir * Speed;
             rb.velocity = new Vector3(HorizontalVelocity.x, VerticalVelocity, HorizontalVelocity.z);
         }
+        if (IsDead)
+        {
+            DeadTime -= Time.fixedDeltaTime;
+            if (DeadTime <= 0)
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 
     public void StopCurrentAction()
@@ -153,7 +217,6 @@ public class Player : MonoBehaviour
         {
             actionControl.timelineDirector.Stop();
         }
-        //rb.velocity = Vector3.zero;
     }
 
     public void Back_To_Move()
@@ -189,10 +252,12 @@ public class Player : MonoBehaviour
         }
         else if (!Is_Action_Playing && !isStopping)
         {
-            actionControl.PlayAction(actionControl.Character.Idle);
+            if (actionControl.currentAction != actionControl.Character.Idle && actionControl.currentAction != actionControl.Character.AfkIdle)
+            {
+                actionControl.PlayAction(actionControl.Character.Idle);
+            }
         }
     }
-
     public void OnMove(InputValue value)
     {
         try
@@ -218,13 +283,13 @@ public class Player : MonoBehaviour
         catch { }
     }
 
-    public void OnRun(InputValue value)
+    public void OnDodge(InputValue value)
     {
         if (value.isPressed)
         {
             StopCurrentAction();
             Is_Action_Playing = true;
-            actionControl.PlayAction(actionControl.Character.Run);
+            actionControl.PlayAction(actionControl.Character.Dodge);
         }
     }
     public void OnBackPack(InputValue value)
@@ -233,6 +298,7 @@ public class Player : MonoBehaviour
         {
             if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.BagPanel))
             {
+                TimeMgr.instance.PauseGame();
                 Cursor.lockState = CursorLockMode.None;
                 Panel_Mgr.instance.OpenPanel(Panel_Mgr.instance.BagPanel);
                 Introduction_Mrg.instance.gameObject.SetActive(false);
@@ -242,10 +308,10 @@ public class Player : MonoBehaviour
             }
             else
             {
+                TimeMgr.instance.UnPauseGame();
                 Cursor.lockState = CursorLockMode.Locked;
                 bag.Save_Bag("Bag_Data");
                 bag.ReClean_Bag_Display();
-                //Bag_Panel.SetActive(false);
                 Panel_Mgr.instance.HideAllPanel();
             }
         }
@@ -265,12 +331,14 @@ public class Player : MonoBehaviour
         {
             if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.CraftPanel))
             {
+                TimeMgr.instance.PauseGame();
                 Cursor.lockState = CursorLockMode.None;
                 Panel_Mgr.instance.OpenPanel(Panel_Mgr.instance.CraftPanel);
                 Game_Event.instance.Init_Crafting();
             }
             else
             {
+                TimeMgr.instance.UnPauseGame();
                 Cursor.lockState = CursorLockMode.Locked;
                 Panel_Mgr.instance.HideAllPanel();
             }
@@ -301,16 +369,17 @@ public class Player : MonoBehaviour
         {
             if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.TraderPanel))
             {
+                TimeMgr.instance.PauseGame();
                 Cursor.lockState = CursorLockMode.None;
                 Panel_Mgr.instance.OpenTraderBuyPanel();
 
                 Game_Event.instance.Refresh_Buy_List();
                 Game_Event.instance.Refresh_Sell_List();
                 Game_Event.instance.Init_Store_Panel(true);
-                //Game_Event.instance.Current_Trader.Refresh_B();
             }
             else
             {
+                TimeMgr.instance.UnPauseGame();
                 Cursor.lockState = CursorLockMode.Locked;
                 Panel_Mgr.instance.HideAllPanel();
             }
@@ -332,9 +401,17 @@ public class Player : MonoBehaviour
             }
             else
             {
+                if (dialogueWriter.IsTyping || dialogueWriter.CurDialogue.ContinueWay != WayToNextDialogue.NoNext)
+                {
+                    return;
+                }
                 Cursor.lockState = CursorLockMode.Locked;
                 Panel_Mgr.instance.HideAllPanel();
                 Interact_Trigger.ResetButton();
+                if (dialogueWriter.typ != null)
+                {
+                    StopCoroutine(dialogueWriter.typ);
+                }
             }
         }
     }
@@ -544,7 +621,51 @@ public class Player : MonoBehaviour
         InputMove = IsBlock ? Vector3.zero : InputMove;
         rb.velocity = IsBlock ? Vector3.zero : rb.velocity;
     }
-
+    public void GetHurt(float damage,Vector3 dir)
+    {
+        if (IsDead)
+        {
+            return;
+        }
+        StopCurrentAction();
+        Is_Action_Playing = true;
+        actionControl.PlayAction(actionControl.Character.GetHit);
+        StartCoroutine(GetFly(dir));
+        damageReceiver.TakeDamage(damage, dir);
+    }
+    public IEnumerator GetFly(Vector3 dir)
+    {
+        Vector3 start = transform.position;
+        Vector3 end = start + dir * damageReceiver.knockForce;
+        float t = 0;
+        bool hitwall = false;
+        while (t < 1)
+        {
+            RaycastHit[] hits = Physics.RaycastAll(rb.position - dir * 0.4f, dir, 0.8f);
+            foreach (var hit in hits)
+            {
+                GameObject hitObj = hit.collider.gameObject;
+                if (hitObj == gameObject || hitObj.CompareTag("Player") || hitObj.CompareTag("Enemy"))
+                {
+                    continue;
+                }
+                hitwall = true;
+                break;
+            }
+            if (hitwall)
+            {
+                break;
+            }
+            t += damageReceiver.SmoothLerp + Time.fixedDeltaTime;
+            Vector3 pos = Vector3.Lerp(start, end, t);
+            rb.MovePosition(pos);
+            yield return new WaitForFixedUpdate();
+        }
+        if (!hitwall)
+        {
+            rb.MovePosition(end);
+        }
+    }
     public void AttackDectetcion()
     {
         Vector3 LookDir;
@@ -555,16 +676,16 @@ public class Player : MonoBehaviour
         Collider[] enemies = Physics.OverlapSphere(transform.position, playerSO.DetectionRadius, EnemyLayer);
         if (enemies.Length > 0)
         {
-            Transform cam = Camera.main.transform;
-            Vector3 camForward = cam.forward;
-            camForward.y = 0;
-            camForward.Normalize();
+            //Transform cam = Camera.main.transform;
+            //Vector3 camForward = cam.forward;
+            //camForward.y = 0;
+            //camForward.Normalize();
             mindistance = Mathf.Infinity;
             for (int i = 0; i < enemies.Length; i++)
             {
                 bool BlockByObstacle = Physics.Linecast(transform.position, enemies[i].transform.position, mask);
-                bool AngleTooLarge = Vector3.Angle(camForward, enemies[i].transform.position - transform.position) > 90;
-                if (BlockByObstacle || AngleTooLarge)
+                //bool AngleTooLarge = Vector3.Angle(camForward, enemies[i].transform.position - transform.position) > 90;
+                if (BlockByObstacle/* || AngleTooLarge*/)
                 {
                     continue;
                 }

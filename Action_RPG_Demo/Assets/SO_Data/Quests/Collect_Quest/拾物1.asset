@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Quest_Title: "\u52A9\u4EBA\u4E3A\u4E50"
   single_QuestItems:
-  - Loaction: {x: 0, y: 0, z: 0}
-    QuestItem: {fileID: 0}
+  - Loaction: {x: 4.709, y: -0.947, z: -0.731}
+    QuestItem: {fileID: 4327948736354952195, guid: 64d161106ea870748a69c5f73fb87a63, type: 3}
     ItemGets:
-    - Count: 0
-      ItemGet: {fileID: 0}
+    - CountGet: 1
+      ItemGet: {fileID: 4327948736354952195, guid: 64d161106ea870748a69c5f73fb87a63, type: 3}
+    - CountGet: 1
+      ItemGet: {fileID: 6718475951256757655, guid: 6e4fc1fc163fd984d8711a4db981df74, type: 3}

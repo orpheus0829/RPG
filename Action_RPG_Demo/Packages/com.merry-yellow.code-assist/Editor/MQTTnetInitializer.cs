@@ -64,7 +64,7 @@ namespace Meryel.UnityCodeAssist.Editor
         {
             if (!IsMainUnityEditorProcess())
             {
-                // if try to creaate NetMQ, will recieve AddressAlreadyInUseException during binding
+                // if try to create NetMQ, will recieve AddressAlreadyInUseException during binding
                 Serilog.Log.Debug("MQTTnet won't initialize on secondary processes");
                 return;
             }

@@ -17,74 +17,29 @@ using Serilog = Meryel.Serilog;
 namespace Meryel.UnityCodeAssist.Editor.Input
 {
 
-    public class InputManagerMonitor
+    public class InputManagerMonitor : Monitors.FileMonitor
     {
         private static readonly Lazy<InputManagerMonitor> _instance = new Lazy<InputManagerMonitor>(() => new InputManagerMonitor());
         public static InputManagerMonitor Instance => _instance.Value;
 
         //UnityInputManager inputManager;
-        readonly string inputManagerFilePath;
-        DateTime previousTagManagerLastWrite;
+
 
         public InputManagerMonitor()
+            : base(CommonTools.GetInputManagerFilePath())
         {
-            EditorApplication.update += Update;
-            inputManagerFilePath = CommonTools.GetInputManagerFilePath();
-
-            if (!System.IO.File.Exists(inputManagerFilePath))
-            {
-                Serilog.Log.Error("InputManager file not found at {location}", inputManagerFilePath);
-                return;
-            }
-
-            try
-            {
-                previousTagManagerLastWrite = System.IO.File.GetLastWriteTime(inputManagerFilePath);
-            }
-            catch (Exception ex)
-            {
-                Serilog.Log.Debug(ex, "Exception at {Location}", nameof(System.IO.File.GetLastWriteTime));
-            }
         }
 
-        void Update()
-        {
 #if !ENABLE_LEGACY_INPUT_MANAGER
-            return;
+        protected override bool IsDisabled => true;
 #endif
 
-#pragma warning disable CS0162
-#pragma warning disable IDE0035
 
-            var currentInputManagerLastWrite = previousTagManagerLastWrite;
-            try
-            {
-                if (System.IO.File.Exists(inputManagerFilePath))
-                    currentInputManagerLastWrite = System.IO.File.GetLastWriteTime(inputManagerFilePath);
-            }
-            catch (Exception ex)
-            {
-                Serilog.Log.Debug(ex, "Exception at {Location}", nameof(System.IO.File.GetLastWriteTime));
-            }
-            if (currentInputManagerLastWrite != previousTagManagerLastWrite)
-            {
-                previousTagManagerLastWrite = currentInputManagerLastWrite;
-                Bump();
-            }
-
-#pragma warning restore CS0162
-#pragma warning restore IDE0035
-        }
-
-        public void Bump()
+        protected override void BumpAux()
         {
-#if !ENABLE_LEGACY_INPUT_MANAGER
-            return;
-#endif
-#pragma warning disable CS0162
-#pragma warning disable IDE0035
+            Serilog.Log.Debug("InputMonitor {Event}", nameof(BumpAux));
 
-            Serilog.Log.Debug("InputMonitor {Event}", nameof(Bump));
+            var inputManagerFilePath = CommonTools.GetInputManagerFilePath();
 
             if (!System.IO.File.Exists(inputManagerFilePath))
             {
@@ -95,10 +50,6 @@ namespace Meryel.UnityCodeAssist.Editor.Input
             var inputManager = new UnityInputManager();
             inputManager.ReadFromPath(inputManagerFilePath);
             inputManager.SendData();
-
-
-#pragma warning restore CS0162
-#pragma warning restore IDE0035
         }
 
     }

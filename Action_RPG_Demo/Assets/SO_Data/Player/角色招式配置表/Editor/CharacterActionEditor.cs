@@ -15,7 +15,7 @@ public class CharacterActionEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("WalkStart"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Walk"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("WalkEnd"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("Run"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("Dodge"));
         EditorGUILayout.Space(8);
 
         SerializedProperty atkList = serializedObject.FindProperty("AtkList");
@@ -75,6 +75,7 @@ public class CharacterActionEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("PreVault"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("AftVault"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Slide"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("GetHit"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Death"));
 
         serializedObject.ApplyModifiedProperties();

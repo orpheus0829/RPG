@@ -40,6 +40,9 @@ public class Game_Event : Base_mgr<Game_Event>
     public event Action PressChoice1;
     public event Action<Dialogue_SO> PressChoice2;
     public event Action DirectNextDialogue;
+    //任务怪额外修改数据
+    public event Action<float,Enemy> ModifyEnemyDamage;
+    public event Action<float,Enemy> ModifyEnemyMaxHP;
     protected override void Awake()
     {
         base.Awake();
@@ -144,6 +147,16 @@ public class Game_Event : Base_mgr<Game_Event>
     public void NextDialogue()
     {
         DirectNextDialogue?.Invoke();
+    }
+    #endregion
+    #region 修改任务怪物数值
+    public void ModifyDamage(float property,Enemy enemy)
+    {
+        ModifyEnemyDamage?.Invoke(property, enemy);
+    }
+    public void ModifyHP(float property, Enemy enemy)
+    {
+        ModifyEnemyMaxHP.Invoke(property, enemy);
     }
     #endregion
 }
