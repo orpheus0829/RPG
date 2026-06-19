@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RedDiamond
   m_EditorClassIdentifier: 
   Display_In_Backpacks: {fileID: 21300000, guid: 098d7de52aa157847b2a2ec334629c82, type: 3}
-  Drop: {fileID: 3578220384266054800, guid: 550c0c7d46296ed46b3144ab4a4c9024, type: 3}
+  Drop: {fileID: 5727843108200075940, guid: 550c0c7d46296ed46b3144ab4a4c9024, type: 3}
   item_name: "\u7EA2\u5B9D\u77F3"
   item_id: 3
   Height: 2

@@ -14,10 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Idle: {fileID: 11400000, guid: 81e8fad9bf1509a4f9b2b25eb2f24ea8, type: 2}
   AfkIdle: {fileID: 11400000, guid: 9d6740d0598ed044faadd986f5307669, type: 2}
+  BornSet: {fileID: 11400000, guid: 2a7ba6e134110c8418ebad9fdff4e242, type: 2}
+  Born: {fileID: 11400000, guid: feb3b523fc30d4c49b9afb6a49c6c801, type: 2}
   WalkStart: {fileID: 11400000, guid: f069ec03b13df834f87a5d8909b00d9f, type: 2}
   Walk: {fileID: 11400000, guid: 566ce85efcff818408d149838a6c3482, type: 2}
   WalkEnd: {fileID: 11400000, guid: 2fd33e3f00313784893ad793fffa9947, type: 2}
   Dodge: {fileID: 11400000, guid: f93144c8c5dc2d44d9a23849c34f49a3, type: 2}
+  RunDodge: {fileID: 11400000, guid: 8517ba961e3528240a8c80e79f5af4a6, type: 2}
+  Run: {fileID: 11400000, guid: d256acb0028c6724eb0f4fcfc1eb72cd, type: 2}
+  RunEnd: {fileID: 11400000, guid: cd9e700136b854148b59f179b1288467, type: 2}
   AtkList:
   - ATK: {fileID: 11400000, guid: a33569c2c6b17f9439c3c5cdaafd5607, type: 2}
     ChargeNor: 2

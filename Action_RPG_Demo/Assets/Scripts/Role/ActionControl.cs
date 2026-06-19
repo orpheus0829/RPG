@@ -66,6 +66,9 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
     public float debugBoxRadius;
     public bool debugDrawHitBox;
 
+    [HideInInspector] public float CurrentHitDamage;
+    [HideInInspector] public HitBoxShape CurrentHitShape;
+    [HideInInspector] public Vector3 CurrentHitBoxSize;
     private void Awake()
     {
         player = GetComponent<Player>();
@@ -171,18 +174,34 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
         }
         if (currentAction.nextAction != null)
         {
-            //Debug.Log("转至" + currentAction.nextAction);
             PlayAction(currentAction.nextAction);
             return;
         }
-        if (player.InputMove.magnitude > 0.01f)
+        if (player.IsHoldingMove)
         {
-            PlayAction(Character.Walk);
+            if (currentAction == Character.RunDodge)
+            {
+                player.InputMove = player.moveaction.ReadValue<Vector3>();
+                player.isStopping = false;
+                player.isWalking = true;
+                PlayAction(Character.Run);
+            }
+            else
+            {
+                player.InputMove = player.moveaction.ReadValue<Vector3>();
+                player.isStopping = false;
+                player.isWalking = true;
+                PlayAction(Character.Walk);
+            }
         }
         else
         {
-            Debug.Log("默认转至待机");
+            player.InputMove = Vector3.zero;
+            player.rb.velocity = Vector3.zero;
+            player.isWalking = false;
+            player.isStopping = true;
             PlayAction(Character.Idle);
+            Debug.Log("默认转至待机");
         }
     }
 
@@ -225,7 +244,7 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
         }
         CloseHitBox();
 
-        if (currentAction.hitBoxShape == HitBoxShape.Sphere)
+        if (CurrentHitShape == HitBoxShape.Sphere)
         {
             if (_sphereCollider == null)
             {
@@ -249,6 +268,7 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
         }
 
         debugBoxOffset = offset;
+        debugBoxRadius = radius;
         debugDrawHitBox = true;
     }
     public void CloseHitBox()
@@ -272,13 +292,13 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
 
         Gizmos.color = Color.red;
         Vector3 worldPos = transform.TransformPoint(debugBoxOffset);
-        if (currentAction.hitBoxShape == HitBoxShape.Sphere)
+        if (CurrentHitShape == HitBoxShape.Sphere)
         {
             Gizmos.DrawWireSphere(worldPos, debugBoxRadius);
         }
         else
         {
-            Gizmos.DrawWireCube(worldPos, currentAction.hitBoxSize);
+            Gizmos.DrawWireCube(worldPos, CurrentHitBoxSize);
         }
     }
     #endregion
@@ -324,7 +344,7 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
                 receiver.knockForce = Hit_Force != 0 ? Hit_Force : receiver.knockForce;
                 //receiver.em.TransitionState(EnemyStateType.Hurt);
             }
-            target.TakeDamage(currentAction.damageValue, transform.forward);
+            target.TakeDamage(CurrentHitDamage, transform.forward);
             Hit_Force = 0;
         }
     }

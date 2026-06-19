@@ -19,11 +19,18 @@ public class CharacterActionSO : ScriptableObject
     [Header("待机")]
     public ActionSO Idle;
     public ActionSO AfkIdle;
+    public ActionSO BornSet;
+    public ActionSO Born;
     [Header("移动")]
     public ActionSO WalkStart;
     public ActionSO Walk;
     public ActionSO WalkEnd;
     public ActionSO Dodge;
+    [Header("疾跑")]
+    public ActionSO RunDodge;
+    public ActionSO Run;
+    public ActionSO RunEnd;
+
     [Header("攻击")]
     public List<Single_ATK> AtkList = new List<Single_ATK>();
     [Header("特殊技")]

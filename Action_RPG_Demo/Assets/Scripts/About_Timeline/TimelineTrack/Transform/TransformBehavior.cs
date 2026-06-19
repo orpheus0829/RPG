@@ -14,6 +14,7 @@ public class TransformBehaviour : PlayableBehaviour
     private bool _isBlocked;
     private Vector3 _climbFinalPosition;
 
+    private bool _hasTeleported;
     public float checkRadius = 0.5f;
     public float groundOffset = 0.5f;
 
@@ -28,6 +29,7 @@ public class TransformBehaviour : PlayableBehaviour
         _climbFinalPosition = Vector3.zero;
         _curPos = Vector3.zero;
         _moveDir = Vector3.zero;
+        _hasTeleported = false;
     }
 
     public override void OnBehaviourPause(Playable playable, FrameData info)
@@ -43,7 +45,7 @@ public class TransformBehaviour : PlayableBehaviour
     }
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {
-        if (_isBlocked)
+        if (_isBlocked && !(clip.moveMode == MoveMode.ClimbOver && clip.climbStage == ClimbStage.AfterClimb))
         {
             return;
         }
@@ -103,25 +105,47 @@ public class TransformBehaviour : PlayableBehaviour
             _inited = true;
         }
 
+        if (clip.moveMode == MoveMode.FixedEndPos)
+        {
+            if (!_hasTeleported)
+            {
+                Vector3 targetTeleportPos = clip.endPos;
+                if (_rb != null)
+                {
+                    _rb.position = targetTeleportPos;
+                    _rb.velocity = Vector3.zero;
+                    _rb.angularVelocity = Vector3.zero;
+                }
+                trans.position = targetTeleportPos;
+                _curPos = targetTeleportPos;
+                _hasTeleported = true;
+            }
+            trans.rotation = Rot;
+            return;
+        }
+
         float frameSpeed = GetCurrentFrameSpeed(curTime, duration);
         Vector3 frameDelta = _moveDir * frameSpeed * deltaTime;
         Vector3 targetNextPos = _curPos + frameDelta;
-        if (clip.moveMode != MoveMode.ClimbOver)
+
+        bool shouldCheckCollision = clip.moveMode != MoveMode.ClimbOver || clip.climbStage == ClimbStage.BeforeClimb;
+        if (shouldCheckCollision)
         {
             float castR = _player.col.radius;
             Vector3 rayStart = _curPos + Vector3.up * castR;
             Vector3 flatDir = frameDelta.normalized;
             float rayDist = frameDelta.magnitude;
-            if (rayDist > 0.001f && Physics.SphereCast( rayStart, checkRadius, flatDir, out RaycastHit hit, rayDist, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+            if (rayDist > 0.001f && Physics.SphereCast(rayStart, checkRadius, flatDir, out RaycastHit hit, rayDist, Physics.AllLayers, QueryTriggerInteraction.Ignore))
             {
                 targetNextPos = hit.point - flatDir * 0.01f;
                 _isBlocked = true;
             }
         }
-        else
+        if (clip.moveMode == MoveMode.ClimbOver)
         {
             _climbFinalPosition = targetNextPos;
         }
+
         _curPos = targetNextPos;
         if (_rb != null)
         {
@@ -151,11 +175,7 @@ public class TransformBehaviour : PlayableBehaviour
                 }
 
             case MoveMode.FixedEndPos:
-                Vector3 remainVec = clip.endPos - _curPos;
-                float remainDist = remainVec.magnitude;
-                float remainTime = duration - curTime;
-                if (remainTime < 0.001f) return 0;
-                return remainDist / remainTime;
+                return 0;
 
             default:
                 return clip.moveSpeed;
@@ -164,19 +184,9 @@ public class TransformBehaviour : PlayableBehaviour
 
     private void ReadParams(out MoveMode mode, out Vector3 dir, out Vector3 endPos, out float dist)
     {
-        if (clip.data != null)
-        {
-            mode = clip.data.moveMode;
-            dir = clip.data.direction;
-            endPos = clip.data.endPos;
-            dist = clip.data.totalDistance;
-        }
-        else
-        {
-            mode = clip.moveMode;
-            dir = clip.direction;
-            endPos = clip.endPos;
-            dist = clip.totalDistance;
-        }
+        mode = clip.moveMode;
+        dir = clip.direction;
+        endPos = clip.endPos;
+        dist = clip.totalDistance;
     }
 }

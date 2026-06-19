@@ -10,12 +10,19 @@ public class CharacterActionEditor : Editor
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Idle"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("AfkIdle"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("BornSet"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("Born"));
         EditorGUILayout.Space(8);
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("WalkStart"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Walk"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("WalkEnd"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Dodge"));
+        EditorGUILayout.Space(8);
+
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("RunDodge"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("Run"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("RunEnd"));
         EditorGUILayout.Space(8);
 
         SerializedProperty atkList = serializedObject.FindProperty("AtkList");

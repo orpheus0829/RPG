@@ -4,17 +4,20 @@ using UnityEngine;
 using UnityEngine.Playables;
 
 /// <summary>
-/// 音效特效触发逻辑
+/// 音效特效触发逻辑（修复残留循环播放）
 /// </summary>
 public class EffectAudioBehaviour : PlayableBehaviour
 {
     public EffectAudioClip clip;
-    //public AudioClip sound;
-    //public GameObject effectPrefab;
-    //public Vector3 spawnOffset;
     private bool fired;
-
     public List<GameObject> VWait_for_Des = new List<GameObject>();
+    private AudioSource _cacheAudioSource;
+
+    public override void OnGraphStart(Playable playable)
+    {
+        fired = false;
+        VWait_for_Des.Clear();
+    }
 
     public override void OnBehaviourPlay(Playable playable, FrameData info)
     {
@@ -32,43 +35,55 @@ public class EffectAudioBehaviour : PlayableBehaviour
         {
             return;
         }
+        _cacheAudioSource = ctrl.audioSource;
 
-        AudioClip snd = null;
-        GameObject fx = null;
-        Vector3 offset = Vector3.zero;
+        AudioClip snd = clip.sound;
+        GameObject fx = clip.effectPrefab;
+        Vector3 offset = clip.spawnOffset;
+        Quaternion localRot = Quaternion.Euler(clip.spawnEuler);
+        Vector3 localScl = clip.spawnScale;
 
-        if (clip.data != null)
-        {
-            snd = clip.data.soundClip;
-            fx = clip.data.effectPrefab;
-            offset = clip.data.effectSpawnOffset;
-        }
-        else
-        {
-            snd = clip.sound;
-            fx = clip.effectPrefab;
-            offset = clip.spawnOffset;
-        }
         Vector3 worldPos = ctrl.transform.TransformPoint(offset);
-        if (snd != null)
+        Quaternion worldRot = ctrl.transform.rotation * localRot;
+        if (snd != null && _cacheAudioSource != null)
         {
-            ctrl.PlaySound(snd);
+            _cacheAudioSource.clip = snd;
+            _cacheAudioSource.Play();
         }
+
         if (fx != null)
         {
-            GameObject vfx = ctrl.SpawnEffect(fx, worldPos, ctrl.transform.rotation);
+            GameObject vfx = ctrl.SpawnEffect(fx, worldPos, worldRot);
+            vfx.transform.localScale = localScl;
             VWait_for_Des.Add(vfx);
         }
         fired = true;
     }
     public override void OnBehaviourPause(Playable playable, FrameData info)
     {
-        foreach (var i in VWait_for_Des)
+        if (_cacheAudioSource != null)
         {
-            if (i != null)
-            {
-                GameObject.Destroy(i);
-            }
+            _cacheAudioSource.Stop();
+        }
+        foreach (var obj in VWait_for_Des)
+        {
+            if (obj != null)
+                GameObject.Destroy(obj);
+        }
+        VWait_for_Des.Clear();
+        fired = false;
+    }
+    public override void OnGraphStop(Playable playable)
+    {
+        if (_cacheAudioSource != null)
+        {
+            _cacheAudioSource.Stop();
+        }
+
+        foreach (var obj in VWait_for_Des)
+        {
+            if (obj != null)
+                GameObject.Destroy(obj);
         }
         VWait_for_Des.Clear();
     }

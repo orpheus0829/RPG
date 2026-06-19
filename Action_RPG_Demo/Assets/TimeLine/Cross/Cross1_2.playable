@@ -72,7 +72,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c38f6fa1940124db1ab7f6fe7268d1, type: 3}
   m_Name: Signal Emitter
   m_EditorClassIdentifier: 
-  m_Time: 0.38333333333333336
+  m_Time: 0.5833333333333334
   m_Retroactive: 0
   m_EmitOnce: 0
   m_Asset: {fileID: 11400000, guid: 058d65e9abeed9c479ecff5838782e95, type: 2}
@@ -320,7 +320,25 @@ MonoBehaviour:
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -373,7 +391,7 @@ MonoBehaviour:
   m_EulerAngles: {x: 0, y: 0, z: 0}
   m_AvatarMask: {fileID: 0}
   m_ApplyAvatarMask: 1
-  m_TrackOffset: 1
+  m_TrackOffset: 2
   m_InfiniteClip: {fileID: 0}
   m_OpenClipOffsetRotation: {x: 0, y: 0, z: 0, w: 1}
   m_Rotation: {x: 0, y: 0, z: 0, w: 1}
@@ -391,19 +409,19 @@ MonoBehaviour:
   m_Name: TransformTimelineClip
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 02e53aaaea6487d458a4fa62184ea914, type: 2}
-  moveMode: 0
+  moveMode: 3
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
   moveSpeed: 0
   totalDistance: 0
   startSpeed: 0
   endSpeed: 0
-  climbStage: 0
-  climbUseVariableSpeed: 0
-  climbSpeed: 0
-  climbStartSpeed: 0
-  climbEndSpeed: 0
-  climbAfterExtraDistance: 0
+  climbStage: 1
+  climbUseVariableSpeed: 1
+  climbSpeed: 3
+  climbStartSpeed: 4
+  climbEndSpeed: 1
+  climbAfterExtraDistance: 3
 --- !u!114 &8686942947544948398
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Dodge
   m_EditorClassIdentifier: 
   actionID: 22
-  actionName: "\u95EA\u907F"
+  actionName: "\u5E38\u89C4\u5411\u540E\u95EA\u907F"
   timeline: {fileID: 11400000, guid: 05866442ecc328f48be37a572f3f6184, type: 2}
   actionType: 0
   hitBoxShape: 0

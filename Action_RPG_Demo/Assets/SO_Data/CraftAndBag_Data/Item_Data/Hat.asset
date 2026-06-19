@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Hat
   m_EditorClassIdentifier: 
   Display_In_Backpacks: {fileID: 21300000, guid: b8bfaa2b96c519b45903435b5bfbd444, type: 3}
-  Drop: {fileID: 6718475951256757655, guid: 6e4fc1fc163fd984d8711a4db981df74, type: 3}
+  Drop: {fileID: 1397313149998604923, guid: 6e4fc1fc163fd984d8711a4db981df74, type: 3}
   item_name: "\u9B54\u6CD5\u5E3D"
   item_id: 4
   Height: 2

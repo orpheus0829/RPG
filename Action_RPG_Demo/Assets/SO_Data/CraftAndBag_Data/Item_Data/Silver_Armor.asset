@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Silver_Armor
   m_EditorClassIdentifier: 
   Display_In_Backpacks: {fileID: 21300000, guid: cc252efdd234e0d40b5ea88ee3a9417a, type: 3}
-  Drop: {fileID: 8462307458700875411, guid: a0f5d7692f0421f4b9cba9024aa6797c, type: 3}
+  Drop: {fileID: 3697824930084320981, guid: a0f5d7692f0421f4b9cba9024aa6797c, type: 3}
   item_name: "\u94F6\u7532"
   item_id: 6
   Height: 2

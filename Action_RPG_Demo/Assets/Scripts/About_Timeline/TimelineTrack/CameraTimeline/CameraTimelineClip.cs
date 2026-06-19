@@ -3,9 +3,6 @@ using UnityEngine.Playables;
 
 public class CameraTimelineClip : PlayableAsset
 {
-    [Header("镜头数据盒")]
-    public ActionSO data;
-
     [Header("镜头单独参数")]
     public MoveMode cameraMoveMode;
     public Vector3 cameraDirection;

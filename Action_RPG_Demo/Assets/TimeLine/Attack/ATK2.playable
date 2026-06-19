@@ -304,49 +304,13 @@ MonoBehaviour:
     m_BlendOutDuration: 2.1722222222222225
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -373,25 +337,7 @@ MonoBehaviour:
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -678,10 +624,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21b0902d755e6d94dac4f8399b9e47c0, type: 3}
   m_Name: EffectAudioClip
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: fa1c58fe7d5d740439969e3e56f23219, type: 2}
-  sound: {fileID: 0}
-  effectPrefab: {fileID: 0}
-  spawnOffset: {x: 0, y: 0, z: 0}
+  sound: {fileID: 8300000, guid: 273941788f7d30746b0c927aa5ea5ffe, type: 3}
+  effectPrefab: {fileID: 3593040352138873559, guid: 5fc8aa250d0018048bfcd981c0ddecb6, type: 3}
+  spawnOffset: {x: 0.012473702, y: 0.5, z: 0.81430054}
+  spawnEuler: {x: 2.7902815, y: 354.15253, z: 83.53475}
+  spawnScale: {x: 0.5886855, y: 0.28068256, z: 0.44913194}
 --- !u!114 &-1020345345150737438
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -851,12 +798,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da8d075dc41a51e408761beace65af41, type: 3}
   m_Name: HitBoxClip(Clone)(Clone)
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: fa1c58fe7d5d740439969e3e56f23219, type: 2}
-  boxOffset: {x: 0, y: 0, z: 0}
-  boxRadius: 0
+  boxOffset: {x: 0.30622792, y: 0.66, z: 0.7507231}
+  boxRadius: 2
+  damage: 20
   startTime: 0
   endTime: 0
-  HitForce: 0
+  HitForce: 1
+  hitBoxShape: 1
+  hitBoxSize: {x: 0.44712973, y: 1.1849948, z: 1.1486127}
 --- !u!114 &2683065842998407697
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -907,7 +856,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c38f6fa1940124db1ab7f6fe7268d1, type: 3}
   m_Name: Signal Emitter
   m_EditorClassIdentifier: 
-  m_Time: 0.5333333333333333
+  m_Time: 0.4
   m_Retroactive: 0
   m_EmitOnce: 0
   m_Asset: {fileID: 11400000, guid: c407bcfb0a7ceb2468b8d3aec5d5b0e4, type: 2}
@@ -1015,7 +964,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6149976e4f74a94a869741bf5df169b, type: 3}
   m_Name: TransformTimelineClip(Clone)(Clone)
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: fa1c58fe7d5d740439969e3e56f23219, type: 2}
   moveMode: 2
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}

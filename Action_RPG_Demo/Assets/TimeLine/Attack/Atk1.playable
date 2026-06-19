@@ -147,10 +147,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21b0902d755e6d94dac4f8399b9e47c0, type: 3}
   m_Name: EffectAudioClip
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: a33569c2c6b17f9439c3c5cdaafd5607, type: 2}
-  sound: {fileID: 0}
-  effectPrefab: {fileID: 0}
-  spawnOffset: {x: 0, y: 0, z: 0}
+  sound: {fileID: 8300000, guid: 90a08c6e24d05854981bd4dfe451756b, type: 3}
+  effectPrefab: {fileID: 7922894242906070829, guid: e27da0982a226b64881b78c1ccf1ef51, type: 3}
+  spawnOffset: {x: 0.14224848, y: 0.6785872, z: 0.7975645}
+  spawnEuler: {x: 1.6319577, y: 12.200922, z: 183.24402}
+  spawnScale: {x: 0.50355685, y: 0.50293636, z: 0.345099}
 --- !u!114 &-6555387305546101057
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -185,7 +186,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6149976e4f74a94a869741bf5df169b, type: 3}
   m_Name: TransformTimelineClip
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: a33569c2c6b17f9439c3c5cdaafd5607, type: 2}
   moveMode: 2
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
@@ -211,12 +211,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da8d075dc41a51e408761beace65af41, type: 3}
   m_Name: HitBoxClip
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: a33569c2c6b17f9439c3c5cdaafd5607, type: 2}
-  boxOffset: {x: 0, y: 0, z: 0}
-  boxRadius: 0
+  boxOffset: {x: 0.23945427, y: 0.66, z: 1.1231173}
+  boxRadius: 1.5
+  damage: 15
   startTime: 0
   endTime: 0
-  HitForce: 0
+  HitForce: 1
+  hitBoxShape: 1
+  hitBoxSize: {x: 1.0876794, y: 0.22965994, z: 1.0876794}
 --- !u!114 &-4044607060477600090
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -514,49 +516,13 @@ MonoBehaviour:
     m_BlendOutDuration: 2.6166666666666667
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -634,25 +600,7 @@ MonoBehaviour:
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -1046,7 +994,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c38f6fa1940124db1ab7f6fe7268d1, type: 3}
   m_Name: Signal Emitter
   m_EditorClassIdentifier: 
-  m_Time: 0.5166666666666667
+  m_Time: 0.3333333333333333
   m_Retroactive: 0
   m_EmitOnce: 0
   m_Asset: {fileID: 11400000, guid: c407bcfb0a7ceb2468b8d3aec5d5b0e4, type: 2}

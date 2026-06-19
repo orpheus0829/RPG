@@ -441,7 +441,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6149976e4f74a94a869741bf5df169b, type: 3}
   m_Name: TransformTimelineClip
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: 7016c9c052360094780deb47b8dcc343, type: 2}
   moveMode: 2
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}

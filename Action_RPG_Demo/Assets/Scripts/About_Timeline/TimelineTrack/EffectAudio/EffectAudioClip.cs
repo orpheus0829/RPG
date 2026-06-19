@@ -8,13 +8,12 @@ using UnityEngine.Playables;
 /// </summary>
 public class EffectAudioClip : PlayableAsset
 {
-    [Header("特效音效数据盒")]
-    public ActionSO data;
-
     [Header("特效音效盒参数")]
     public AudioClip sound;
     public GameObject effectPrefab;
     public Vector3 spawnOffset;
+    public Vector3 spawnEuler;
+    public Vector3 spawnScale = Vector3.one;
 
     public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
     {

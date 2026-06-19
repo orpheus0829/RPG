@@ -161,7 +161,7 @@ MonoBehaviour:
   m_Name: TransformTimelineClip
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 439c2ba6142adc944b53e8a8a3863f3a, type: 2}
-  moveMode: 0
+  moveMode: 3
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
   moveSpeed: 0
@@ -169,11 +169,11 @@ MonoBehaviour:
   startSpeed: 0
   endSpeed: 0
   climbStage: 0
-  climbUseVariableSpeed: 0
-  climbSpeed: 0
-  climbStartSpeed: 0
-  climbEndSpeed: 0
-  climbAfterExtraDistance: 0
+  climbUseVariableSpeed: 1
+  climbSpeed: 2
+  climbStartSpeed: 5
+  climbEndSpeed: 2
+  climbAfterExtraDistance: 1
 --- !u!114 &-1805706660518581612
 MonoBehaviour:
   m_ObjectHideFlags: 1

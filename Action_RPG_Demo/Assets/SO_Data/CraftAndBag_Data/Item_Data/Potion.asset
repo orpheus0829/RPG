@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Potion
   m_EditorClassIdentifier: 
   Display_In_Backpacks: {fileID: 21300000, guid: 659fc4160bf36344a9f43c82714e9903, type: 3}
-  Drop: {fileID: 7814157649496542322, guid: 39bc66e9da046c14b8d0bd4c1b584923, type: 3}
+  Drop: {fileID: 4845220524345806940, guid: 39bc66e9da046c14b8d0bd4c1b584923, type: 3}
   item_name: "\u836F\u6C34"
   item_id: 2
   Height: 1

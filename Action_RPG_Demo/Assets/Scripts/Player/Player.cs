@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.TextCore.Text;
 
 public class Player : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class Player : MonoBehaviour
 
     [Header("移动")]
     public Vector3 InputMove;
+    public InputAction moveaction;
+    public bool IsHoldingMove;
+    private Vector3 MoveDir;
     public float Speed;
     public bool isWalking;
     public bool IsBlock = false;
@@ -34,6 +38,7 @@ public class Player : MonoBehaviour
     public float vaultBackCapsuleRadius = 0.3f;
     public Vector3 vaultObstacleTopPoint;
     public Vector3 vaultObstacleBottomPoint;
+    public bool vaultFinishedFlag;
 
     [Header("翻越位移")]
     public float vaultMoveDuration = 0.4f;
@@ -80,7 +85,7 @@ public class Player : MonoBehaviour
     public Interact_Trigger Interact_Trigger;
     public DamageReceiver damageReceiver;
     public Mouse mouse;
-    public CameraPivot cameraPivot;
+    //public CameraPivot cameraPivot;
 
     public void Awake()
     {
@@ -88,7 +93,7 @@ public class Player : MonoBehaviour
         am = GetComponent<Animator>();
         col = GetComponent<CapsuleCollider>();
         playerInput = GetComponent<PlayerInput>();
-        cameraPivot = GameObject.FindGameObjectWithTag("Camera_Pivot").GetComponent<CameraPivot>();
+        //cameraPivot = GameObject.FindGameObjectWithTag("Camera_Pivot").GetComponent<CameraPivot>();
         Speed = playerSO.WalkSpeed;
         bag = GetComponent<Player_Bag>();
         Interact_Trigger = GetComponentInChildren<Interact_Trigger>();
@@ -103,14 +108,20 @@ public class Player : MonoBehaviour
             PlayerPrefs.SetInt("Money", Start_Money);
         }
         PlayerPrefs.Save();
+
+        moveaction = playerInput.actions["Move"];
     }
     public void OnEnable()
     {
         Game_Event.instance.Init_Store += Set_StorePanel;
+        Game_Event.instance.DeathState += BornSet;
+        Game_Event.instance.DeathSecState += BornAction;
     }
     public void OnDisable()
     {
         Game_Event.instance.Init_Store -= Set_StorePanel;
+        Game_Event.instance.DeathState -= BornSet;
+        Game_Event.instance.DeathSecState -= BornAction;
     }
 
     public void Start()
@@ -127,6 +138,17 @@ public class Player : MonoBehaviour
     }
     public void Update()
     {
+        moveDir = moveaction.ReadValue<Vector3>();
+        IsHoldingMove = moveDir.sqrMagnitude > 0.0001f;
+        if (actionControl.currentAction == actionControl.Character.Walk)
+        {
+            Speed = playerSO.WalkSpeed;
+        }
+        else if (actionControl.currentAction == actionControl.Character.Run)
+        {
+            Speed = playerSO.RunSpeed;
+        }
+
         Update_Vault();
         if (Panel_Mgr.instance.IsPanelOpen)
         {
@@ -136,16 +158,23 @@ public class Player : MonoBehaviour
         {
             AttackDectetcion();
         }
-        if (InputMove.magnitude < 0.1f)
+        if (!Is_Action_Playing && !IsHoldingMove)
         {
-            if (actionControl.currentAction == actionControl.Character.WalkStart
-                || actionControl.currentAction == actionControl.Character.Walk)
+            if (actionControl.currentAction == actionControl.Character.WalkStart || actionControl.currentAction == actionControl.Character.Walk)
             {
                 isWalking = false;
                 isStopping = true;
                 stopMoveLockTime = playerSO.LockDuration;
                 StopCurrentAction();
                 actionControl.PlayAction(actionControl.Character.WalkEnd);
+            }
+            else if (actionControl.currentAction == actionControl.Character.Run)
+            {
+                isWalking = false;
+                isStopping = true;
+                stopMoveLockTime = playerSO.LockDuration;
+                StopCurrentAction();
+                actionControl.PlayAction(actionControl.Character.RunEnd);
             }
         }
         if (mouse != null && !Panel_Mgr.instance.IsPanelOpen)
@@ -154,7 +183,7 @@ public class Player : MonoBehaviour
             float verticalScroll = mouseScroll.y;
             if (Mathf.Abs(verticalScroll) > 0.01f)
             {
-                cameraPivot.AddZoomDelta(verticalScroll);
+                CameraPivot.instance.AddZoomDelta(verticalScroll);
             }
         }
     }
@@ -183,7 +212,7 @@ public class Player : MonoBehaviour
         if (stopMoveLockTime > 0)
         {
             stopMoveLockTime -= Time.fixedDeltaTime;
-            if (actionControl.currentAction == actionControl.Character.WalkEnd && isWalking)
+            if ((actionControl.currentAction == actionControl.Character.WalkEnd || actionControl.currentAction == actionControl.Character.RunEnd) && isWalking)
             {
                 actionControl.PlayAction(actionControl.Character.WalkStart);
             }
@@ -218,16 +247,37 @@ public class Player : MonoBehaviour
             actionControl.timelineDirector.Stop();
         }
     }
-
+    #region 移动
     public void Back_To_Move()
     {
-        if (isStopping)
+        if (vaultFinishedFlag)
+        {
+            vaultFinishedFlag = false;
+            if (IsHoldingMove)
+            {
+                StopCurrentAction();
+                isStopping = false;
+                isWalking = true;
+                actionControl.AttackLevel = 0;
+                actionControl.PlayAction(actionControl.Character.WalkStart);
+                return;
+            }
+            else
+            {
+                StopCurrentAction();
+                isWalking = false;
+                isStopping = false;
+                actionControl.PlayAction(actionControl.Character.Idle);
+                return;
+            }
+        }
+        if (isStopping && !IsHoldingMove)
         {
             return;
         }
         if (actionControl.currentAction == actionControl.Character.WalkStart || actionControl.currentAction == actionControl.Character.Walk)
         {
-            if (InputMove.magnitude <= 0.1f)
+            if (!IsHoldingMove)
             {
                 isWalking = false;
                 isStopping = true;
@@ -237,22 +287,30 @@ public class Player : MonoBehaviour
             }
             return;
         }
-        if (isStopping && !Is_Action_Playing)
+        if (actionControl.currentAction == actionControl.Character.Run)
         {
-            isStopping = false;
-            actionControl.PlayAction(actionControl.Character.Idle);
+            if (!IsHoldingMove)
+            {
+                isWalking = false;
+                isStopping = true;
+                stopMoveLockTime = playerSO.LockDuration;
+                actionControl.PlayAction(actionControl.Character.RunEnd);
+                return;
+            }
             return;
         }
-        if (InputMove.magnitude > 0.1f && actionControl.canInterrupt)
+        if (IsHoldingMove && actionControl.canInterrupt && actionControl.currentAction != actionControl.Character.Run)
         {
             StopCurrentAction();
             isStopping = false;
+            isWalking = true;
             actionControl.AttackLevel = 0;
             actionControl.PlayAction(actionControl.Character.WalkStart);
+            return;
         }
-        else if (!Is_Action_Playing && !isStopping)
+        if (!Is_Action_Playing && !isStopping)
         {
-            if (actionControl.currentAction != actionControl.Character.Idle && actionControl.currentAction != actionControl.Character.AfkIdle)
+            if (actionControl.currentAction != actionControl.Character.Idle && actionControl.currentAction != actionControl.Character.AfkIdle && actionControl.currentAction != actionControl.Character.Walk && actionControl.currentAction != actionControl.Character.Run)
             {
                 actionControl.PlayAction(actionControl.Character.Idle);
             }
@@ -282,16 +340,43 @@ public class Player : MonoBehaviour
         }
         catch { }
     }
-
+    public void StopMove()
+    {
+        InputMove = Vector3.zero;
+        isWalking = false;
+        isStopping = true;
+    }
+    #endregion
+    #region 闪避
     public void OnDodge(InputValue value)
     {
         if (value.isPressed)
         {
-            StopCurrentAction();
-            Is_Action_Playing = true;
-            actionControl.PlayAction(actionControl.Character.Dodge);
+            if (InputMove.magnitude > 0.1f)
+            {
+                StopCurrentAction();
+                Is_Action_Playing = true;
+                actionControl.PlayAction(actionControl.Character.RunDodge);
+            }
+            else
+            {
+                StopCurrentAction();
+                Is_Action_Playing = true;
+                actionControl.PlayAction(actionControl.Character.Dodge);
+            }
         }
     }
+    public void TurnRun()
+    {
+        if (actionControl.currentAction == actionControl.Character.RunDodge && InputMove.magnitude > 0.1f)
+        {
+            StopCurrentAction();
+            actionControl.PlayAction(actionControl.Character.Run);
+            Debug.Log("变为疾跑");
+        }
+    }
+    #endregion
+    #region 背包
     public void OnBackPack(InputValue value)
     {
         if (value.isPressed && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.TraderPanel) && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.CraftPanel))
@@ -325,6 +410,12 @@ public class Player : MonoBehaviour
             bag.Refresh_Bag_Display();
         }
     }
+    public void Set_StorePanel(bool Is_Ready)
+    {
+        Panel_Mgr.instance.TraderPanel.gameObject.SetActive(Is_Ready);
+    }
+    #endregion
+    #region 制作
     public void OnCraft(InputValue value)
     {
         if (value.isPressed && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.TraderPanel) && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.BagPanel))
@@ -344,6 +435,8 @@ public class Player : MonoBehaviour
             }
         }
     }
+    #endregion
+    #region 滑铲
     public void OnSlide(InputValue value)
     {
         if (Panel_Mgr.instance.IsPanelOpen)
@@ -356,13 +449,15 @@ public class Player : MonoBehaviour
             {
                 return;
             }
+            //InputMove = Vector3.zero;
             isWalking = false;
-            InputMove = Vector3.zero;
             StopCurrentAction();
             Is_Action_Playing = true;
             actionControl.PlayAction(actionControl.Character.Slide);
         }
     }
+    #endregion
+    #region 交易
     public void OnTrade(InputValue value)
     {
         if (value.isPressed && Can_Trade && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.BagPanel))
@@ -385,6 +480,8 @@ public class Player : MonoBehaviour
             }
         }
     }
+    #endregion
+    #region 交谈
     public void OnChat(InputValue value)
     {
         if (value.isPressed && Can_Chat && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.BagPanel))
@@ -415,7 +512,8 @@ public class Player : MonoBehaviour
             }
         }
     }
-    #region 跳跃
+    #endregion
+    #region 跳跃与翻越
     public void OnJump(InputValue value)
     {
         if (Panel_Mgr.instance.DialoguePanel.gameObject.activeSelf)
@@ -438,6 +536,7 @@ public class Player : MonoBehaviour
         {
             return;
         }
+        //InputMove = Vector3.zero;
         int jumpResult = JumpScan();
         if (jumpResult > 1)
         {
@@ -450,7 +549,6 @@ public class Player : MonoBehaviour
                 return;
             }
             isWalking = false;
-            InputMove = Vector3.zero;
             StopCurrentAction();
             if (jumpResult == 1)
             {
@@ -539,6 +637,7 @@ public class Player : MonoBehaviour
                 transform.position = vaultEndPos;
                 isDoingVaultMove = false;
                 rb.isKinematic = false;
+                vaultFinishedFlag = true;
                 return;
             }
 
@@ -549,6 +648,7 @@ public class Player : MonoBehaviour
             {
                 isDoingVaultMove = false;
                 rb.isKinematic = false;
+                vaultFinishedFlag = true;
                 return;
             }
 
@@ -562,8 +662,16 @@ public class Player : MonoBehaviour
                 rb.isKinematic = false;
         }
     }
+    public void Vault_Aft()
+    {
+        StopCurrentAction();
+        Is_Action_Playing = true;
+        actionControl.PlayAction(actionControl.Character.AftVault);
+        Debug.Log("后续翻越");
+    }
     public void Climb_Scan() { }
     #endregion
+    #region 特殊技
     public void OnSpecialSkill(InputValue value)
     {
         if (Panel_Mgr.instance.IsPanelOpen)
@@ -595,6 +703,8 @@ public class Player : MonoBehaviour
             actionControl.canCombo = false;
         }
     }
+    #endregion
+    #region 攻击
     public void OnAttack(InputValue value)
     {
         if (Panel_Mgr.instance.IsPanelOpen)
@@ -621,6 +731,47 @@ public class Player : MonoBehaviour
         InputMove = IsBlock ? Vector3.zero : InputMove;
         rb.velocity = IsBlock ? Vector3.zero : rb.velocity;
     }
+    public void AttackDectetcion()
+    {
+        Vector3 LookDir;
+        float mindistance;
+        int index = -1;
+        //LayerMask enemyLayer = LayerMask.GetMask("Enemy");
+        int mask = ~(1 << LayerMask.NameToLayer("Enemy"));
+        Collider[] enemies = Physics.OverlapSphere(transform.position, playerSO.DetectionRadius, EnemyLayer);
+        if (enemies.Length > 0)
+        {
+            //Transform cam = Camera.main.transform;
+            //Vector3 camForward = cam.forward;
+            //camForward.y = 0;
+            //camForward.Normalize();
+            mindistance = Mathf.Infinity;
+            for (int i = 0; i < enemies.Length; i++)
+            {
+                bool BlockByObstacle = Physics.Linecast(transform.position, enemies[i].transform.position, mask);
+                //bool AngleTooLarge = Vector3.Angle(camForward, enemies[i].transform.position - transform.position) > 90;
+                if (BlockByObstacle/* || AngleTooLarge*/)
+                {
+                    continue;
+                }
+                float distance = Vector3.Distance(enemies[i].transform.position, transform.position);
+                if (distance < mindistance)
+                {
+                    mindistance = distance;
+                    index = i;
+                }
+            }
+            if (index != -1)
+            {
+                LookDir = enemies[index].transform.position - transform.position;
+                LookDir.y = 0;
+                LookDir.Normalize();
+                transform.rotation = Quaternion.LookRotation(LookDir);
+            }
+        }
+    }
+    #endregion
+    #region 受伤
     public void GetHurt(float damage,Vector3 dir)
     {
         if (IsDead)
@@ -666,51 +817,8 @@ public class Player : MonoBehaviour
             rb.MovePosition(end);
         }
     }
-    public void AttackDectetcion()
-    {
-        Vector3 LookDir;
-        float mindistance;
-        int index = -1;
-        //LayerMask enemyLayer = LayerMask.GetMask("Enemy");
-        int mask = ~(1 << LayerMask.NameToLayer("Enemy"));
-        Collider[] enemies = Physics.OverlapSphere(transform.position, playerSO.DetectionRadius, EnemyLayer);
-        if (enemies.Length > 0)
-        {
-            //Transform cam = Camera.main.transform;
-            //Vector3 camForward = cam.forward;
-            //camForward.y = 0;
-            //camForward.Normalize();
-            mindistance = Mathf.Infinity;
-            for (int i = 0; i < enemies.Length; i++)
-            {
-                bool BlockByObstacle = Physics.Linecast(transform.position, enemies[i].transform.position, mask);
-                //bool AngleTooLarge = Vector3.Angle(camForward, enemies[i].transform.position - transform.position) > 90;
-                if (BlockByObstacle/* || AngleTooLarge*/)
-                {
-                    continue;
-                }
-                float distance = Vector3.Distance(enemies[i].transform.position, transform.position);
-                if (distance < mindistance)
-                {
-                    mindistance = distance;
-                    index = i;
-                }
-            }
-            if (index != -1)
-            {
-                LookDir = enemies[index].transform.position - transform.position;
-                LookDir.y = 0;
-                LookDir.Normalize();
-                transform.rotation = Quaternion.LookRotation(LookDir);
-            }
-        }
-    }
-    public void Vault_Aft()
-    {
-        StopCurrentAction();
-        Is_Action_Playing = true;
-        actionControl.PlayAction(actionControl.Character.AftVault);
-    }
+    #endregion
+    #region 死亡
     public void TurnDeath()
     {
         StopCurrentAction();
@@ -719,9 +827,35 @@ public class Player : MonoBehaviour
     }
     public void Dead()
     {
-        //用signal receiver在死亡倒地后接收这个回调方法
-        //写死亡后慢慢黑屏然后重新重生睁眼。待施工
+        DeathMgr.instance.DearhFade();
     }
+    public void BornSet()
+    {
+        gameObject.tag = "Player";
+        rb.position = playerSO.SpawnPoint;
+        rb.rotation = playerSO.SpwanRotation;
+        IsDead = false;
+        Skill_PowerPool = 0;
+        damageReceiver.currentHp = playerSO.PlayerMaxHP;
+    }
+    public void BornAction()
+    {
+        if (playerSO.EnableBornAnim)
+        {
+            CameraPivot.instance.PlayRevolveAroundPlayerAnim();
+            StopCurrentAction();
+            Is_Action_Playing = true;
+            actionControl.PlayAction(actionControl.Character.Born);
+        }
+        else
+        {
+            StopCurrentAction();
+            Is_Action_Playing = true;
+            actionControl.PlayAction(actionControl.Character.AfkIdle);
+        }
+    }
+    #endregion
+    #region 相机
     public void Move_Follow_Camera()
     {
         Transform cam = Camera.main.transform;
@@ -740,11 +874,8 @@ public class Player : MonoBehaviour
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(moveDir), 15f * Time.fixedDeltaTime);
         }
     }
-    public void Set_StorePanel(bool Is_Ready)
-    {
-        Panel_Mgr.instance.TraderPanel.gameObject.SetActive(Is_Ready);
-    }
-    //#region 辅助调试显示
+    #endregion
+    #region 辅助调试显示
     //private void OnDrawGizmos()
     //{
     //    float vaultHeight = playerSO.VaultHeight;
@@ -767,7 +898,6 @@ public class Player : MonoBehaviour
     //    {
     //        float currentAngle = -halfAngle + angleStep * h;
     //        Vector3 dir = Quaternion.Euler(0, currentAngle, 0) * transform.forward;
-
     //        for (int v = 0; v < verticalRays; v++)
     //        {
     //            float yPos = rayOriginOffset + minY + yStep * v;
@@ -776,5 +906,5 @@ public class Player : MonoBehaviour
     //        }
     //    }
     //}
-    //#endregion
+    #endregion
 }

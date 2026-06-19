@@ -17,10 +17,11 @@ public class HitBoxBehaviour : PlayableBehaviour
 
     private bool isActive;
     private ActionControl cont;
+    private float _currentDamage;
 
     public override void OnBehaviourPlay(Playable playable, FrameData info)
     {
-
+        _currentDamage = clip.damage;
     }
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {
@@ -31,12 +32,16 @@ public class HitBoxBehaviour : PlayableBehaviour
             return;
         }
 
-        Vector3 offset = clip.data != null ? clip.data.hitBoxOffset : clip.boxOffset;
-        float radius = clip.data != null ? clip.data.hitBoxRadius : clip.boxRadius;
-        float start = clip.data != null ? clip.data.hitStartTime : clip.startTime;
-        float end = clip.data != null ? clip.data.hitEndTime : clip.endTime;
-        float force = clip.data != null ? clip.data.hitForce : clip.HitForce;
+        Vector3 offset = clip.boxOffset;
+        float radius = clip.boxRadius;
+        float start = clip.startTime;
+        float end = clip.endTime;
+        float force = clip.HitForce;
         ctrl.Hit_Force = force;
+
+        ctrl.CurrentHitDamage = _currentDamage;
+        ctrl.CurrentHitShape = clip.hitBoxShape;
+        ctrl.CurrentHitBoxSize = clip.hitBoxSize;
 
         float t = (float)playable.GetTime() / (float)playable.GetDuration();
         bool inRange = t >= start && t <= end;
@@ -45,7 +50,7 @@ public class HitBoxBehaviour : PlayableBehaviour
             isActive = inRange;
             if (isActive)
             {
-                Vector3 boxSize = clip.data != null ? clip.data.hitBoxSize : Vector3.zero;
+                Vector3 boxSize = clip.hitBoxSize;
                 ctrl.OpenHitBox(offset, radius, boxSize);
             }
             else
@@ -53,28 +58,17 @@ public class HitBoxBehaviour : PlayableBehaviour
                 ctrl.CloseHitBox();
             }
         }
-        //if (isActive && clip.data != null)
-        //{
-        //    Vector3 worldPos = ctrl.transform.TransformPoint(offset);
-        //    Gizmos.color = Color.red;
-        //    if (clip.data.hitBoxShape == HitBoxShape.Sphere)
-        //    {
-        //        Gizmos.DrawWireSphere(worldPos, radius);
-        //    }
-        //    else
-        //    {
-        //        Gizmos.DrawWireCube(worldPos, clip.data.hitBoxSize);
-        //    }
-        //}
     }
     public override void OnBehaviourPause(Playable playable, FrameData info)
     {
         if (cont != null)
         {
             cont.CloseHitBox();
+            cont.CurrentHitDamage = 0;
+            cont.CurrentHitShape = HitBoxShape.Sphere;
+            cont.CurrentHitBoxSize = Vector3.zero;
         }
         isActive = false;
         cont = null;
-        // 移除过期的GetBinding取值，依靠运行时传入的playerData即可收尾
     }
 }

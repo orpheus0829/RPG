@@ -25,27 +25,3 @@ MonoBehaviour:
   hitEndTime: 2
   hitForce: 1
   nextAction: {fileID: 11400000, guid: 81e8fad9bf1509a4f9b2b25eb2f24ea8, type: 2}
-  cameraMoveMode: 0
-  cameraDirection: {x: 0, y: 0, z: 1}
-  cameraTotalDistance: 0
-  cameraTargetLocalPos: {x: 0, y: 0, z: 0}
-  cameraMoveSpeed: 0
-  cameraStartSpeed: 0
-  cameraEndSpeed: 0
-  effectPrefab: {fileID: 1011157772751556, guid: ca63c6ac7458764498741e0306f78528, type: 3}
-  soundClip: {fileID: 0}
-  effectTriggerTime: 0
-  effectSpawnOffset: {x: 0, y: 0.85, z: 1.4}
-  moveMode: 1
-  direction: {x: 0, y: 0, z: 1}
-  endPos: {x: 0, y: 0, z: 0}
-  moveSpeed: 4
-  totalDistance: 12
-  startSpeed: 1000000
-  endSpeed: 100000
-  climbStage: 0
-  climbUseVariableSpeed: 0
-  climbSpeed: 0
-  climbStartSpeed: 0
-  climbEndSpeed: 0
-  climbAfterExtraDistance: 0

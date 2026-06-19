@@ -104,10 +104,13 @@ public class DamageReceiver : MonoBehaviour, IDamageable
         }
         if (pl && !em)
         {
+            Panel_Mgr.instance.HideAllPanel();
             pl.IsDead = true;
+            TimeMgr.instance.UnPauseGame();
             pl.StopCurrentAction();
             pl.Is_Action_Playing = true;
             pl.actionControl.PlayAction(pl.actionControl.Character.Death);
+            pl.gameObject.tag = "DeadPlayer";
             GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
             foreach (var i in enemys)
             {

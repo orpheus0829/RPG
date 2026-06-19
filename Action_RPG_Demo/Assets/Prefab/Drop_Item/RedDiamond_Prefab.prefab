@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3578220384266054800
+--- !u!1 &5727843108200075940
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,63 +8,63 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 650063516560599135}
-  - component: {fileID: 607986885326189739}
-  - component: {fileID: 8483564447431080402}
-  - component: {fileID: 5673865975897532827}
-  - component: {fileID: 358049486312454392}
-  - component: {fileID: -6509219362240945698}
+  - component: {fileID: 3712240316385219192}
+  - component: {fileID: 7478502227681308168}
+  - component: {fileID: 3156298510881095254}
+  - component: {fileID: 8831768833271137922}
+  - component: {fileID: 5554601542413182102}
+  - component: {fileID: 2578177631382982153}
   m_Layer: 0
   m_Name: RedDiamond_Prefab
-  m_TagString: Drop_Item
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &650063516560599135
+--- !u!4 &3712240316385219192
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3578220384266054800}
+  m_GameObject: {fileID: 5727843108200075940}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.94, y: -0.21, z: 2.98}
-  m_LocalScale: {x: 0.4, y: 0.3, z: 0.3}
+  m_LocalPosition: {x: -2.15308, y: -1.1000009, z: 2.1386757}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &607986885326189739
+--- !u!33 &7478502227681308168
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3578220384266054800}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &8483564447431080402
+  m_GameObject: {fileID: 5727843108200075940}
+  m_Mesh: {fileID: 4300000, guid: 052e2f79a51cd79499bdd6b05e8989ef, type: 3}
+--- !u!23 &3156298510881095254
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3578220384266054800}
+  m_GameObject: {fileID: 5727843108200075940}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
-  m_LightProbeUsage: 1
+  m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9e7b11c8d1724e443a2f986e727fcd53, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -86,59 +86,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &5673865975897532827
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3578220384266054800}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &358049486312454392
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3578220384266054800}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2a1460afd5fa594e9f3fc2c7a82d498, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  item_Data: {fileID: 11400000, guid: 676d10526004e1141962ede2c42367e4, type: 2}
-  Picture: {fileID: 0}
-  Drop_name: 
-  Drop_id: 0
-  Drop_Height: 0
-  Drop_Width: 0
-  Drop_PriceValue: 0
-  Drop_Description: 
-  Drop_Kind: 0
-  Drop_weapon:
-    weapon_Damage: 0
---- !u!54 &-6509219362240945698
+--- !u!54 &8831768833271137922
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3578220384266054800}
+  m_GameObject: {fileID: 5727843108200075940}
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
@@ -157,5 +111,55 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &5554601542413182102
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5727843108200075940}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.49253353, y: 0.49253333, z: 0.4925335}
+  m_Center: {x: -0.000000074505806, y: 0.24916941, z: 0.000000022351742}
+--- !u!114 &2578177631382982153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5727843108200075940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2a1460afd5fa594e9f3fc2c7a82d498, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item_Data: {fileID: 11400000, guid: 676d10526004e1141962ede2c42367e4, type: 2}
+  Picture: {fileID: 0}
+  Drop_name: 
+  Drop_id: 0
+  Drop_Height: 0
+  Drop_Width: 0
+  Drop_PriceValue: 0
+  Drop_Description: 
+  IsQuestItem: 0
+  bindQuestItem:
+    Loaction: {x: 0, y: 0, z: 0}
+    QuestItem: {fileID: 0}
+    ItemGets: []
+  QuestGets: []
+  Drop_Kind: 0
+  Drop_weapon:
+    weapon_Damage: 0

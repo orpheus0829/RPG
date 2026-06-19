@@ -28,11 +28,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6149976e4f74a94a869741bf5df169b, type: 3}
   m_Name: TransformTimelineClip
   m_EditorClassIdentifier: 
-  data: {fileID: 0}
   moveMode: 1
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
-  moveSpeed: 7
+  moveSpeed: 5
   totalDistance: 4
   startSpeed: 0
   endSpeed: 0
@@ -54,10 +53,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21b0902d755e6d94dac4f8399b9e47c0, type: 3}
   m_Name: EffectAudioClip
   m_EditorClassIdentifier: 
-  data: {fileID: 0}
   sound: {fileID: 8300000, guid: 0fa936695bb484f4a98d9c82dd04d735, type: 3}
   effectPrefab: {fileID: 9028235707007033244, guid: 6c3cadcecf024cc45a5671c17a56112d, type: 3}
-  spawnOffset: {x: 0, y: 1, z: 1.5}
+  spawnOffset: {x: -0.003954649, y: 0.8, z: 1.4}
+  spawnEuler: {x: 0, y: 0, z: 0}
+  spawnScale: {x: 0.4, y: 0.4, z: 0.4}
 --- !u!114 &-4684921632080858138
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -546,25 +546,7 @@ MonoBehaviour:
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -634,7 +616,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c38f6fa1940124db1ab7f6fe7268d1, type: 3}
   m_Name: Signal Emitter
   m_EditorClassIdentifier: 
-  m_Time: 1.1333333333333333
+  m_Time: 0.8
   m_Retroactive: 0
   m_EmitOnce: 0
   m_Asset: {fileID: 11400000, guid: c407bcfb0a7ceb2468b8d3aec5d5b0e4, type: 2}
@@ -871,12 +853,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6149976e4f74a94a869741bf5df169b, type: 3}
   m_Name: TransformTimelineClip
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: 5f37969fbe8cc8c47af92d46737bbf12, type: 2}
   moveMode: 1
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
-  moveSpeed: 10
-  totalDistance: 0
+  moveSpeed: 5
+  totalDistance: 2
   startSpeed: 0
   endSpeed: 0
   climbStage: 0
@@ -1083,10 +1064,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21b0902d755e6d94dac4f8399b9e47c0, type: 3}
   m_Name: EffectAudioClip(Clone)(Clone)
   m_EditorClassIdentifier: 
-  data: {fileID: 0}
   sound: {fileID: 0}
   effectPrefab: {fileID: 8951042971882684985, guid: 18b59091c0e938c4499d2870ab3fbc75, type: 3}
-  spawnOffset: {x: 0, y: 1, z: 1.5}
+  spawnOffset: {x: -0.003954649, y: 0.8, z: 1.4}
+  spawnEuler: {x: 0.052420337, y: 0, z: 0}
+  spawnScale: {x: 0.4, y: 0.4, z: 0.4}
 --- !u!114 &3717760121109727257
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1099,12 +1081,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da8d075dc41a51e408761beace65af41, type: 3}
   m_Name: HitBoxClip
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: 86cc31db246141f4c88e5de7fa324c98, type: 2}
-  boxOffset: {x: 0, y: 0, z: 0}
-  boxRadius: 0
+  boxOffset: {x: 0.71697545, y: 0.3, z: -0.06682992}
+  boxRadius: 1
+  damage: 40
   startTime: 0
   endTime: 0
-  HitForce: 0
+  HitForce: 1
+  hitBoxShape: 0
+  hitBoxSize: {x: 1, y: 1, z: 1}
 --- !u!114 &4062374969918250090
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1267,10 +1251,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21b0902d755e6d94dac4f8399b9e47c0, type: 3}
   m_Name: EffectAudioClip(Clone)(Clone)
   m_EditorClassIdentifier: 
-  data: {fileID: 0}
   sound: {fileID: 0}
   effectPrefab: {fileID: 8951042971882684985, guid: 18b59091c0e938c4499d2870ab3fbc75, type: 3}
-  spawnOffset: {x: 0, y: 1, z: 1.5}
+  spawnOffset: {x: -0.003954649, y: 0.8, z: 1.4}
+  spawnEuler: {x: 0, y: 0, z: 0}
+  spawnScale: {x: 0.4, y: 0.4, z: 0.4}
 --- !u!114 &6786433381702221812
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1327,7 +1312,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21b0902d755e6d94dac4f8399b9e47c0, type: 3}
   m_Name: EffectAudioClip
   m_EditorClassIdentifier: 
-  data: {fileID: 0}
   sound: {fileID: 8300000, guid: 5f737b703fd3cd4489991b9ec13636b6, type: 3}
   effectPrefab: {fileID: 9028235707007033244, guid: 6c3cadcecf024cc45a5671c17a56112d, type: 3}
-  spawnOffset: {x: 0, y: 1, z: 1.5}
+  spawnOffset: {x: -0.003954649, y: 0.8, z: 1.4}
+  spawnEuler: {x: 0, y: 0, z: 0}
+  spawnScale: {x: 0.4, y: 0.4, z: 0.4}
