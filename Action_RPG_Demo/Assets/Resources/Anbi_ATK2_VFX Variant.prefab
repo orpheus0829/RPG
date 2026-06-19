@@ -60,6 +60,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 105
       objectReference: {fileID: 0}
+    - target: {fileID: 1146499491673708497, guid: e27da0982a226b64881b78c1ccf1ef51, type: 3}
+      propertyPath: stopAction
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1146499491673708497, guid: e27da0982a226b64881b78c1ccf1ef51, type: 3}
+      propertyPath: ShapeModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1146499491673708497, guid: e27da0982a226b64881b78c1ccf1ef51, type: 3}
+      propertyPath: ShapeModule.m_Rotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1146499491673708497, guid: e27da0982a226b64881b78c1ccf1ef51, type: 3}
+      propertyPath: ShapeModule.m_Rotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1146499491673708497, guid: e27da0982a226b64881b78c1ccf1ef51, type: 3}
+      propertyPath: InitialModule.startRotation.scalar
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7922894242906070829, guid: e27da0982a226b64881b78c1ccf1ef51, type: 3}
       propertyPath: m_Name
       value: Anbi_ATK2_VFX Variant

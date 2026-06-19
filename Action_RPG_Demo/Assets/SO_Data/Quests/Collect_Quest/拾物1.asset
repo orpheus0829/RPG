@@ -15,9 +15,9 @@ MonoBehaviour:
   Quest_Title: "\u52A9\u4EBA\u4E3A\u4E50"
   single_QuestItems:
   - Loaction: {x: 4.709, y: -0.947, z: -0.731}
-    QuestItem: {fileID: 4327948736354952195, guid: 64d161106ea870748a69c5f73fb87a63, type: 3}
+    QuestItem: {fileID: 4036299250517763226, guid: 64d161106ea870748a69c5f73fb87a63, type: 3}
     ItemGets:
     - CountGet: 1
-      ItemGet: {fileID: 4327948736354952195, guid: 64d161106ea870748a69c5f73fb87a63, type: 3}
+      ItemGet: {fileID: 3697824930084320981, guid: a0f5d7692f0421f4b9cba9024aa6797c, type: 3}
     - CountGet: 1
-      ItemGet: {fileID: 6718475951256757655, guid: 6e4fc1fc163fd984d8711a4db981df74, type: 3}
+      ItemGet: {fileID: 69093387330780800, guid: f08e0b8aa212c7f49a7a85faa443bc52, type: 3}

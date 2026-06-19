@@ -28,26 +28,13 @@ public class CameraTimelineBehaviour : PlayableBehaviour
         float startSpeed;
         float endSpeed;
 
-        if (clip.data != null)
-        {
-            mode = clip.data.cameraMoveMode;
-            camDir = clip.data.cameraDirection;
-            camDist = clip.data.cameraTotalDistance;
-            fixedTarget = clip.data.cameraTargetLocalPos;
-            moveSpeed = clip.data.cameraMoveSpeed;
-            startSpeed = clip.data.cameraStartSpeed;
-            endSpeed = clip.data.cameraEndSpeed;
-        }
-        else
-        {
-            mode = clip.cameraMoveMode;
-            camDir = clip.cameraDirection;
-            camDist = clip.cameraTotalDistance;
-            fixedTarget = clip.cameraTargetLocalPos;
-            moveSpeed = clip.cameraMoveSpeed;
-            startSpeed = clip.cameraStartSpeed;
-            endSpeed = clip.cameraEndSpeed;
-        }
+        mode = clip.cameraMoveMode;
+        camDir = clip.cameraDirection;
+        camDist = clip.cameraTotalDistance;
+        fixedTarget = clip.cameraTargetLocalPos;
+        moveSpeed = clip.cameraMoveSpeed;
+        startSpeed = clip.cameraStartSpeed;
+        endSpeed = clip.cameraEndSpeed;
 
         Transform roleTrans = ctrl.transform;
         float totalTime = (float)playable.GetDuration();

@@ -19,4 +19,8 @@ public class PlayerSO : ScriptableObject
     public float JumpScanRadius;
     public float VaultHeight;
     public float HighClimbHeight;
+    [Header("À¿Õˆ")]
+    public bool EnableBornAnim;
+    public Vector3 SpawnPoint;
+    public Quaternion SpwanRotation;
 }

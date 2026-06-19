@@ -43,6 +43,9 @@ public class Game_Event : Base_mgr<Game_Event>
     //任务怪额外修改数据
     public event Action<float,Enemy> ModifyEnemyDamage;
     public event Action<float,Enemy> ModifyEnemyMaxHP;
+    //死亡阶段
+    public event Action DeathState;
+    public event Action DeathSecState;
     protected override void Awake()
     {
         base.Awake();
@@ -156,7 +159,17 @@ public class Game_Event : Base_mgr<Game_Event>
     }
     public void ModifyHP(float property, Enemy enemy)
     {
-        ModifyEnemyMaxHP.Invoke(property, enemy);
+        ModifyEnemyMaxHP?.Invoke(property, enemy);
+    }
+    #endregion
+    #region 死亡
+    public void DeadState()
+    {
+        DeathState?.Invoke();
+    }
+    public void DeadSecState()
+    {
+        DeathSecState?.Invoke();
     }
     #endregion
 }

@@ -16,9 +16,6 @@ public enum ClimbStage
 }
 public class TransformTimelineClip : PlayableAsset, ITimelineClipAsset
 {
-    [Header("数据盒子")]
-    public ActionSO data;
-
     [Header("位移模式")]
     public MoveMode moveMode;
 
