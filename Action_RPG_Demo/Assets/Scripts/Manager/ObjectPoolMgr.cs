@@ -16,11 +16,19 @@ public class ObjectPoolMgr : Base_mgr<ObjectPoolMgr>
             PoolRoot.transform.SetParent(this.transform);
         }
     }
+    public GameObject GetObj(GameObject gameObj, Transform parent)
+    {
+        return GetObj(gameObj, parent.position, parent.rotation, parent);
+    }
     public GameObject GetObj(GameObject gameObj, Vector3 pos)
     {
-        return GetObj(gameObj, pos, Quaternion.identity);
+        return GetObj(gameObj, pos, Quaternion.identity, null);
     }
-    public GameObject GetObj(GameObject gameObj,Vector3 pos, Quaternion rot)
+    public GameObject GetObj(GameObject gameObj, Vector3 pos, Quaternion rot)
+    {
+        return GetObj(gameObj, pos, rot, null);
+    }
+    private GameObject GetObj(GameObject gameObj, Vector3 pos, Quaternion rot, Transform parent)
     {
         GameObject obj;
         string name = gameObj.name;
@@ -29,11 +37,15 @@ public class ObjectPoolMgr : Base_mgr<ObjectPoolMgr>
             obj = PoolDic[name].Dequeue();
             obj.transform.SetParent(null);
             obj.transform.SetPositionAndRotation(pos, rot);
+            if (parent != null)
+            {
+                obj.transform.SetParent(parent, false);
+            }
             obj.SetActive(true);
         }
         else
         {
-            obj = Instantiate(gameObj, pos, rot, null);
+            obj = Instantiate(gameObj, pos, rot, parent);
             obj.name = name;
         }
         return obj;
@@ -46,6 +58,7 @@ public class ObjectPoolMgr : Base_mgr<ObjectPoolMgr>
         }
         string name = obj.name;
         obj.SetActive(false);
+        obj.transform.SetParent(null, true);
         obj.transform.SetParent(PoolRoot.transform);
         if (!PoolDic.ContainsKey(name))
         {

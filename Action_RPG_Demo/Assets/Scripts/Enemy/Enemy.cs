@@ -91,6 +91,11 @@ public class Enemy : MonoBehaviour
                 //Story_Mgr.instance.QuestAdvance();
             }
         }
+        if (MiniMapMgr.instance.trackingTarget == this.gameObject)
+        {
+            NavPathMgr.instance.CloseNavPath();
+            MiniMapMgr.instance.trackingTarget = null;
+        }
     }
     public void TransitionState(EnemyStateType type)
     {
@@ -212,9 +217,12 @@ public class Enemy : MonoBehaviour
     {
         foreach(var i in damageTrigger.WaitHurt)
         {
-            i.GetHurt(damage, transform.forward);
-            i.InputMove = Vector3.zero;
-            Debug.Log($"打到了玩家{i.name}");
+            if (i.tag == "Player")
+            {
+                i.GetHurt(damage, transform.forward);
+                i.InputMove = Vector3.zero;
+            }
+            //Debug.Log($"打到了玩家{i.name}");
         }
     }
     public void FrezzeMove()

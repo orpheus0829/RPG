@@ -76,7 +76,6 @@ public class CameraPivot : Base_mgr<CameraPivot>
         TargetDistance = distance;
         SaveNormalCameraState();
     }
-
     public void AddZoomDelta(float scrollDelta)
     {
         TargetDistance -= scrollDelta * ZoomSpeed;

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 [System.Serializable]
 public class MainStoryData
@@ -21,9 +22,11 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
     public List<Dialogue_Set> DialogActor = new List<Dialogue_Set>();
     public Dictionary<Dialogue_Set, string> DialogueActorToIdDict = new Dictionary<Dialogue_Set, string>();
     public Dictionary<string, Dialogue_Set> IdToDialogueActorDict = new Dictionary<string, Dialogue_Set>();
-    [Header("任务对象缓存")]
+    [Header("任务相关缓存")]
     public List<GameObject> CurEnemys = new List<GameObject>();
     public List<GameObject> CurDrops = new List<GameObject>();
+    public GameObject CurActor;
+    public Vector3 CurQuestPos;
     [Header("数据盒debug")]
     public bool StoryDebug;
     public bool Advance;
@@ -71,6 +74,8 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
         }
         //CurQuest = Story.Chapters[CurStory.ChapterID].Episodes[CurStory.EpisodeID].Quests[CurStory.QuestID - 1];
         Refresh_StoryProgress();
+        CurQuestPos = CalculateQuestPos();
+        NavPathMgr.instance.OpenNavPath(CurQuestPos);
     }
     public void OnEnable()
     {
@@ -99,6 +104,8 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
             Debug_Story();
             StoryDebug = false;
         }
+        CurQuestPos = CalculateQuestPos();
+        //NavPathMgr.instance.targetPoint = CurQuestPos;
     }
     private void OnDestroy()
     {
@@ -194,6 +201,8 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
         }
 
         Refresh_StoryProgress();
+        CurQuestPos = CalculateQuestPos();
+        NavPathMgr.instance.OpenNavPath(CurQuestPos);
     }
     public QuestBase_SO GetCurrentQuest()
     {
@@ -247,10 +256,18 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
         if (curQuest is Dialogue_SO curDialogueQuest)
         {
             Dialogue_Set targetActor = GetDialogueActorByDialogueSO(curDialogueQuest);
-            targetActor.Story_Dialogue = curDialogueQuest;
-            targetActor.Switch_DialogueSO();
-            Debug.Log($"找到对话角色{targetActor.gameObject.name},对话SO为{curDialogueQuest.Single_Dialogue}");
-            // 下方写逻辑赋值触发对话UI等
+            if (targetActor != null)
+            {
+                CurActor = targetActor.gameObject;
+                targetActor.Story_Dialogue = curDialogueQuest;
+                targetActor.Switch_DialogueSO();
+                Debug.Log($"找到对话角色{targetActor.gameObject.name},对话SO为{curDialogueQuest.Single_Dialogue}");
+            }
+            else
+            {
+                CurActor = null;
+                Debug.Log($"对话任务 {curDialogueQuest.Quest_Title} 未匹配到对应NPC SpeakerId:{curDialogueQuest.SpeakerId}");
+            }
         }
         else if (curQuest is FightQuest_SO curFightQuest)
         {
@@ -265,7 +282,6 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
                     Game_Event.instance.ModifyHP(i.MaxHp, enemyprefab);
                 }
                 CurEnemys.Add(e);
-                //设置特殊血量啥的,待施工
             }
         }
         else if (curQuest is CollectQuest_SO curCollectQuest)
@@ -282,23 +298,101 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
             }
         }
     }
+    public Vector3 CalculateQuestPos()
+    {
+        QuestBase_SO quest = GetCurrentQuest();
+        if(quest is FightQuest_SO fight)
+        {
+            int count = CurEnemys.Count;
+            Vector3 pos = Vector3.zero;
+            foreach(var i in CurEnemys)
+            {
+                pos += i.gameObject.transform.position;
+            }
+            return pos / count;
+        }
+        else if(quest is CollectQuest_SO collect)
+        {
+            int count = CurDrops.Count;
+            Vector3 pos = Vector3.zero;
+            foreach (var i in CurDrops)
+            {
+                pos += i.gameObject.transform.position;
+            }
+            return pos / count;
+        }
+        else if(quest is Dialogue_SO dialogue)
+        {
+            if (CurActor)
+            {
+                return CurActor.gameObject.transform.position;
+            }
+        }
+        return Vector3.zero;
+    }
     public void CheckAllEnemyDead()
     {
-        if (CurQuest is FightQuest_SO)
+        if (CurQuest is FightQuest_SO fight)
         {
             if (CurEnemys.Count <= 0)
             {
+                DeliverReward(fight);
                 QuestAdvance();
             }
         }
     }
     public void CheckAllDrop()
     {
-        if (CurQuest is CollectQuest_SO)
+        if (CurQuest is CollectQuest_SO collect)
         {
             if (CurDrops.Count <= 0)
             {
+                DeliverReward(collect);
                 QuestAdvance();
+            }
+        }
+    }
+    public void DeliverReward(QuestBase_SO quest)
+    {
+        GameObject[] pl = GameObject.FindGameObjectsWithTag("Player");
+        foreach (var i in pl)
+        {
+            Player_Bag bag = i.GetComponent<Player_Bag>();
+            if (quest is FightQuest_SO fight)
+            {
+                foreach (var j in fight.Rewards)
+                {
+                    Item_Data data = j.Reward.GetComponent<Drop_gameObject>().item_Data;
+                    for (int n = 0; n < j.Count; n++)
+                    {
+                        bool get = bag.Pick_Up(data);
+                        if (!get)
+                        {
+                            PickNoticeMgr.instance.AddNote(data);
+                            ObjectPoolMgr.instance.GetObj(data.Drop, bag.gameObject.transform.position + Vector3.up * 2);
+                        }
+                    }
+                }
+            }
+            else if (quest is CollectQuest_SO collect)
+            {
+                foreach (var j in collect.single_QuestItems)
+                {
+                    foreach (var m in j.ItemGets)
+                    {
+                        Item_Data data = m.ItemGet.GetComponent<Drop_gameObject>().item_Data;
+                        for (int n = 0; n < m.CountGet; n++)
+                        {
+                            bool get = bag.Pick_Up(data);
+                            if (!get)
+                            {
+                                PickNoticeMgr.instance.AddNote(data);
+                                ObjectPoolMgr.instance.GetObj(data.Drop, bag.gameObject.transform.position + Vector3.up * 2);
+                                Debug.Log($"加入{data.item_name}");
+                            }
+                        }
+                    }
+                }
             }
         }
     }

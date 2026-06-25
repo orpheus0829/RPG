@@ -6,5 +6,5 @@ using UnityEngine;
 /// </summary>
 public interface IDamageable
 {
-    void TakeDamage(float damage, Vector3 attackDir);
+    void TakeDamage<T>(float damage, Vector3 attackDir) where T : MonoBehaviour;
 }

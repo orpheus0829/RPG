@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d3a3c6cfdc745f4a94702d36c410017, type: 3}
+  m_Name: "\u827E\u83B2\u5267\u60C5\u5BF9\u8BDD1"
+  m_EditorClassIdentifier: 
+  Quest_Title: "\u4E09\u8A00\u4E24\u8BED1"
+  Quest_Description: "\u548C\u827E\u83B2\u804A\u804A"
+  dialogueMode: 0
+  SpeakerName: "\u827E\u83B2"
+  SpeakerId: "\u827E\u83B2"
+  Single_Dialogue: Test1
+  Cut_Show: {fileID: 11400000, guid: 5d55b83c5df5c6444913a02fd32a610c, type: 2}
+  ContinueWay: 2
+  nextDialogue: {fileID: 11400000, guid: 2ff5ac79c6e56a748a8653b2f889569e, type: 2}
+  choiceDialogues: []
+  HasNext: 0

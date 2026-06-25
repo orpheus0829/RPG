@@ -377,14 +377,6 @@ public class Player_Bag : MonoBehaviour
     #region —∞’“”ÎÀ¢–¬
     public void Find_Image_By_id(Item_Data item, int posX, int posY)
     {
-        //Sprite image = Instantiate(item.Display_In_Backpacks, Images);
-        //image.gameObject.AddComponent<Item_Dragger>();
-        //var drag = image.GetComponent<Item_Dragger>();
-        //drag.data = item;
-        //drag.startPos = new Vector2Int(posX, posY);
-        //drag.Player_Bag = this;
-        //image.transform.SetParent(Images, false);
-
         int w = item.Width;
         int h = item.Height;
         GameObject iconObj = new GameObject("ItemIcon");
@@ -427,7 +419,10 @@ public class Player_Bag : MonoBehaviour
                     int sx = bag[i, j].Start_x;
                     int sy = bag[i, j].Start_y;
                     Item_Data tempItem = allData_Item.Data_List.Find(t => t.item_id == bag[i, j].item_ID);
-                    if (tempItem == null) continue;
+                    if (tempItem == null)
+                    {
+                        continue;
+                    }
                     Find_Image_By_id(tempItem, sx, sy);
                 }
             }

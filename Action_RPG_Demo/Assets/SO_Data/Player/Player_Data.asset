@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Player_Name: Player
   WalkSpeed: 5
-  RunSpeed: 7
-  PlayerMaxHP: 500
+  RunSpeed: 9
+  PlayerMaxHP: 1
   Deadline: 1000000
   AFKInterval: 15
   DetectionRadius: 6

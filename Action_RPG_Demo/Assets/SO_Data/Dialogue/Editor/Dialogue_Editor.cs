@@ -10,28 +10,24 @@ public class Dialogue_Editor : Editor
     {
         serializedObject.Update();
         Dialogue_SO so = target as Dialogue_SO;
-
-        // 基础信息
         EditorGUILayout.PropertyField(serializedObject.FindProperty("dialogueMode"));
         EditorGUILayout.Space(10);
-
-        // 发言人
+        if (so.dialogueMode == DialogueMode.Quest)
+        {
+            EditorGUILayout.LabelField("任务基础信息", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("Quest_Title"), new GUIContent("任务标题"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("Quest_Description"), new GUIContent("任务描述"));
+            EditorGUILayout.Space(10);
+        }
         EditorGUILayout.PropertyField(serializedObject.FindProperty("SpeakerName"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("SpeakerId"));
         EditorGUILayout.Space(10);
-
-        // 台词
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Single_Dialogue"));
         EditorGUILayout.Space(10);
-
-        // 演出
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Cut_Show"));
         EditorGUILayout.Space(10);
-
-        // 跳转方式
         EditorGUILayout.PropertyField(serializedObject.FindProperty("ContinueWay"));
         EditorGUILayout.Space(10);
-
         switch (so.ContinueWay)
         {
             case WayToNextDialogue.Next:
@@ -46,8 +42,6 @@ public class Dialogue_Editor : Editor
                 EditorGUILayout.HelpBox("对话结束，无后续内容", MessageType.Info);
                 break;
         }
-
-        // 应用修改
         serializedObject.ApplyModifiedProperties();
     }
 }

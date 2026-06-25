@@ -46,6 +46,9 @@ public class Game_Event : Base_mgr<Game_Event>
     //ËÀÍö½×¶Î
     public event Action DeathState;
     public event Action DeathSecState;
+    //Íæ¼ÒÐé»¯
+    public event Action SetDodgeAlpha;
+    public event Action SetNormalAlpha;
     protected override void Awake()
     {
         base.Awake();
@@ -171,5 +174,15 @@ public class Game_Event : Base_mgr<Game_Event>
     {
         DeathSecState?.Invoke();
     }
+    #region Íæ¼ÒÐé»¯
+    public void SetAlpha()
+    {
+        SetDodgeAlpha?.Invoke();
+    }
+    public void ReSetAlpha()
+    {
+        SetNormalAlpha?.Invoke();
+    }
+    #endregion
     #endregion
 }

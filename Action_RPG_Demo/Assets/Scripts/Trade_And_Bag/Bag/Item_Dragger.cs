@@ -54,12 +54,45 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         {
             drop_pos = vaildpoint[Random.Range(0, vaildpoint.Count)];
         }
-        Instantiate(data.Drop,drop_pos , Quaternion.identity);
+        ObjectPoolMgr.instance.GetObj(data.Drop, drop_pos, Quaternion.identity);
 
         Player_Bag.currentDraggingItem = null;
         Player_Bag.IsDragging = false;
         Player_Bag.resort_list.Remove(data);
         Destroy(this.gameObject);
+    }
+    public void Throw_Item(Item_Data dropitem)
+    {
+        Item_Dragger item = Player_Bag.currentDraggingItem;
+        if (item == null || item.data == null)
+        {
+            return;
+        }
+
+        int sx = Player_Bag.currentDraggingItem.startPos.x;
+        int sy = Player_Bag.currentDraggingItem.startPos.y;
+        int sw = Player_Bag.currentDraggingItem.data.Width;
+        int sh = Player_Bag.currentDraggingItem.data.Height;
+        Player_Bag.RemoveItem(sx, sy, sw, sh);
+        List<Vector3> vaildpoint = FindVaildGround(Player_Bag.gameObject.transform.position, Player_Bag.DropRadius);
+        Debug.Log("Œª÷√”–" + vaildpoint.Count);
+        Vector3 drop_pos;
+        if (vaildpoint.Count <= 0)
+        {
+            drop_pos = new Vector3(Player_Bag.gameObject.transform.position.x + Random.Range(-2f, 2f), Player_Bag.gameObject.transform.position.y + 0.5f, Player_Bag.gameObject.transform.position.z + Random.Range(-2f, 2f));
+            while (Vector3.Distance(drop_pos, Player_Bag.gameObject.transform.position) < 1f)
+            {
+                drop_pos = new Vector3(Player_Bag.gameObject.transform.position.x + Random.Range(-2f, 2f), Player_Bag.gameObject.transform.position.y + 0.5f, Player_Bag.gameObject.transform.position.z + Random.Range(-2f, 2f));
+            }
+        }
+        else
+        {
+            drop_pos = vaildpoint[Random.Range(0, vaildpoint.Count)];
+        }
+        ObjectPoolMgr.instance.GetObj(dropitem.Drop, drop_pos, Quaternion.identity);
+
+        Player_Bag.currentDraggingItem = null;
+        Player_Bag.IsDragging = false;
     }
     public List<Vector3> FindVaildGround(Vector3 center, float radius)
     {
