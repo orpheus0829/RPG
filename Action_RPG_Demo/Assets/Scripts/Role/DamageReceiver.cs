@@ -2,10 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// 受击逻辑组件
-/// 处理掉血、僵直、击退效果
-/// </summary>
 public class DamageReceiver : MonoBehaviour, IDamageable
 {
     public EnemySO enemydata;
@@ -56,45 +52,71 @@ public class DamageReceiver : MonoBehaviour, IDamageable
         }
     }
 
-    /// <summary>
-    /// 接收伤害处理
-    /// </summary>
-    public void TakeDamage(float damage, Vector3 attackDir)
+    //接收伤害处理
+    public void TakeDamage<T>(float damage, Vector3 attackDir) where T : MonoBehaviour
     {
-        if (damage <= 0)
+        T target = GetComponent<T>();
+        if (target == null)
         {
             return;
         }
-        if (isStiff)
+        if ((target is Player p && p.IsDead) || (target is Enemy e && e.IsDead))
         {
             return;
         }
-        currentHp -= damage;
-        CheckDead();
-        if(em && !pl)
+
+        if (damage <= 0 || isStiff)
         {
-            if (em.IsDead)
+            return;
+        }
+        bool killHit = false;
+        if (target is Player player)
+        {
+            pl = player;
+            em = null;
+            bool realDodge = pl.actionControl.currentAction == pl.actionControl.Character.Dodge || pl.actionControl.currentAction == pl.actionControl.Character.RunDodge;
+            if (realDodge)
             {
+                TimeMgr.instance.BulletTime(pl.DownSpeed, pl.BulletScale, pl.BulletDuration, pl.UpSpeed);
+                isStiff = true;
+                stiffTimer = stiffDuration;
                 return;
             }
-            if (damage > 0)
-            {
-                em.TransitionState(EnemyStateType.Hurt);
-            }
+            currentHp -= damage;
+            CheckDead<T>(target);
+            if (player.IsDead) killHit = true;
+        }
+        else if (target is Enemy enemy)
+        {
+            em = enemy;
+            pl = null;
+            currentHp -= damage;
+            CheckDead<T>(target);
+            if (enemy.IsDead) killHit = true;
+        }
+        if (killHit)
+        {
+            return;
+        }
+        if (target is Enemy en)
+        {
+            en.TransitionState(EnemyStateType.Hurt);
         }
         isStiff = true;
         stiffTimer = stiffDuration;
-
         if (Rb != null)
         {
             Rb.velocity = Vector3.zero;
             Rb.AddForce(attackDir.normalized * knockForce, ForceMode.Impulse);
         }
-        Debug.Log($"{gameObject.name} 受到伤害：{damage}");
     }
-    public void CheckDead()
+    private void CheckDead<T>(T target) where T : MonoBehaviour
     {
-        if ((em && em.IsDead) || pl && pl.IsDead)
+        if (target is Player p && p.IsDead)
+        {
+            return;
+        }
+        if (target is Enemy e && e.IsDead)
         {
             return;
         }
@@ -102,32 +124,33 @@ public class DamageReceiver : MonoBehaviour, IDamageable
         {
             return;
         }
-        if (pl && !em)
+        if (target is Player player)
         {
             Panel_Mgr.instance.HideAllPanel();
-            pl.IsDead = true;
+            player.IsDead = true;
             TimeMgr.instance.UnPauseGame();
-            pl.StopCurrentAction();
-            pl.Is_Action_Playing = true;
-            pl.actionControl.PlayAction(pl.actionControl.Character.Death);
-            pl.gameObject.tag = "DeadPlayer";
+            player.StopCurrentAction();
+            player.Is_Action_Playing = true;
+            player.actionControl.PlayAction(player.actionControl.Character.Death);
+            player.gameObject.tag = "DeadPlayer";
             GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
-            foreach (var i in enemys)
+            foreach (var obj in enemys)
             {
-                DamageTrigger trigger = i.GetComponent<Enemy>().damageTrigger;
-                if (trigger.WaitHurt.Contains(pl))
+                Enemy enemy = obj.GetComponent<Enemy>();
+                if (enemy == null) continue;
+                DamageTrigger trigger = enemy.damageTrigger;
+                if (trigger.WaitHurt.Contains(player))
                 {
-                    trigger.WaitHurt.Remove(pl);
+                    trigger.WaitHurt.Remove(player);
                 }
             }
         }
-        else if (em && !pl)
+        else if (target is Enemy enemy)
         {
-            Debug.Log("怪物死亡");
-            em.damageTrigger.WaitHurt.Clear();
-            em.IsDead = true;
-            em.col.isTrigger = true;
-            em.TransitionState(EnemyStateType.Dead);
+            enemy.damageTrigger.WaitHurt.Clear();
+            enemy.IsDead = true;
+            enemy.col.isTrigger = true;
+            enemy.TransitionState(EnemyStateType.Dead);
         }
     }
 }

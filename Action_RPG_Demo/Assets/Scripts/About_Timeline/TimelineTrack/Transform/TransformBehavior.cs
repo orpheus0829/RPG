@@ -84,7 +84,14 @@ public class TransformBehaviour : PlayableBehaviour
             }
             else
             {
-                _obstacleTopPos = _player.vaultObstacleTopPoint;
+                if (_player != null)
+                {
+                    _obstacleTopPos = _player.vaultObstacleTopPoint;
+                }
+                else
+                {
+                    _obstacleTopPos = _startPos;
+                }
                 if (_obstacleTopPos.magnitude < 0.01f)
                 {
                     _obstacleTopPos = _startPos;
@@ -131,14 +138,17 @@ public class TransformBehaviour : PlayableBehaviour
         bool shouldCheckCollision = clip.moveMode != MoveMode.ClimbOver || clip.climbStage == ClimbStage.BeforeClimb;
         if (shouldCheckCollision)
         {
-            float castR = _player.col.radius;
-            Vector3 rayStart = _curPos + Vector3.up * castR;
-            Vector3 flatDir = frameDelta.normalized;
-            float rayDist = frameDelta.magnitude;
-            if (rayDist > 0.001f && Physics.SphereCast(rayStart, checkRadius, flatDir, out RaycastHit hit, rayDist, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+            if (_player != null && _player.col != null)
             {
-                targetNextPos = hit.point - flatDir * 0.01f;
-                _isBlocked = true;
+                float castR = _player.col.radius;
+                Vector3 rayStart = _curPos + Vector3.up * castR;
+                Vector3 flatDir = frameDelta.normalized;
+                float rayDist = frameDelta.magnitude;
+                if (rayDist > 0.001f && Physics.SphereCast(rayStart, checkRadius, flatDir, out RaycastHit hit, rayDist, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+                {
+                    targetNextPos = hit.point - flatDir * 0.01f;
+                    _isBlocked = true;
+                }
             }
         }
         if (clip.moveMode == MoveMode.ClimbOver)

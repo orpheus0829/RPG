@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: "\u827E\u83B2chat1"
   m_EditorClassIdentifier: 
   Quest_Title: 
+  Quest_Description: 
   dialogueMode: 1
   SpeakerName: "\u827E\u83B2"
   SpeakerId: "\u827E\u83B2"
@@ -21,4 +22,4 @@ MonoBehaviour:
   ContinueWay: 0
   nextDialogue: {fileID: 11400000, guid: 2ff5ac79c6e56a748a8653b2f889569e, type: 2}
   choiceDialogues: []
-  HasNext: 0
+  HasNext: 1

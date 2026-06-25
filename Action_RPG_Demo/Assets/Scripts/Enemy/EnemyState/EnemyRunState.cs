@@ -50,7 +50,7 @@ public class EnemyRunState : Istate
             //}
             if (enemy.damageTrigger.WaitHurt.Count > 0 && enemy.AtkCoolDown <= 0)
             {
-                Debug.Log("是时候攻击了");
+                //Debug.Log("是时候攻击了");
                 enemy.TransitionState(EnemyStateType.Attack);
             }
             //else

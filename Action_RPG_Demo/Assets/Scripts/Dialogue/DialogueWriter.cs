@@ -12,6 +12,7 @@ public class DialogueWriter : MonoBehaviour
     public bool IsTyping;
     public string FullContent;
     [Header("ÒýÓÃ")]
+    public Dialogue_Set Actor;
     public GameObject ChoiceParent;
     public TextMeshProUGUI Speaker;
     public TextMeshProUGUI Content;
@@ -63,6 +64,12 @@ public class DialogueWriter : MonoBehaviour
             StopCoroutine(typ);
         }
         FullContent = CurDialogue.Single_Dialogue;
+        CameraPivot.instance.RestoreNormalCameraState();
+        CameraPivot.instance.isPlayingCameraAnim = false;
+        if (CurDialogue.Cut_Show)
+        {
+            Actor.PlayNpcAction(CurDialogue.Cut_Show);
+        }
         typ = StartCoroutine(TypeCoroutine());
     }
     public IEnumerator TypeCoroutine()
@@ -123,9 +130,14 @@ public class DialogueWriter : MonoBehaviour
         {
             Speaker.text = string.Empty;
             Content.text = string.Empty;
+            CameraPivot.instance.isPlayingCameraAnim = false;
+            Story_Mgr.instance.CurActor = null;
             Panel_Mgr.instance.HideAllPanel();
-            Story_Mgr.instance.QuestAdvance();
-            Story_Mgr.instance.Refresh_StoryProgress();
+            if (CurDialogue.dialogueMode == DialogueMode.Quest)
+            {
+                Story_Mgr.instance.QuestAdvance();
+                Story_Mgr.instance.Refresh_StoryProgress();
+            }
         }
     }
 }

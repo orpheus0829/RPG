@@ -69,12 +69,13 @@ public class Drop_gameObject : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            //写物品被吸收的代码
+            //写物品被吸收
             if (!IsQuestItem)
             {
                 bool Pick = other.gameObject.GetComponent<Player_Bag>().Pick_Up(this.item_Data);
                 if (Pick)
                 {
+                    PickNoticeMgr.instance.AddNote(item_Data);
                     other.gameObject.GetComponent<Player_Bag>().resort_list.Add(item_Data);
                     ObjectPoolMgr.instance.PushObj(gameObject);
                 }
@@ -104,15 +105,16 @@ public class Drop_gameObject : MonoBehaviour
                 }
                 Debug.Log("match到了");
                 IsQuestItem = false;
-                foreach (var item in QuestGets)
-                {
-                    bool Pick = other.gameObject.GetComponent<Player_Bag>().Pick_Up(item);
-                    if (Pick)
-                    {
-                        other.gameObject.GetComponent<Player_Bag>().resort_list.Add(item);
-                        Debug.Log($"加入{item.item_name}");
-                    }
-                }
+                //foreach (var item in QuestGets)
+                //{
+                //    bool Pick = other.gameObject.GetComponent<Player_Bag>().Pick_Up(item);
+                //    if (Pick)
+                //    {
+                //        PickNoticeMgr.instance.AddNote(item);
+                //        other.gameObject.GetComponent<Player_Bag>().resort_list.Add(item);
+                //        Debug.Log($"加入{item.item_name}");
+                //    }
+                //}
                 QuestGets.Clear();
                 if (Story_Mgr.instance.CurDrops.Contains(this.gameObject))
                 {

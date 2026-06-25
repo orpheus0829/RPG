@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.TextCore.Text;
@@ -59,6 +60,14 @@ public class Player : MonoBehaviour
     public bool IsDead;
     public float DeadTime;
 
+    [Header("闪避")]
+    public bool IsDodging;
+    public float DownSpeed;
+    public float UpSpeed;
+    public float BulletScale;
+    public float BulletDuration;
+    public float DodgeAlpha = 0.3f;
+
     [Header("特殊技")]
     public float Skill_PowerPool = 0;
     public float MaxPower = 100;
@@ -85,7 +94,8 @@ public class Player : MonoBehaviour
     public Interact_Trigger Interact_Trigger;
     public DamageReceiver damageReceiver;
     public Mouse mouse;
-    //public CameraPivot cameraPivot;
+    public List<SkinnedMeshRenderer> AllRenderers = new List<SkinnedMeshRenderer>();
+    public List<Material> MatCopies = new List<Material>();
 
     public void Awake()
     {
@@ -110,22 +120,38 @@ public class Player : MonoBehaviour
         PlayerPrefs.Save();
 
         moveaction = playerInput.actions["Move"];
+        GetComponentsInChildren<SkinnedMeshRenderer>(true, AllRenderers);
+        foreach (Renderer rd in AllRenderers)
+        {
+            foreach (Material mat in rd.materials)
+            {
+                Material instMat = new Material(mat);
+                MatCopies.Add(instMat);
+            }
+            int matCount = rd.materials.Length;
+            rd.materials = MatCopies.GetRange(MatCopies.Count - matCount, matCount).ToArray();
+        }
     }
     public void OnEnable()
     {
         Game_Event.instance.Init_Store += Set_StorePanel;
         Game_Event.instance.DeathState += BornSet;
         Game_Event.instance.DeathSecState += BornAction;
+        Game_Event.instance.SetDodgeAlpha += SetDodgeA;
+        Game_Event.instance.SetNormalAlpha += ResetA; ;
     }
     public void OnDisable()
     {
         Game_Event.instance.Init_Store -= Set_StorePanel;
         Game_Event.instance.DeathState -= BornSet;
         Game_Event.instance.DeathSecState -= BornAction;
+        Game_Event.instance.SetDodgeAlpha -= SetDodgeA;
+        Game_Event.instance.SetNormalAlpha -= ResetA; ;
     }
 
     public void Start()
     {
+        NavPathMgr.instance.OpenNavPath(new Vector3(2, 2, 2));
         if (actionControl.timelineDirector != null)
         {
             actionControl.timelineDirector.stopped += (director) =>
@@ -135,11 +161,14 @@ public class Player : MonoBehaviour
                 rb.isKinematic = false;
             };
         }
+        SetModelAlpha(1f);
+        NavPathMgr.instance.player = this.transform;
     }
     public void Update()
     {
         moveDir = moveaction.ReadValue<Vector3>();
         IsHoldingMove = moveDir.sqrMagnitude > 0.0001f;
+        IsDodging = actionControl.currentAction == actionControl.Character.Dodge || actionControl.currentAction == actionControl.Character.RunDodge;
         if (actionControl.currentAction == actionControl.Character.Walk)
         {
             Speed = playerSO.WalkSpeed;
@@ -148,7 +177,6 @@ public class Player : MonoBehaviour
         {
             Speed = playerSO.RunSpeed;
         }
-
         Update_Vault();
         if (Panel_Mgr.instance.IsPanelOpen)
         {
@@ -191,8 +219,7 @@ public class Player : MonoBehaviour
     public void FixedUpdate()
     {
         Move_Follow_Camera();
-        if (actionControl.currentAction != actionControl.Character.Idle
-    /*&& actionControl.currentAction != actionControl.Character.AfkIdle*/)
+        if (actionControl.currentAction != actionControl.Character.Idle)
         {
             CurAFKCount = 0;
         }
@@ -229,6 +256,7 @@ public class Player : MonoBehaviour
             Vector3 HorizontalVelocity = moveDir * Speed;
             rb.velocity = new Vector3(HorizontalVelocity.x, VerticalVelocity, HorizontalVelocity.z);
         }
+
         if (IsDead)
         {
             DeadTime -= Time.fixedDeltaTime;
@@ -238,7 +266,6 @@ public class Player : MonoBehaviour
             }
         }
     }
-
     public void StopCurrentAction()
     {
         Is_Action_Playing = false;
@@ -320,7 +347,7 @@ public class Player : MonoBehaviour
     {
         try
         {
-            if (Panel_Mgr.instance.IsPanelOpen)
+            if (Panel_Mgr.instance.IsPanelOpen || IsDead)
             {
                 return;
             }
@@ -350,7 +377,7 @@ public class Player : MonoBehaviour
     #region 闪避
     public void OnDodge(InputValue value)
     {
-        if (value.isPressed)
+        if (value.isPressed && !IsDead)
         {
             if (InputMove.magnitude > 0.1f)
             {
@@ -360,11 +387,31 @@ public class Player : MonoBehaviour
             }
             else
             {
+                AttackDectetcion();
                 StopCurrentAction();
                 Is_Action_Playing = true;
                 actionControl.PlayAction(actionControl.Character.Dodge);
             }
         }
+    }
+    public void SetModelAlpha(float alpha)
+    {
+        Debug.Log($"变色{alpha}");
+        float a = Mathf.Clamp01(alpha);
+        foreach (var mat in MatCopies)
+        {
+            Color c = mat.color;
+            c.a = a;
+            mat.color = c;
+        }
+    }
+    public void SetDodgeA()
+    {
+        SetModelAlpha(DodgeAlpha);
+    }
+    public void ResetA()
+    {
+        SetModelAlpha(1);
     }
     public void TurnRun()
     {
@@ -492,6 +539,7 @@ public class Player : MonoBehaviour
                 Cursor.lockState = CursorLockMode.None;
                 Panel_Mgr.instance.OpenPanel(Panel_Mgr.instance.DialoguePanel);
                 dialogueWriter.CurDialogue = Interact_Trigger.interactableChatNPCS[0].Cur_Dialogue;
+                dialogueWriter.Actor = Interact_Trigger.interactableChatNPCS[0];
                 dialogueWriter.WriteDialogue();
                 Panel_Mgr.instance.Control_InteractPanel(false, Panel_Mgr.instance.InteractChatPanel);
                 Panel_Mgr.instance.Control_InteractPanel(false, Panel_Mgr.instance.TraderPanel);
@@ -501,6 +549,12 @@ public class Player : MonoBehaviour
                 if (dialogueWriter.IsTyping || dialogueWriter.CurDialogue.ContinueWay != WayToNextDialogue.NoNext)
                 {
                     return;
+                }
+                CameraPivot.instance.isPlayingCameraAnim = false;
+                if (dialogueWriter.typ != null)
+                {
+                    StopCoroutine(dialogueWriter.typ);
+                    dialogueWriter.typ = null;
                 }
                 Cursor.lockState = CursorLockMode.Locked;
                 Panel_Mgr.instance.HideAllPanel();
@@ -513,9 +567,38 @@ public class Player : MonoBehaviour
         }
     }
     #endregion
+    #region 任务栏
+    public void OnMisson(InputValue value)
+    {
+        if(value.isPressed && !IsDead)
+        {
+            GameObject mission = Panel_Mgr.instance.MissionPanel.gameObject;
+            StoryRelation storyRelation = mission.GetComponentInChildren<StoryRelation>(includeInactive:true);
+            if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.MissionPanel))
+            {
+                Panel_Mgr.instance.OpenPanel(Panel_Mgr.instance.MissionPanel);
+                //storyRelation.CreateStoryDropDown();
+            }
+            else if (Panel_Mgr.instance.IsPanelOpen)
+            {
+                //storyRelation.DestroyAllDropDown();
+                Panel_Mgr.instance.HideAllPanel();
+            }
+        }
+    }
+    #endregion
     #region 跳跃与翻越
     public void OnJump(InputValue value)
     {
+        if (Panel_Mgr.instance.MissionPanel.gameObject.activeSelf)
+        {
+            Vector3 questPos = Story_Mgr.instance.CalculateQuestPos();
+            MiniMapMgr.instance.trackingTarget = null;
+            NavPathMgr.instance.SwitchNavTarget(questPos);
+            NavPathMgr.instance.CloseNavPath();
+            NavPathMgr.instance.OpenNavPath(questPos);
+            return;
+        }
         if (Panel_Mgr.instance.DialoguePanel.gameObject.activeSelf)
         {
             DialogueWriter writer = Panel_Mgr.instance.DialoguePanel.GetComponent<DialogueWriter>();
@@ -707,7 +790,7 @@ public class Player : MonoBehaviour
     #region 攻击
     public void OnAttack(InputValue value)
     {
-        if (Panel_Mgr.instance.IsPanelOpen)
+        if (Panel_Mgr.instance.IsPanelOpen || Panel_Mgr.instance.IsFullMapOpen || IsDead)
         {
             return;
         }
@@ -741,10 +824,6 @@ public class Player : MonoBehaviour
         Collider[] enemies = Physics.OverlapSphere(transform.position, playerSO.DetectionRadius, EnemyLayer);
         if (enemies.Length > 0)
         {
-            //Transform cam = Camera.main.transform;
-            //Vector3 camForward = cam.forward;
-            //camForward.y = 0;
-            //camForward.Normalize();
             mindistance = Mathf.Infinity;
             for (int i = 0; i < enemies.Length; i++)
             {
@@ -778,11 +857,20 @@ public class Player : MonoBehaviour
         {
             return;
         }
-        StopCurrentAction();
-        Is_Action_Playing = true;
-        actionControl.PlayAction(actionControl.Character.GetHit);
-        StartCoroutine(GetFly(dir));
-        damageReceiver.TakeDamage(damage, dir);
+        damageReceiver.TakeDamage<Player>(damage, dir);
+        if (IsDead)
+        {
+            TurnDeath();
+            return;
+        }
+
+        if (!IsDodging)
+        {
+            StopCurrentAction();
+            Is_Action_Playing = true;
+            actionControl.PlayAction(actionControl.Character.GetHit);
+            StartCoroutine(GetFly(dir));
+        }
     }
     public IEnumerator GetFly(Vector3 dir)
     {
@@ -792,6 +880,10 @@ public class Player : MonoBehaviour
         bool hitwall = false;
         while (t < 1)
         {
+            if (IsDead)
+            {
+                yield break;
+            }
             RaycastHit[] hits = Physics.RaycastAll(rb.position - dir * 0.4f, dir, 0.8f);
             foreach (var hit in hits)
             {
@@ -834,15 +926,18 @@ public class Player : MonoBehaviour
         gameObject.tag = "Player";
         rb.position = playerSO.SpawnPoint;
         rb.rotation = playerSO.SpwanRotation;
-        IsDead = false;
         Skill_PowerPool = 0;
         damageReceiver.currentHp = playerSO.PlayerMaxHP;
+    }
+    public void TrulyBorn()
+    {
+        IsDead = false;
     }
     public void BornAction()
     {
         if (playerSO.EnableBornAnim)
         {
-            CameraPivot.instance.PlayRevolveAroundPlayerAnim();
+            //CameraPivot.instance.PlayRevolveAroundPlayerAnim();
             StopCurrentAction();
             Is_Action_Playing = true;
             actionControl.PlayAction(actionControl.Character.Born);
@@ -854,18 +949,77 @@ public class Player : MonoBehaviour
             actionControl.PlayAction(actionControl.Character.AfkIdle);
         }
     }
+    public void OnCameraFrame()
+    {
+        CameraPivot.instance.isPlayingCameraAnim = true;
+    }
+    public void OffCameraFrame()
+    {
+        CameraPivot.instance.isPlayingCameraAnim = false;
+    }
     #endregion
+    #region 地图
+    public void OnMap(InputValue value)
+    {
+        if(value.isPressed&& !IsDead)
+        {
+            Panel_Mgr.instance.SwitchMap(Panel_Mgr.instance.CurMapStyle == MapStyle.Min);
+        }
+    }
+    #endregion
+    //#region 退出
+    //public void OnEscape(InputValue value)
+    //{
+    //    if(value.isPressed && !IsDead && Panel_Mgr.instance.IsPanelOpen)
+    //    {
+    //        Panel_Mgr.instance.HideAllPanel();
+    //    }
+    //}
+    //#endregion
     #region 相机
     public void Move_Follow_Camera()
     {
-        Transform cam = Camera.main.transform;
-        Vector3 camForward = cam.forward;
-        Vector3 camRight = cam.right;
+        //Transform cam = Camera.main.transform;
+        //Vector3 camForward = cam.forward;
+        //Vector3 camRight = cam.right;
+
+        //camForward.y = 0;
+        //camRight.y = 0;
+        //camForward.Normalize();
+        //camRight.Normalize();
+
+        //moveDir = camForward * InputMove.z + camRight * InputMove.x;
+
+        //if (moveDir.magnitude > 0.1f)
+        //{
+        //    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(moveDir), 15f * Time.fixedDeltaTime);
+        //}
+        Transform camPivotTrans = null;
+        if (CameraPivot.instance != null)
+        {
+            camPivotTrans = CameraPivot.instance.transform;
+        }
+        if (camPivotTrans == null)
+        {
+            camPivotTrans = Camera.main.transform;
+        }
+
+        Vector3 camForward = camPivotTrans.forward;
+        Vector3 camRight = camPivotTrans.right;
 
         camForward.y = 0;
         camRight.y = 0;
         camForward.Normalize();
         camRight.Normalize();
+        if (CameraTimelineBehaviour.IsLockMoveToCharForward == true)
+        {
+            camForward = transform.forward;
+            camRight = transform.right;
+            camForward.y = 0;
+            camRight.y = 0;
+            camForward.Normalize();
+            camRight.Normalize();
+        }
 
         moveDir = camForward * InputMove.z + camRight * InputMove.x;
 

@@ -31,8 +31,6 @@ public class LoadChoice : MonoBehaviour
         Debug.Log("º”‘ÿ—°œÓ");
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = true;
-        //DialogueWriter writer = Panel_Mgr.instance.GetComponent<DialogueWriter>();
-        //writer.ClearAllChoice();
         foreach (var i in dialogue.choiceDialogues)
         {
             GameObject btn = Instantiate(ChoicePrefab, Parent.transform);

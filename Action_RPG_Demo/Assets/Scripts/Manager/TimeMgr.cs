@@ -13,6 +13,9 @@ public class TimeMgr : Base_mgr<TimeMgr>
     [Header("目标时间倍率")]
     public float TargetTimeScale;
 
+    private Coroutine ActiveBulletTimeCor;
+    private float DefaultLerpSpeedBackup;
+
     protected override void Awake()
     {
         base.Awake();
@@ -63,5 +66,36 @@ public class TimeMgr : Base_mgr<TimeMgr>
     {
         Time.timeScale = scale;
         Time.fixedDeltaTime = OriginFixedDeltaTime * scale;
+    }
+    public void BulletTime(float downSpeed, float targetScale, float bulletDuration, float upSpeed)
+    {
+        if (ActiveBulletTimeCor != null)
+        {
+            StopCoroutine(ActiveBulletTimeCor);
+            TimeLerpSpeed = DefaultLerpSpeedBackup;
+        }
+        ActiveBulletTimeCor = StartCoroutine(BulletCoroutine(downSpeed, targetScale, bulletDuration, upSpeed));
+    }
+
+    private IEnumerator BulletCoroutine(float downSpeed, float targetScale, float realDuration, float upSpeed)
+    {
+        Game_Event.instance.SetAlpha();
+        TimeLerpSpeed = downSpeed;
+        TargetTimeScale = Mathf.Clamp(targetScale, 0.01f, 2f);
+        yield return WaitUntilTimeScaleReach(targetScale);
+        yield return new WaitForSecondsRealtime(realDuration);
+        Game_Event.instance.ReSetAlpha();
+        TimeLerpSpeed = upSpeed;
+        TargetTimeScale = NormalTimeScale;
+        yield return WaitUntilTimeScaleReach(NormalTimeScale);
+        TimeLerpSpeed = DefaultLerpSpeedBackup;
+        ActiveBulletTimeCor = null;
+    }
+    private IEnumerator WaitUntilTimeScaleReach(float target)
+    {
+        while (!Mathf.Approximately(Time.timeScale, target))
+        {
+            yield return null;
+        }
     }
 }

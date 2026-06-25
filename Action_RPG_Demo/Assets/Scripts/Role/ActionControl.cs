@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
-public class ActionControl : MonoBehaviour, INotificationReceiver
+public class ActionControl : BaseActor, INotificationReceiver
 {
     [Header("组件绑定")]
     public Player player;
@@ -58,10 +58,7 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
     public bool canInterrupt;
 
     [Header("攻击范围盒调试用")]
-    public SphereCollider _sphereCollider;
-    public BoxCollider _boxCollider;
     public float Hit_Force = 0;
-
     public Vector3 debugBoxOffset;
     public float debugBoxRadius;
     public bool debugDrawHitBox;
@@ -69,6 +66,10 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
     [HideInInspector] public float CurrentHitDamage;
     [HideInInspector] public HitBoxShape CurrentHitShape;
     [HideInInspector] public Vector3 CurrentHitBoxSize;
+    private Vector3 _curBoxOffset;
+    private float _curBoxRadius;
+    private Vector3 _curBoxSize;
+    private HitBoxShape _curShape;
     private void Awake()
     {
         player = GetComponent<Player>();
@@ -78,11 +79,7 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
     }
     public void Update()
     {
-        //if (currentAction == Character.Walk && player.InputMove == Vector3.zero)
-        //{
-        //    player.StopCurrentAction();
-        //    PlayAction(Character.WalkEnd);
-        //}
+
     }
     public void FixedUpdate()
     {
@@ -153,7 +150,7 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
         {
             player.isWalking = false;
         }
-        Debug.Log("切换为" + action.actionName);
+        //Debug.Log("切换为" + action.actionName);
         if (currentAction == Character.Walk)
         {
             currentAction = Character.Walk;
@@ -236,52 +233,62 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
         PlayAction(attackToPlay);
         player.IsAttacking = false;
     }
-    public void OpenHitBox(Vector3 offset, float radius, Vector3 boxSize)
+    public void SetHitBoxData(Vector3 offset, float radius, Vector3 size, HitBoxShape shape, float damage, float force)
     {
-        if (currentAction == null)
-        {
-            return;
-        }
-        CloseHitBox();
+        _curBoxOffset = offset;
+        _curBoxRadius = radius;
+        _curBoxSize = size;
+        _curShape = shape;
 
-        if (CurrentHitShape == HitBoxShape.Sphere)
-        {
-            if (_sphereCollider == null)
-            {
-                _sphereCollider = gameObject.AddComponent<SphereCollider>();
-                _sphereCollider.isTrigger = true;
-            }
-            _sphereCollider.center = offset;
-            _sphereCollider.radius = radius;
-            _sphereCollider.enabled = true;
-        }
-        else
-        {
-            if (_boxCollider == null)
-            {
-                _boxCollider = gameObject.AddComponent<BoxCollider>();
-                _boxCollider.isTrigger = true;
-            }
-            _boxCollider.center = offset;
-            _boxCollider.size = boxSize;
-            _boxCollider.enabled = true;
-        }
+        CurrentHitDamage = damage;
+        Hit_Force = force;
+        CurrentHitShape = shape;
+        CurrentHitBoxSize = size;
 
         debugBoxOffset = offset;
         debugBoxRadius = radius;
         debugDrawHitBox = true;
     }
-    public void CloseHitBox()
+
+    public void ClearHitBoxData()
     {
-        if (_sphereCollider != null)
-        {
-            _sphereCollider.enabled = false;
-        }
-        if (_boxCollider != null)
-        {
-            _boxCollider.enabled = false;
-        }
+        CurrentHitDamage = 0;
+        Hit_Force = 0;
         debugDrawHitBox = false;
+    }
+
+    public void DoSingleHitScan()
+    {
+        Vector3 worldCenter = transform.TransformPoint(_curBoxOffset);
+        Collider[] hits;
+
+        if (_curShape == HitBoxShape.Sphere)
+        {
+            hits = Physics.OverlapSphere(worldCenter, _curBoxRadius);
+        }
+        else
+        {
+            hits = Physics.OverlapBox(worldCenter, _curBoxSize * 0.5f, transform.rotation);
+        }
+
+        foreach (var col in hits)
+        {
+            if (!col.CompareTag("Enemy"))
+            {
+                continue;
+            }
+            if (!col.TryGetComponent(out IDamageable target))
+            {
+                continue;
+            }
+            target.TakeDamage<Enemy>(CurrentHitDamage, transform.forward);
+            Debug.Log($"造成{CurrentHitDamage}伤害");
+            if (Hit_Force != 0 && col.TryGetComponent(out DamageReceiver rec))
+            {
+                rec.knockForce = Hit_Force;
+            }
+        }
+        Hit_Force = 0;
     }
     public void OnDrawGizmos()
     {
@@ -289,7 +296,6 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
         {
             return;
         }
-
         Gizmos.color = Color.red;
         Vector3 worldPos = transform.TransformPoint(debugBoxOffset);
         if (CurrentHitShape == HitBoxShape.Sphere)
@@ -331,21 +337,4 @@ public class ActionControl : MonoBehaviour, INotificationReceiver
         return mainCamera.GetComponent<CameraMotion>();
     }
     #endregion
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.tag != "Enemy")
-        {
-            return;
-        }
-        if (other.TryGetComponent(out IDamageable target))
-        {
-            if(other.TryGetComponent(out DamageReceiver receiver))
-            {
-                receiver.knockForce = Hit_Force != 0 ? Hit_Force : receiver.knockForce;
-                //receiver.em.TransitionState(EnemyStateType.Hurt);
-            }
-            target.TakeDamage(CurrentHitDamage, transform.forward);
-            Hit_Force = 0;
-        }
-    }
 }
