@@ -25,33 +25,31 @@ MonoBehaviour:
   RunEnd: {fileID: 11400000, guid: cd9e700136b854148b59f179b1288467, type: 2}
   AtkList:
   - ATK: {fileID: 11400000, guid: a33569c2c6b17f9439c3c5cdaafd5607, type: 2}
-    ChargeNor: 2
     HasVariantATK: 0
     PerfectATK: {fileID: 0}
-    ChargePer: 0
-    Percentage: 0
   - ATK: {fileID: 11400000, guid: fa1c58fe7d5d740439969e3e56f23219, type: 2}
-    ChargeNor: 2
     HasVariantATK: 0
     PerfectATK: {fileID: 0}
-    ChargePer: 0
-    Percentage: 0
   - ATK: {fileID: 11400000, guid: 5f37969fbe8cc8c47af92d46737bbf12, type: 2}
-    ChargeNor: 2
     HasVariantATK: 0
     PerfectATK: {fileID: 0}
-    ChargePer: 0
-    Percentage: 0
   - ATK: {fileID: 11400000, guid: 7312288a44923184cafb9c1010527eb9, type: 2}
-    ChargeNor: 2
     HasVariantATK: 1
     PerfectATK: {fileID: 11400000, guid: 770cdb21c5d904442aa22ebadb41cf5b, type: 2}
-    ChargePer: 2
-    Percentage: 50
-  RelatedFullE: {fileID: 11400000, guid: b95677a32e8afa64bac6921cdfeea47a, type: 2}
-  FullE: {fileID: 11400000, guid: 04dc7ebd2c546ca44983bdd98b553686, type: 2}
-  RelatedUnfilledE: {fileID: 11400000, guid: 9b043eafcbb065c4f912de89435c5022, type: 2}
-  UnfilledE: {fileID: 11400000, guid: bf3dc92e2fa3cda449de78069b2883cb, type: 2}
+  RushAttack: {fileID: 11400000, guid: edda97e81795ebb408d45fcd7e6ca35f, type: 2}
+  RelatedFullE:
+    Special: {fileID: 11400000, guid: b95677a32e8afa64bac6921cdfeea47a, type: 2}
+    Cost: 60
+  FullE:
+    Special: {fileID: 11400000, guid: 04dc7ebd2c546ca44983bdd98b553686, type: 2}
+    Cost: 80
+  RelatedUnfilledE:
+    Special: {fileID: 11400000, guid: 9b043eafcbb065c4f912de89435c5022, type: 2}
+    Cost: 0
+  UnfilledE:
+    Special: {fileID: 11400000, guid: bf3dc92e2fa3cda449de78069b2883cb, type: 2}
+    Cost: 0
+  EndSkill: {fileID: 11400000, guid: 77d3856e0ff037e4cb544797b34994d0, type: 2}
   Jump: {fileID: 11400000, guid: d84ade2055b4bd34abd8def0b87d7560, type: 2}
   PreVault: {fileID: 11400000, guid: 439c2ba6142adc944b53e8a8a3863f3a, type: 2}
   AftVault: {fileID: 11400000, guid: 02e53aaaea6487d458a4fa62184ea914, type: 2}

@@ -75,7 +75,7 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
         //CurQuest = Story.Chapters[CurStory.ChapterID].Episodes[CurStory.EpisodeID].Quests[CurStory.QuestID - 1];
         Refresh_StoryProgress();
         CurQuestPos = CalculateQuestPos();
-        NavPathMgr.instance.OpenNavPath(CurQuestPos);
+        //NavPathMgr.instance.OpenNavPath(CurQuestPos);
     }
     public void OnEnable()
     {
@@ -144,7 +144,7 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
     }
     public void StoryAdvance()
     {
-        Debug.Log("storyadvance");
+        //Debug.Log("storyadvance");
         bool isLastChapter = Story.Chapters.Find(t => t.Chapter_ID == CurStory.ChapterID + 1) == null;
         if (isLastChapter)
         {
@@ -174,7 +174,7 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
     }
     public void QuestAdvance()
     {
-        Debug.Log("questadvance");
+        //Debug.Log("questadvance");
         Chapter_SO curChap = Story.Chapters.Find(c => c.Chapter_ID == CurStory.ChapterID);
         if (curChap == null)
         {
@@ -337,7 +337,9 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
             if (CurEnemys.Count <= 0)
             {
                 DeliverReward(fight);
+                PickNoticeMgr.instance.MissionDone();
                 QuestAdvance();
+                PickNoticeMgr.instance.MissionNext();
             }
         }
     }
@@ -348,9 +350,18 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
             if (CurDrops.Count <= 0)
             {
                 DeliverReward(collect);
+                PickNoticeMgr.instance.MissionDone();
                 QuestAdvance();
+                PickNoticeMgr.instance.MissionNext();
             }
         }
+    }
+    public void CheckDialogue()
+    {
+        PickNoticeMgr.instance.MissionDone();
+        QuestAdvance();
+        Refresh_StoryProgress();
+        PickNoticeMgr.instance.MissionNext();
     }
     public void DeliverReward(QuestBase_SO quest)
     {
@@ -368,8 +379,12 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
                         bool get = bag.Pick_Up(data);
                         if (!get)
                         {
-                            PickNoticeMgr.instance.AddNote(data);
                             ObjectPoolMgr.instance.GetObj(data.Drop, bag.gameObject.transform.position + Vector3.up * 2);
+                        }
+                        else
+                        {
+                            PickNoticeMgr.instance.AddNote(data);
+                            Debug.Log("发放奖励");
                         }
                     }
                 }
@@ -386,9 +401,12 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
                             bool get = bag.Pick_Up(data);
                             if (!get)
                             {
-                                PickNoticeMgr.instance.AddNote(data);
                                 ObjectPoolMgr.instance.GetObj(data.Drop, bag.gameObject.transform.position + Vector3.up * 2);
-                                Debug.Log($"加入{data.item_name}");
+                            }
+                            else
+                            {
+                                PickNoticeMgr.instance.AddNote(data);
+                                Debug.Log("发放奖励");
                             }
                         }
                     }

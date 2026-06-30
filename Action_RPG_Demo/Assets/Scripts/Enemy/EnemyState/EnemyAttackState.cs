@@ -14,13 +14,14 @@ public class EnemyAttackState : Istate
 
     public void OnEnter()
     {
+        enemy.IsAttacking = true;
         enemy.PlayAnim(3, "RunAttack", 0);
         enemy.agent.speed = enemy.enemySO.RunSpeed;
     }
 
     public void OnExit()
     {
-        
+        enemy.IsAttacking = false;
     }
 
     public void OnFixedUpdate()

@@ -7,12 +7,23 @@ using UnityEngine.UI;
 
 public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
 {
+    public Queue<GameObject> CenterAnounce = new Queue<GameObject>();
+    [Header("拾取提示")]
     public Queue<GameObject> Notices = new Queue<GameObject>();
     public GameObject Note;
     public Transform NoteParent;
     public float FadeDuration;
     public float AnimDuration;
     public float SlideOffsetx;
+    [Header("任务提示")]
+    public GameObject CenterText;
+    public Transform CenterParent;
+    private string MissionUpdate;
+    public string MissionSuccess;
+    public float CenterFadeDuration;
+    public float CenterAnimDuration;
+    public float CenterSlideOffsetx;
+    public bool CenterAnimRunning;
     protected override void Awake()
     {
         base.Awake();
@@ -25,12 +36,17 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
     {
 
     }
+    public void Update()
+    {
+
+    }
+    #region 拾取
     public void AddNote(Item_Data data)
     {
         GameObject n = ObjectPoolMgr.instance.GetObj(Note, NoteParent);
         Transform noteTrans = n.transform;
         CanvasGroup cg = n.GetComponent<CanvasGroup>();
-        if (cg == null)
+        if (!cg)
         {
             cg = n.AddComponent<CanvasGroup>();
         }
@@ -71,4 +87,77 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
         NoteText.text = string.Empty;
         ObjectPoolMgr.instance.PushObj(obj);
     }
+    #endregion
+    #region 任务
+    public void MissionDone()
+    {
+        EnqueueCenterText(MissionSuccess, 0f);
+    }
+    public void MissionNext()
+    {
+        MissionUpdate = $"下一幕:{Story_Mgr.instance.CurQuest.Quest_Title}";
+        float delay = CenterAnimRunning ? (CenterAnimDuration * 2 + CenterFadeDuration) : 0f;
+        EnqueueCenterText(MissionUpdate, delay);
+    }
+    private void EnqueueCenterText(string sourceText, float delay = 0f)
+    {
+        StartCoroutine(DelayAddToQueue(sourceText, delay));
+    }
+    private IEnumerator DelayAddToQueue(string text, float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        GameObject obj = CreateCenterTextObj(text);
+        CenterAnounce.Enqueue(obj);
+        if (!CenterAnimRunning)
+        {
+            StartCoroutine(ProcessCenterQueue());
+        }
+    }
+
+    private GameObject CreateCenterTextObj(string t)
+    {
+        GameObject obj = ObjectPoolMgr.instance.GetObj(CenterText, CenterParent);
+        TextMeshProUGUI mt = obj.GetComponent<TextMeshProUGUI>();
+        mt.text = t;
+        CanvasGroup cg = obj.GetComponent<CanvasGroup>();
+        if (!cg)
+        {
+            cg = obj.AddComponent<CanvasGroup>();
+        }
+        cg.alpha = 0;
+        obj.transform.localPosition = new Vector3(CenterSlideOffsetx, 0, 0);
+        return obj;
+    }
+
+    private IEnumerator ProcessCenterQueue()
+    {
+        CenterAnimRunning = true;
+        while (CenterAnounce.Count > 0)
+        {
+            GameObject curObj = CenterAnounce.Dequeue();
+            Transform trans = curObj.transform;
+            CanvasGroup cg = curObj.GetComponent<CanvasGroup>();
+            cg.alpha = 0;
+            trans.localPosition = new Vector3(CenterSlideOffsetx, 0, 0);
+            Sequence enterSeq = DOTween.Sequence();
+            enterSeq.Join(trans.DOLocalMoveX(0, CenterAnimDuration).SetEase(Ease.OutQuad));
+            enterSeq.Join(cg.DOFade(1, CenterAnimDuration));
+            yield return enterSeq.WaitForCompletion();
+            yield return new WaitForSeconds(CenterFadeDuration);
+            Sequence exitSeq = DOTween.Sequence();
+            exitSeq.Join(trans.DOLocalMoveX(-CenterSlideOffsetx, CenterAnimDuration).SetEase(Ease.InQuad));
+            exitSeq.Join(cg.DOFade(0, CenterAnimDuration));
+            yield return exitSeq.WaitForCompletion();
+            RecycleCenterObj(curObj);
+        }
+        CenterAnimRunning = false;
+    }
+
+    private void RecycleCenterObj(GameObject obj)
+    {
+        TextMeshProUGUI mt = obj.GetComponent<TextMeshProUGUI>();
+        mt.text = string.Empty;
+        ObjectPoolMgr.instance.PushObj(obj);
+    }
+    #endregion
 }

@@ -32,6 +32,7 @@ public class Enemy : MonoBehaviour
     public float AtkCoolDown;
     public bool IsChasing;
     public float damage;
+    public bool IsAttacking;
     public DamageTrigger damageTrigger;
     [Header("死亡")]
     public bool IsDead;
@@ -88,7 +89,6 @@ public class Enemy : MonoBehaviour
             if (Story_Mgr.instance.CurEnemys.Count <= 0)
             {
                 Story_Mgr.instance.CurEnemys.Clear();
-                //Story_Mgr.instance.QuestAdvance();
             }
         }
         if (MiniMapMgr.instance.trackingTarget == this.gameObject)
@@ -105,14 +105,12 @@ public class Enemy : MonoBehaviour
         }
         CurrentState = EnemyStates[type];
         CurType = type;
-        //Debug.Log($"进入{type}");
         CurrentState.OnEnter();
     }
     public void PlayAnim(int anim_num,string anim_name,float crossfade_time, int layer = 0)
     {
         string cur = RandomAnim(anim_num, anim_name);
         int useLayer = layer < 0 ? 0 : layer;
-        //Debug.Log($"本次播放{cur}");
         if (IsSpawnInit)
         {
             am.Play(cur);

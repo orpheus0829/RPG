@@ -15,6 +15,7 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
     public BasePanel DialoguePanel;
     public BasePanel MapPanel;
     public BasePanel MissionPanel;
+    public BasePanel EscPanel;
 
     public BasePanel BuyPanel;
     public BasePanel SellPanel;
@@ -107,6 +108,7 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
     public void HideAllPanel()
     {
         IsPanelOpen = false;
+        TimeMgr.instance.UnPauseGame();
         foreach (var panel in PanelList)
         {
             if (panel == InteractTradePanel || panel == InteractChatPanel || panel == BuyPanel || panel == SellPanel || panel==MapPanel)
@@ -155,6 +157,10 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
         panel.ShowPanel();
         cg.DOFade(1, FadeInDuration).SetEase(Ease.OutQuad);
         IsPanelOpen = true;
+        if (panel != DialoguePanel)
+        {
+            TimeMgr.instance.PauseGame();
+        }
     }
     public void OpenTraderBuyPanel()
     {

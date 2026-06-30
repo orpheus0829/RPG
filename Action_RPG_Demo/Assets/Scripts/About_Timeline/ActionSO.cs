@@ -24,4 +24,6 @@ public class ActionSO : ScriptableObject
 
     [Header("无突发时 → 自动跳转")]
     public ActionSO nextAction;
+
+    public bool Related;
 }

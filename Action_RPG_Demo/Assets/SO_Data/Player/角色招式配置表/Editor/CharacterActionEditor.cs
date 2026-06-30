@@ -42,15 +42,13 @@ public class CharacterActionEditor : Editor
                 {
                     EditorGUI.indentLevel++;
                     EditorGUILayout.PropertyField(item.FindPropertyRelative("ATK"));
-                    EditorGUILayout.PropertyField(item.FindPropertyRelative("ChargeNor"));
 
                     SerializedProperty hasVariant = item.FindPropertyRelative("HasVariantATK");
                     EditorGUILayout.PropertyField(hasVariant);
                     if (hasVariant.boolValue)
                     {
+                        EditorGUILayout.LabelField("重击", EditorStyles.boldLabel);
                         EditorGUILayout.PropertyField(item.FindPropertyRelative("PerfectATK"));
-                        EditorGUILayout.PropertyField(item.FindPropertyRelative("ChargePer"));
-                        EditorGUILayout.PropertyField(item.FindPropertyRelative("Percentage"));
                     }
                     EditorGUI.indentLevel--;
                 }
@@ -62,14 +60,14 @@ public class CharacterActionEditor : Editor
             {
                 atkList.arraySize++;
             }
-            if (GUILayout.Button("删除最后一项", GUILayout.Width(80)) && atkList.arraySize > 0)
+            if (GUILayout.Button("删除最后一项", GUILayout.Width(100)) && atkList.arraySize > 0)
             {
                 atkList.arraySize--;
             }
             EditorGUILayout.EndHorizontal();
             EditorGUI.indentLevel--;
         }
-
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("RushAttack"));
         EditorGUILayout.Space(8);
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("RelatedFullE"));
@@ -77,6 +75,7 @@ public class CharacterActionEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("RelatedUnfilledE"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("UnfilledE"));
         EditorGUILayout.Space(8);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("EndSkill"));
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Jump"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("PreVault"));
@@ -84,6 +83,9 @@ public class CharacterActionEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Slide"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("GetHit"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Death"));
+
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("SwitchIn"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("SwitchOut"));
 
         serializedObject.ApplyModifiedProperties();
     }

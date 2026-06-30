@@ -51,7 +51,7 @@ public class NavPathMgr : Base_mgr<NavPathMgr>
     public void Start()
     {
         targetPoint = Story_Mgr.instance.CurQuestPos;
-        OpenNavPath(targetPoint);
+        //OpenNavPath(targetPoint);
     }
     public void Update()
     {
