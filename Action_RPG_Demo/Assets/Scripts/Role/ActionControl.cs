@@ -121,8 +121,6 @@ public class ActionControl : BaseActor, INotificationReceiver
                 return;
             }
         }
-
-        //Debug.Log($"收到未知信号: {notification?.GetType().Name}");
     }
     public bool IsInAttackAction(ActionSO action)
     {
@@ -148,6 +146,7 @@ public class ActionControl : BaseActor, INotificationReceiver
         }
         if (IsInAttackAction(action))
         {
+            player.InputMove = Vector3.zero;
             player.isWalking = false;
         }
         //Debug.Log("切换为" + action.actionName);
@@ -206,6 +205,10 @@ public class ActionControl : BaseActor, INotificationReceiver
     #region 攻击判定
     public void PlayAttackAction()
     {
+        PlayAttackAction(false);
+    }
+    public void PlayAttackAction(bool IsHold)
+    {
         AttackLevel = canCombo ? (AttackLevel % Character.AtkList.Count) + 1 : 1;
 
         if (AttackLevel < 1 || AttackLevel > Character.AtkList.Count)
@@ -213,22 +216,10 @@ public class ActionControl : BaseActor, INotificationReceiver
             AttackLevel = 1;
         }
         Single_ATK atkData = Character.AtkList[AttackLevel - 1];
-        ActionSO attackToPlay;
-        if (atkData.HasVariantATK)
+        ActionSO attackToPlay = atkData.ATK;
+        if (atkData.HasVariantATK && IsHold)
         {
-            float random = Random.Range(0f, 100f);
-            if (random <= atkData.Percentage)
-            {
-                attackToPlay = atkData.PerfectATK;
-            }
-            else
-            {
-                attackToPlay = atkData.ATK;
-            }
-        }
-        else
-        {
-            attackToPlay = atkData.ATK;
+            attackToPlay = atkData.PerfectATK;
         }
         PlayAction(attackToPlay);
         player.IsAttacking = false;
@@ -282,7 +273,14 @@ public class ActionControl : BaseActor, INotificationReceiver
                 continue;
             }
             target.TakeDamage<Enemy>(CurrentHitDamage, transform.forward);
-            Debug.Log($"造成{CurrentHitDamage}伤害");
+            if (currentAction.actionType == ActionType.Attack)
+            {
+                player.Skill_PowerPool += CurrentHitDamage * player.PowerFactor;
+                player.Skill_PowerPool = Mathf.Clamp(player.Skill_PowerPool, 0, player.MaxPower);
+            }
+            player.Charge += CurrentHitDamage * player.ChargeFactor;
+            player.Charge = Mathf.Clamp(player.Charge, 0, player.MaxCharge);
+            //Debug.Log($"造成{CurrentHitDamage}伤害");
             if (Hit_Force != 0 && col.TryGetComponent(out DamageReceiver rec))
             {
                 rec.knockForce = Hit_Force;

@@ -51,8 +51,6 @@ public class DamageReceiver : MonoBehaviour, IDamageable
             }
         }
     }
-
-    //接收伤害处理
     public void TakeDamage<T>(float damage, Vector3 attackDir) where T : MonoBehaviour
     {
         T target = GetComponent<T>();
@@ -84,7 +82,10 @@ public class DamageReceiver : MonoBehaviour, IDamageable
             }
             currentHp -= damage;
             CheckDead<T>(target);
-            if (player.IsDead) killHit = true;
+            if (player.IsDead)
+            {
+                killHit = true;
+            }
         }
         else if (target is Enemy enemy)
         {
@@ -92,7 +93,10 @@ public class DamageReceiver : MonoBehaviour, IDamageable
             pl = null;
             currentHp -= damage;
             CheckDead<T>(target);
-            if (enemy.IsDead) killHit = true;
+            if (enemy.IsDead)
+            {
+                killHit = true;
+            }
         }
         if (killHit)
         {
@@ -101,6 +105,7 @@ public class DamageReceiver : MonoBehaviour, IDamageable
         if (target is Enemy en)
         {
             en.TransitionState(EnemyStateType.Hurt);
+            TimeMgr.instance.HitPause();
         }
         isStiff = true;
         stiffTimer = stiffDuration;

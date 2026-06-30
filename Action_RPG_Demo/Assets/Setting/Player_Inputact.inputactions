@@ -115,9 +115,45 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Misson",
+                    "name": "Mission",
                     "type": "Button",
                     "id": "7d139796-47b8-46e7-b430-6bcbbfdc3b22",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ClosePanel",
+                    "type": "Button",
+                    "id": "27ea30d2-f3d8-436f-9f17-41f52fc067bc",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Esc",
+                    "type": "Button",
+                    "id": "fa085ecb-8b78-4d35-a1e3-174a914fa475",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "EndSkill",
+                    "type": "Button",
+                    "id": "01c36440-5805-440e-af73-f3fcf4024eb6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SwitchRole",
+                    "type": "Button",
+                    "id": "424eb008-41e8-4239-8d77-29ee0f15a456",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -330,7 +366,51 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Misson",
+                    "action": "Mission",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fac41dc6-bc16-4a8c-9564-e33f2d681c73",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ClosePanel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ea32818d-8ccc-437d-abd5-9947161039b2",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Esc",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5b8084bb-4424-40c4-b0ab-1b26472eec8d",
+                    "path": "<Keyboard>/v",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EndSkill",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8b1f0b2c-a850-4309-b9bd-a7a06f382a0d",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchRole",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

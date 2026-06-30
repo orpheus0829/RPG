@@ -14,9 +14,13 @@ public class EnemyDeadState : Istate
 
     public void OnEnter()
     {
+        if (enemy.tag == "DeadEnemy")
+        {
+            return;
+        }
         //Debug.Log("ËÀÍöenter");
-        enemy.gameObject.tag = "DeadEnemy";
         enemy.PlayAnim(2, "DeadDown", 0.1f);
+        enemy.gameObject.tag = "DeadEnemy";
         enemy.SetChase(false);
     }
 

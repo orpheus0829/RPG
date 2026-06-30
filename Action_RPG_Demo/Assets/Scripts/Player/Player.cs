@@ -55,6 +55,10 @@ public class Player : MonoBehaviour
     [Header("攻击")]
     public bool IsAttacking;
     public LayerMask EnemyLayer;
+    public InputAction AtkAction;
+    public float HoldJudgeTime = 0.3f;
+    public Coroutine HoldATK;
+    public bool IsHoldAtk;
 
     [Header("死亡")]
     public bool IsDead;
@@ -70,7 +74,15 @@ public class Player : MonoBehaviour
 
     [Header("特殊技")]
     public float Skill_PowerPool = 0;
-    public float MaxPower = 100;
+    public float PowerFactor;
+    public float TriggerPower = 100;
+    public float MaxPower = 500;
+
+    [Header("终结技")]
+    public bool IsInvincible;
+    public float ChargeFactor;
+    public float Charge;
+    public float MaxCharge;
 
     [Header("相机")]
     public Vector3 moveDir;
@@ -93,26 +105,28 @@ public class Player : MonoBehaviour
     public CapsuleCollider col;
     public Interact_Trigger Interact_Trigger;
     public DamageReceiver damageReceiver;
+    public AudioSource au;
     public Mouse mouse;
     public List<SkinnedMeshRenderer> AllRenderers = new List<SkinnedMeshRenderer>();
     public List<Material> MatCopies = new List<Material>();
-
+    private const string volumeSaveKey = "GameSoundVolume";
     public void Awake()
     {
         rb = GetComponent<Rigidbody>();
         am = GetComponent<Animator>();
         col = GetComponent<CapsuleCollider>();
         playerInput = GetComponent<PlayerInput>();
-        //cameraPivot = GameObject.FindGameObjectWithTag("Camera_Pivot").GetComponent<CameraPivot>();
         Speed = playerSO.WalkSpeed;
         bag = GetComponent<Player_Bag>();
         Interact_Trigger = GetComponentInChildren<Interact_Trigger>();
         damageReceiver = GetComponent<DamageReceiver>();
         DeadTime = playerSO.Deadline;
         AFKTime = playerSO.AFKInterval;
+        au = GetComponent<AudioSource>();
         mouse = Mouse.current;
         rb.useGravity = true;
-
+        float savedVol = PlayerPrefs.GetFloat(volumeSaveKey, 0.7f);
+        au.volume = savedVol;
         if (PlayerPrefs.GetInt("Money", 0) <= 0)
         {
             PlayerPrefs.SetInt("Money", Start_Money);
@@ -134,6 +148,9 @@ public class Player : MonoBehaviour
     }
     public void OnEnable()
     {
+        AtkAction = playerInput.actions["Attack"];
+        AtkAction.started += AtkDown;
+        AtkAction.canceled += AtkUp;
         Game_Event.instance.Init_Store += Set_StorePanel;
         Game_Event.instance.DeathState += BornSet;
         Game_Event.instance.DeathSecState += BornAction;
@@ -142,6 +159,8 @@ public class Player : MonoBehaviour
     }
     public void OnDisable()
     {
+        AtkAction.started -= AtkDown;
+        AtkAction.canceled -= AtkUp;
         Game_Event.instance.Init_Store -= Set_StorePanel;
         Game_Event.instance.DeathState -= BornSet;
         Game_Event.instance.DeathSecState -= BornAction;
@@ -163,6 +182,7 @@ public class Player : MonoBehaviour
         }
         SetModelAlpha(1f);
         NavPathMgr.instance.player = this.transform;
+        NavPathMgr.instance.CloseNavPath();
     }
     public void Update()
     {
@@ -182,7 +202,7 @@ public class Player : MonoBehaviour
         {
             InputMove = Vector3.zero;
         }
-        if (actionControl.canCombo)
+        if (actionControl.canCombo && actionControl.currentAction != actionControl.Character.RushAttack)
         {
             AttackDectetcion();
         }
@@ -218,7 +238,10 @@ public class Player : MonoBehaviour
 
     public void FixedUpdate()
     {
-        Move_Follow_Camera();
+        if (!Panel_Mgr.instance.IsPanelOpen)
+        {
+            Move_Follow_Camera();
+        }
         if (actionControl.currentAction != actionControl.Character.Idle)
         {
             CurAFKCount = 0;
@@ -250,8 +273,13 @@ public class Player : MonoBehaviour
         }
         Back_To_Move();
 
-        if (!Is_Action_Playing)
+        if (!Is_Action_Playing )
         {
+            if (Panel_Mgr.instance.IsPanelOpen || IsDead)
+            {
+                InputMove = Vector3.zero;
+                return;
+            }
             float VerticalVelocity = rb.velocity.y;
             Vector3 HorizontalVelocity = moveDir * Speed;
             rb.velocity = new Vector3(HorizontalVelocity.x, VerticalVelocity, HorizontalVelocity.z);
@@ -277,6 +305,8 @@ public class Player : MonoBehaviour
     #region 移动
     public void Back_To_Move()
     {
+        if (actionControl.currentAction == actionControl.Character.RunDodge)
+            return;
         if (vaultFinishedFlag)
         {
             vaultFinishedFlag = false;
@@ -322,6 +352,7 @@ public class Player : MonoBehaviour
                 isStopping = true;
                 stopMoveLockTime = playerSO.LockDuration;
                 actionControl.PlayAction(actionControl.Character.RunEnd);
+                Debug.Log("2");
                 return;
             }
             return;
@@ -396,7 +427,7 @@ public class Player : MonoBehaviour
     }
     public void SetModelAlpha(float alpha)
     {
-        Debug.Log($"变色{alpha}");
+        //Debug.Log($"变色{alpha}");
         float a = Mathf.Clamp01(alpha);
         foreach (var mat in MatCopies)
         {
@@ -417,9 +448,12 @@ public class Player : MonoBehaviour
     {
         if (actionControl.currentAction == actionControl.Character.RunDodge && InputMove.magnitude > 0.1f)
         {
-            StopCurrentAction();
-            actionControl.PlayAction(actionControl.Character.Run);
-            Debug.Log("变为疾跑");
+            if (IsHoldingMove)
+            {
+                StopCurrentAction();
+                actionControl.PlayAction(actionControl.Character.Run);
+                //Debug.Log("变为疾跑");
+            }
         }
     }
     #endregion
@@ -430,7 +464,6 @@ public class Player : MonoBehaviour
         {
             if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.BagPanel))
             {
-                TimeMgr.instance.PauseGame();
                 Cursor.lockState = CursorLockMode.None;
                 Panel_Mgr.instance.OpenPanel(Panel_Mgr.instance.BagPanel);
                 Introduction_Mrg.instance.gameObject.SetActive(false);
@@ -440,7 +473,6 @@ public class Player : MonoBehaviour
             }
             else
             {
-                TimeMgr.instance.UnPauseGame();
                 Cursor.lockState = CursorLockMode.Locked;
                 bag.Save_Bag("Bag_Data");
                 bag.ReClean_Bag_Display();
@@ -469,14 +501,12 @@ public class Player : MonoBehaviour
         {
             if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.CraftPanel))
             {
-                TimeMgr.instance.PauseGame();
                 Cursor.lockState = CursorLockMode.None;
                 Panel_Mgr.instance.OpenPanel(Panel_Mgr.instance.CraftPanel);
                 Game_Event.instance.Init_Crafting();
             }
             else
             {
-                TimeMgr.instance.UnPauseGame();
                 Cursor.lockState = CursorLockMode.Locked;
                 Panel_Mgr.instance.HideAllPanel();
             }
@@ -511,7 +541,6 @@ public class Player : MonoBehaviour
         {
             if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.TraderPanel))
             {
-                TimeMgr.instance.PauseGame();
                 Cursor.lockState = CursorLockMode.None;
                 Panel_Mgr.instance.OpenTraderBuyPanel();
 
@@ -521,7 +550,6 @@ public class Player : MonoBehaviour
             }
             else
             {
-                TimeMgr.instance.UnPauseGame();
                 Cursor.lockState = CursorLockMode.Locked;
                 Panel_Mgr.instance.HideAllPanel();
             }
@@ -568,7 +596,7 @@ public class Player : MonoBehaviour
     }
     #endregion
     #region 任务栏
-    public void OnMisson(InputValue value)
+    public void OnMission(InputValue value)
     {
         if(value.isPressed && !IsDead)
         {
@@ -582,6 +610,22 @@ public class Player : MonoBehaviour
             else if (Panel_Mgr.instance.IsPanelOpen)
             {
                 //storyRelation.DestroyAllDropDown();
+                Panel_Mgr.instance.HideAllPanel();
+            }
+        }
+    }
+    #endregion
+    #region ESC
+    public void OnEsc(InputValue value)
+    {
+        if (value.isPressed && !IsDead)
+        {
+            if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.EscPanel))
+            {
+                Panel_Mgr.instance.OpenPanel(Panel_Mgr.instance.EscPanel);
+            }
+            else if (Panel_Mgr.instance.IsPanelOpen)
+            {
                 Panel_Mgr.instance.HideAllPanel();
             }
         }
@@ -771,42 +815,71 @@ public class Player : MonoBehaviour
             AttackDectetcion();
             StopCurrentAction();
             Is_Action_Playing = true;
-            if (actionControl.canCombo)
+            Single_SpecialATK action;
+            if (actionControl.canCombo && actionControl.currentAction.actionType == ActionType.Attack && actionControl.currentAction.Related)
             {
-                ActionSO action = MaxPower == Skill_PowerPool ? actionControl.Character.RelatedFullE : actionControl.Character.RelatedUnfilledE;
-                Debug.Log(action.actionName);
-                actionControl.PlayAction(action);
+                action = TriggerPower <= Skill_PowerPool ? actionControl.Character.RelatedFullE : actionControl.Character.RelatedUnfilledE;
+                Debug.Log(action.Special.actionName);
+                actionControl.PlayAction(action.Special);
             }
             else
             {
-                ActionSO action = MaxPower == Skill_PowerPool ? actionControl.Character.FullE : actionControl.Character.UnfilledE;
-                Debug.Log(action.actionName);
-                actionControl.PlayAction(action);
+                action = TriggerPower <= Skill_PowerPool ? actionControl.Character.FullE : actionControl.Character.UnfilledE;
+                Debug.Log(action.Special.actionName);
+                actionControl.PlayAction(action.Special);
             }
+            Skill_PowerPool -= action.Cost;
+            Skill_PowerPool = Mathf.Clamp(Skill_PowerPool, 0, MaxPower);
             actionControl.canCombo = false;
         }
     }
     #endregion
-    #region 攻击
-    public void OnAttack(InputValue value)
+    #region 终结技
+    public void OnEndSkill(InputValue value)
     {
-        if (Panel_Mgr.instance.IsPanelOpen || Panel_Mgr.instance.IsFullMapOpen || IsDead)
+        if (Charge < MaxCharge)
         {
             return;
         }
-        if (actionControl.canCombo)
-        {
-            Is_Action_Playing = false;
-        }
         if (value.isPressed)
         {
-            IsAttacking = true;
             StopCurrentAction();
             Is_Action_Playing = true;
-            AttackDectetcion();
-            actionControl.PlayAttackAction();
+            actionControl.PlayAction(actionControl.Character.EndSkill);
+            Charge = 0f;
         }
     }
+    public void InvincibleOn()
+    {
+        IsInvincible = true;
+        //gameObject.tag = "DeadPlayer";
+    }
+    public void InvincibleOff()
+    {
+        IsInvincible = false;
+        //gameObject.tag = "Player";
+    }
+    #endregion
+    #region 攻击
+    //public void OnAttack(InputValue value)
+    //{
+    //    if (Panel_Mgr.instance.IsPanelOpen || Panel_Mgr.instance.IsFullMapOpen || IsDead)
+    //    {
+    //        return;
+    //    }
+    //    if (actionControl.canCombo)
+    //    {
+    //        Is_Action_Playing = false;
+    //    }
+    //    if (value.isPressed)
+    //    {
+    //        IsAttacking = true;
+    //        StopCurrentAction();
+    //        Is_Action_Playing = true;
+    //        AttackDectetcion();
+    //        actionControl.PlayAttackAction();
+    //    }
+    //}
 
     public void AfterAttack()
     {
@@ -849,27 +922,99 @@ public class Player : MonoBehaviour
             }
         }
     }
+    private void AtkDown(InputAction.CallbackContext context)
+    {
+        if (Panel_Mgr.instance.IsPanelOpen || Panel_Mgr.instance.IsFullMapOpen || IsDead || actionControl.currentAction==actionControl.Character.RushAttack)
+        {
+            return;
+        }
+        IsHoldAtk = false;
+        HoldATK = StartCoroutine(HoldJudge());
+    }
+    private void AtkUp(InputAction.CallbackContext context)
+    {
+        if (actionControl.currentAction == actionControl.Character.Run || actionControl.currentAction == actionControl.Character.Dodge)
+        {
+            Debug.Log("rush");
+            if (HoldATK != null)
+            {
+                StopCoroutine(HoldATK);
+                HoldATK = null;
+            }
+            //InputMove = Vector3.zero;
+            //actionControl.canInterrupt = false;
+            RushAttack();
+            return;
+        }
+        if (HoldATK != null)
+        {
+            StopCoroutine(HoldATK);
+            HoldATK = null;
+        }
+        if (!IsHoldAtk)
+        {
+            TapAttack();
+        }
+    }
+    private IEnumerator HoldJudge()
+    {
+        yield return new WaitForSeconds(HoldJudgeTime);
+        IsHoldAtk = true;
+        HoldAttack();
+    }
+    public void TapAttack()
+    {
+        if (Panel_Mgr.instance.IsPanelOpen || Panel_Mgr.instance.IsFullMapOpen || IsDead)
+        {
+            return;
+        }
+        IsAttacking = true;
+        StopCurrentAction();
+        Is_Action_Playing = true;
+        AttackDectetcion();
+        actionControl.PlayAttackAction(false);
+    }
+    public void HoldAttack()
+    {
+        if (Panel_Mgr.instance.IsPanelOpen || Panel_Mgr.instance.IsFullMapOpen || IsDead)
+        {
+            return;
+        }
+        IsAttacking = true;
+        StopCurrentAction();
+        Is_Action_Playing = true;
+        AttackDectetcion();
+        actionControl.PlayAttackAction(true);
+    }
+    public void RushAttack()
+    {
+        StopCurrentAction();
+        AttackDectetcion();
+        Is_Action_Playing = true;
+        actionControl.canCombo = false;
+        actionControl.PlayAction(actionControl.Character.RushAttack);
+    }
     #endregion
     #region 受伤
     public void GetHurt(float damage,Vector3 dir)
     {
-        if (IsDead)
+        if (IsDead || IsInvincible)
         {
             return;
+        }
+        if (!IsDodging)
+        {
+            InputMove = Vector3.zero;
+            StopCurrentAction();
+            Is_Action_Playing = true;
+            actionControl.PlayAction(actionControl.Character.GetHit);
+            StartCoroutine(GetFly(dir));
         }
         damageReceiver.TakeDamage<Player>(damage, dir);
         if (IsDead)
         {
             TurnDeath();
             return;
-        }
-
-        if (!IsDodging)
-        {
-            StopCurrentAction();
-            Is_Action_Playing = true;
-            actionControl.PlayAction(actionControl.Character.GetHit);
-            StartCoroutine(GetFly(dir));
         }
     }
     public IEnumerator GetFly(Vector3 dir)
@@ -967,6 +1112,28 @@ public class Player : MonoBehaviour
         }
     }
     #endregion
+    #region 关闭面板
+    public void OnClosePanel(InputValue value)
+    {
+        if (value.isPressed)
+        {
+            Panel_Mgr.instance.HideAllPanel();
+            if (Panel_Mgr.instance.CurMapStyle == MapStyle.Max)
+            {
+                Panel_Mgr.instance.SwitchMap(false);
+            }
+        }
+    }
+    #endregion
+    #region 切换角色
+    public void OnSwitchRole(InputValue value)
+    {
+        if (value.isPressed && !IsDead && !Panel_Mgr.instance.IsPanelOpen)
+        {
+            //切换角色
+        }
+    }
+    #endregion
     //#region 退出
     //public void OnEscape(InputValue value)
     //{
@@ -1023,12 +1190,17 @@ public class Player : MonoBehaviour
 
         moveDir = camForward * InputMove.z + camRight * InputMove.x;
 
-        if (moveDir.magnitude > 0.1f)
+        if (moveDir.magnitude > 0.1f && actionControl.currentAction != actionControl.Character.RushAttack)
         {
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(moveDir), 15f * Time.fixedDeltaTime);
         }
     }
     #endregion
+    public void RefreshAudioVolume()
+    {
+        float vol = PlayerPrefs.GetFloat("GameSoundVolume", 0.7f);
+        au.volume = vol;
+    }
     #region 辅助调试显示
     //private void OnDrawGizmos()
     //{

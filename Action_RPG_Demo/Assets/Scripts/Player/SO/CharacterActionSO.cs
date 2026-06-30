@@ -6,12 +6,15 @@ using UnityEngine;
 public class Single_ATK
 {
     public ActionSO ATK;
-    public float ChargeNor;
     public bool HasVariantATK;
 
     public ActionSO PerfectATK;
-    public float ChargePer;
-    [Range(0f, 100f)] public float Percentage;
+}
+[System.Serializable]
+public class Single_SpecialATK
+{
+    public ActionSO Special;
+    public float Cost;
 }
 [CreateAssetMenu(fileName = "CharacterAction_Data", menuName = "Player/CharacterAction_Data")]
 public class CharacterActionSO : ScriptableObject
@@ -33,11 +36,14 @@ public class CharacterActionSO : ScriptableObject
 
     [Header("π•ª˜")]
     public List<Single_ATK> AtkList = new List<Single_ATK>();
+    public ActionSO RushAttack;
     [Header("Ãÿ ‚ºº")]
-    public ActionSO RelatedFullE;
-    public ActionSO FullE;
-    public ActionSO RelatedUnfilledE;
-    public ActionSO UnfilledE;
+    public Single_SpecialATK RelatedFullE;
+    public Single_SpecialATK FullE;
+    public Single_SpecialATK RelatedUnfilledE;
+    public Single_SpecialATK UnfilledE;
+    [Header("÷’Ω·ºº")]
+    public ActionSO EndSkill;
     [Header("Ã¯‘æ")]
     public ActionSO Jump;
     [Header("∑≠‘Ω")]
@@ -49,4 +55,8 @@ public class CharacterActionSO : ScriptableObject
     public ActionSO GetHit;
     [Header("À¿Õˆ")]
     public ActionSO Death;
+
+    [Header("«–ªª")]
+    public ActionSO SwitchIn;
+    public ActionSO SwitchOut;
 }

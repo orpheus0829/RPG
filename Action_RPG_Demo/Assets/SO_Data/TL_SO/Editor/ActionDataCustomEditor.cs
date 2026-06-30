@@ -5,6 +5,7 @@ using UnityEngine.Timeline;
 [CustomEditor(typeof(ActionSO))]
 public class ActionDataCustomEditor : Editor
 {
+    public bool AttackFold;
     public override void OnInspectorGUI()
     {
         ActionSO data = target as ActionSO;
@@ -25,6 +26,19 @@ public class ActionDataCustomEditor : Editor
 
         data.nextAction = EditorGUILayout.ObjectField("无突发时-->自动跳转", data.nextAction, typeof(ActionSO), false) as ActionSO;
         EditorGUILayout.Space(10);
+        if (data.actionType == ActionType.Attack)
+        {
+            AttackFold = true;
+        }
+        else
+        {
+            AttackFold = false;
+        }
+
+        if (AttackFold)
+        {
+            data.Related = EditorGUILayout.Toggle("攻击是否连携特殊技", data.Related);
+        }
 
         if (EditorGUI.EndChangeCheck())
         {

@@ -13,6 +13,11 @@ public class TimeMgr : Base_mgr<TimeMgr>
     [Header("目标时间倍率")]
     public float TargetTimeScale;
 
+    [Header("卡肉")]
+    public float HitPauseTime;
+    public bool IsHitPausing;
+
+    public Coroutine Hit;
     private Coroutine ActiveBulletTimeCor;
     private float DefaultLerpSpeedBackup;
 
@@ -26,17 +31,39 @@ public class TimeMgr : Base_mgr<TimeMgr>
             TargetTimeScale = NormalTimeScale;
             Time.timeScale = NormalTimeScale;
         }
+        IsHitPausing = false;
     }
 
     private void Update()
     {
+        if (IsHitPausing)
+        {
+            return;
+        }
         if (!Mathf.Approximately(Time.timeScale, TargetTimeScale))
         {
             float curScale = Mathf.Lerp(Time.timeScale, TargetTimeScale, TimeLerpSpeed * Time.unscaledDeltaTime);
             SetTimeScaleDirect(curScale);
         }
     }
-
+    public void HitPause()
+    {
+        if (Hit != null)
+        {
+            StopCoroutine(Hit);
+        }
+        Hit = StartCoroutine(HitStop());
+    }
+    public IEnumerator HitStop()
+    {
+        Debug.Log("卡肉");
+        IsHitPausing = true;
+        SetTimeScaleDirect(0f);
+        yield return new WaitForSecondsRealtime(HitPauseTime);
+        SetTimeScaleDirect(NormalTimeScale);
+        IsHitPausing = false;
+        Hit = null;
+    }
     public void OpenSlowMotion()
     {
         TargetTimeScale = SlowTimeScale;

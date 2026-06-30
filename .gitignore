@@ -78,6 +78,7 @@ crashlytics-build.properties
 *.a
 Action_RPG_Demo/Assets/MMD4Mecanim.meta
 /Action_RPG_Demo/Assets/艾莲文件/
+/Action_RPG_Demo/Assets/角色源文件/
 /Action_RPG_Demo/Assets/安比文件/
 /Action_RPG_Demo/Assets/Anims/
 /Action_RPG_Demo/Assets/KawaiiCity/

@@ -135,8 +135,7 @@ public class DialogueWriter : MonoBehaviour
             Panel_Mgr.instance.HideAllPanel();
             if (CurDialogue.dialogueMode == DialogueMode.Quest)
             {
-                Story_Mgr.instance.QuestAdvance();
-                Story_Mgr.instance.Refresh_StoryProgress();
+                Story_Mgr.instance.CheckDialogue();
             }
         }
     }

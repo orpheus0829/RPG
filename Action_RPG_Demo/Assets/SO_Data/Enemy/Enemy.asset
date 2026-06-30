@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Enemy
   m_EditorClassIdentifier: 
   Damage: 50
-  MaxHP: 1
+  MaxHP: 1000
   WalkSpeed: 0.5
   RunSpeed: 2
   ChaseRadius: 6

@@ -48,7 +48,7 @@ public class EnemyRunState : Istate
             //        enemy.TransitionState(EnemyStateType.Attack);
             //    }
             //}
-            if (enemy.damageTrigger.WaitHurt.Count > 0 && enemy.AtkCoolDown <= 0)
+            if (enemy.damageTrigger.WaitHurt.Count > 0 && enemy.AtkCoolDown <= 0 && !enemy.IsAttacking)
             {
                 //Debug.Log("ÊÇÊ±ºò¹¥»÷ÁË");
                 enemy.TransitionState(EnemyStateType.Attack);
