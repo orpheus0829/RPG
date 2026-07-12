@@ -1,89 +1,129 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
 /// <summary>
-/// 音效特效触发逻辑（修复残留循环播放）
+/// 音效特效触发逻辑，兼容ActionControl/EnemyActionCtrl，统一调用各自PlaySound
 /// </summary>
 public class EffectAudioBehaviour : PlayableBehaviour
 {
     public EffectAudioClip clip;
     private bool fired;
+    private float spawnTimer;
     public List<GameObject> VWait_for_Des = new List<GameObject>();
-    private AudioSource _cacheAudioSource;
+    private BaseActor _cacheCtrl;
 
     public override void OnGraphStart(Playable playable)
     {
         fired = false;
+        spawnTimer = 0f;
         VWait_for_Des.Clear();
+        _cacheCtrl = null;
     }
 
     public override void OnBehaviourPlay(Playable playable, FrameData info)
     {
         fired = false;
+        spawnTimer = 0f;
     }
 
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {
-        if (fired)
+        _cacheCtrl = playerData as BaseActor;
+        if (_cacheCtrl == null)
         {
             return;
         }
-        ActionControl ctrl = playerData as ActionControl;
-        if (ctrl == null)
-        {
-            return;
-        }
-        _cacheAudioSource = ctrl.audioSource;
 
+        float curTime = (float)playable.GetTime();
+        float duration = (float)playable.GetDuration();
+        float deltaTime = (float)info.deltaTime;
+        bool inTimeRange = curTime >= 0 && curTime <= duration;
+        if (inTimeRange != fired)
+        {
+            fired = inTimeRange;
+            spawnTimer = 0f;
+
+            if (inTimeRange)
+            {
+                if (!clip.useRepeatSpawn)
+                {
+                    SpawnAudioAndVfx();
+                }
+            }
+        }
+        if (inTimeRange && clip.useRepeatSpawn)
+        {
+            spawnTimer += deltaTime;
+            if (spawnTimer >= clip.spawnInterval)
+            {
+                SpawnAudioAndVfx();
+                spawnTimer = 0f;
+            }
+        }
+    }
+    private void SpawnAudioAndVfx()
+    {
         AudioClip snd = clip.sound;
         GameObject fx = clip.effectPrefab;
         Vector3 offset = clip.spawnOffset;
         Quaternion localRot = Quaternion.Euler(clip.spawnEuler);
         Vector3 localScl = clip.spawnScale;
 
-        Vector3 worldPos = ctrl.transform.TransformPoint(offset);
-        Quaternion worldRot = ctrl.transform.rotation * localRot;
-        if (snd != null && _cacheAudioSource != null)
+        Vector3 worldPos = _cacheCtrl.transform.TransformPoint(offset);
+        Quaternion worldRot = _cacheCtrl.transform.rotation * localRot;
+        if (snd != null)
         {
-            _cacheAudioSource.clip = snd;
-            _cacheAudioSource.Play();
+            if (_cacheCtrl is ActionControl playerCtrl)
+            {
+                playerCtrl.PlaySound(snd);
+            }
+            else if (_cacheCtrl is EnemyActionCtrl enemyCtrl)
+            {
+                enemyCtrl.PlaySound(snd);
+            }
         }
-
         if (fx != null)
         {
-            GameObject vfx = ctrl.SpawnEffect(fx, worldPos, worldRot);
-            vfx.transform.localScale = localScl;
-            VWait_for_Des.Add(vfx);
+            GameObject vfx = null;
+            if (_cacheCtrl is ActionControl playerCtrl)
+            {
+                vfx = playerCtrl.SpawnEffect(fx, worldPos, worldRot);
+            }
+            else if (_cacheCtrl is EnemyActionCtrl enemyCtrl)
+            {
+                vfx = enemyCtrl.SpawnEffect(fx, worldPos, worldRot);
+            }
+
+            if (vfx != null)
+            {
+                vfx.transform.localScale = localScl;
+                VWait_for_Des.Add(vfx);
+            }
         }
-        fired = true;
     }
+
     public override void OnBehaviourPause(Playable playable, FrameData info)
     {
-        if (_cacheAudioSource != null)
-        {
-            _cacheAudioSource.Stop();
-        }
-        foreach (var obj in VWait_for_Des)
-        {
-            if (obj != null)
-                GameObject.Destroy(obj);
-        }
-        VWait_for_Des.Clear();
+        RecycleAllVfx();
         fired = false;
+        spawnTimer = 0f;
+        _cacheCtrl = null;
     }
+
     public override void OnGraphStop(Playable playable)
     {
-        if (_cacheAudioSource != null)
-        {
-            _cacheAudioSource.Stop();
-        }
+        RecycleAllVfx();
+        _cacheCtrl = null;
+    }
 
+    private void RecycleAllVfx()
+    {
         foreach (var obj in VWait_for_Des)
         {
-            if (obj != null)
-                GameObject.Destroy(obj);
+            if (obj != null){
+                ObjectPoolMgr.instance.PushObj(obj);
+            }
         }
         VWait_for_Des.Clear();
     }

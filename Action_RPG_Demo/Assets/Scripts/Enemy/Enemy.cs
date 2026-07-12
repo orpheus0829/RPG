@@ -15,42 +15,42 @@ public enum EnemyStateType
     Hurt,
     Dead,
 }
-public class Enemy : MonoBehaviour
+public class Enemy : BaseEnemy
 {
-    public EnemySO enemySO;
     public bool IsSpawnInit = true;
-    public bool IsQuest;
     public float RotateSmooth;
     [Header("FSM")]
     public Istate CurrentState;
     public AnimatorStateInfo animstate;
     public Dictionary<EnemyStateType, Istate> EnemyStates = new Dictionary<EnemyStateType, Istate>();
     public EnemyStateType CurType;
-    [Header("¼ì²âÍæ¼Ò")]
-    public List<GameObject> PlayerList = new List<GameObject>();
     [Header("¹¥»÷")]
     public float AtkCoolDown;
-    public bool IsChasing;
     public float damage;
     public bool IsAttacking;
-    public DamageTrigger damageTrigger;
-    [Header("ËÀÍö")]
-    public bool IsDead;
-    public float DeadTime;
-    [Header("ÒýÓÃ")]
-    public CapsuleCollider col;
-    public Animator am;
-    public DamageReceiver damageReceiver;
-    public Rigidbody rb;
-    public NavMeshAgent agent;
-    public void Awake()
+    //public DamageTrigger damageTrigger;
+    //[Header("ËÀÍö")]
+    //public float DeadTime;
+    //public bool IsDead;
+    //[Header("ÒýÓÃ")]
+    //public CapsuleCollider col;
+    //public DamageReceiver damageReceiver;
+    //public Animator am;
+    //public Rigidbody rb;
+    //public NavMeshAgent agent;
+    public override void Awake()
     {
-        col = GetComponent<CapsuleCollider>();
+        base.Awake();
         am = GetComponent<Animator>();
-        damageReceiver = GetComponent<DamageReceiver>();
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
+        col = GetComponent<CapsuleCollider>();
+        damageReceiver = GetComponent<DamageReceiver>();
         damageTrigger = GetComponentInChildren<DamageTrigger>();
+        renderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        flashRenderer = GetComponent<HurtFlashRenderer>();
+        flashRenderer.TargetSkinRender = renderer;
+        flashRenderer.InitMaterial();
         damage = enemySO.Damage;
         damageReceiver.currentHp = enemySO.MaxHP;
         DeadTime = enemySO.DisappearTime;
@@ -70,31 +70,21 @@ public class Enemy : MonoBehaviour
     {
 
     }
-    public void OnEnable()
+    public override void OnEnable()
     {
+        base.OnEnable();
         IsSpawnInit = true;
-        IsDead = false;
-        DeadTime = enemySO.DisappearTime;
         TransitionState(Random.Range(1, 101) <= enemySO.IdlePer ? EnemyStateType.IdleAndPatrol : EnemyStateType.lie);
-        gameObject.tag = "Enemy";
+        DeadTime = enemySO.DisappearTime;
         col.isTrigger = false;
         damageReceiver.currentHp = enemySO.MaxHP;
     }
-    public void OnDisable()
+    public override void OnDisable()
     {
-        QuestBase_SO questBase = Story_Mgr.instance.GetCurrentQuest(); 
-        if (IsQuest && questBase is FightQuest_SO fight && Story_Mgr.instance.CurEnemys.Contains(this.gameObject))
+        base.OnDisable();
+        if (flashRenderer != null)
         {
-            Story_Mgr.instance.CurEnemys.Remove(this.gameObject);
-            if (Story_Mgr.instance.CurEnemys.Count <= 0)
-            {
-                Story_Mgr.instance.CurEnemys.Clear();
-            }
-        }
-        if (MiniMapMgr.instance.trackingTarget == this.gameObject)
-        {
-            NavPathMgr.instance.CloseNavPath();
-            MiniMapMgr.instance.trackingTarget = null;
+            flashRenderer.ClearTimer();
         }
     }
     public void TransitionState(EnemyStateType type)
@@ -129,7 +119,7 @@ public class Enemy : MonoBehaviour
     public void Update()
     {
         CurrentState.OnUpdate();
-        SearchPlayer();
+        SearchPlayer(enemySO.ChaseRadius);
         IsChasing = PlayerList.Count > 0 ? true : false;
     }
     public void FixedUpdate()
@@ -139,15 +129,15 @@ public class Enemy : MonoBehaviour
         {
             AtkCoolDown -= Time.fixedDeltaTime;
         }
-        if (IsDead)
-        {
-            DeadTime -= Time.fixedDeltaTime;
-            if (DeadTime <= 0)
-            {
-                ObjectPoolMgr.instance.PushObj(gameObject);
-                Story_Mgr.instance.CheckAllEnemyDead();
-            }
-        }
+        //if (IsDead)
+        //{
+        //    DeadTime -= Time.fixedDeltaTime;
+        //    if (DeadTime <= 0)
+        //    {
+        //        ObjectPoolMgr.instance.PushObj(gameObject);
+        //        Story_Mgr.instance.CheckAllEnemyDead();
+        //    }
+        //}
     }
     public string RandomAnim(int max,string anim_name)
     {
@@ -155,27 +145,13 @@ public class Enemy : MonoBehaviour
         string anim = $"{anim_name}{num}";
         return anim;
     }
-    public void SearchPlayer()
+    public override void SearchPlayer(float chaseradius)
     {
-        PlayerList.Clear();
-        Collider[] colliders = Physics.OverlapSphere(this.gameObject.transform.position, enemySO.ChaseRadius);
-        foreach(var i in colliders)
-        {
-            if (i.CompareTag("Player"))
-            {
-                PlayerList.Add(i.gameObject);
-            }
-        }
-        ResortPlayerList();
+        base.SearchPlayer(chaseradius);
     }
-    public void ResortPlayerList()
+    public override void ResortPlayerList()
     {
-        PlayerList.Sort((a, b) =>
-        {
-            float disa = (a.transform.position - transform.position).sqrMagnitude;
-            float disb = (b.transform.position - transform.position).sqrMagnitude;
-            return disa.CompareTo(disb);
-        });
+        base.ResortPlayerList();
     }
     public void RotateForward()
     {
@@ -187,29 +163,16 @@ public class Enemy : MonoBehaviour
         }
         if (PlayerList.Count > 0)
         {
-            TurnToPlayer(animTime);
+            TurnToPlayer(animTime,RotateSmooth);
         }
     }
-    public void TurnToPlayer(float time)
+    public override void TurnToPlayer(float time, float rotatesmmoth)
     {
-        //if (PlayerList.Count <= 0)
-        //{
-        //    return;
-        //}
-        Vector3 dir = PlayerList[0].transform.position - transform.position;
-        Quaternion d = Quaternion.LookRotation(dir);
-        transform.rotation = Quaternion.Lerp(transform.rotation, d, Time.deltaTime * RotateSmooth);
+        base.TurnToPlayer(time, rotatesmmoth);
     }
-    public void SetChase(bool chase)
+    public override void SetChase(bool chase, NavMeshAgent agent)
     {
-        if (chase && PlayerList.Count > 0)
-        {
-            agent.SetDestination(PlayerList[0].transform.position);
-        }
-        else
-        {
-            agent.ResetPath();
-        }
+        base.SetChase(chase, agent);
     }
     public void EnemyAttack()
     {
@@ -233,5 +196,18 @@ public class Enemy : MonoBehaviour
         Vector3 hitcenter = transform.position + new Vector3(0, enemySO.HitHigh, 0) + transform.forward * enemySO.HitLength;
         Gizmos.DrawWireSphere(hitcenter, enemySO.HitRadius);
         Gizmos.DrawLine(transform.position + transform.up * enemySO.HitHigh, transform.position + new Vector3(0, 0, enemySO.HitDetectLengeh));
+    }
+    public override void SwitchHurtState()
+    {
+        TransitionState(EnemyStateType.Hurt);
+    }
+    public override void SwitchDeadState()
+    {
+        TransitionState(EnemyStateType.Dead);
+        TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.DeltaTime, 0, DeadTime, null, () =>
+        {
+            ObjectPoolMgr.instance.PushObj(gameObject);
+            Story_Mgr.instance.CheckAllEnemyDead();
+        });
     }
 }

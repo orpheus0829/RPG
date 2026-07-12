@@ -18,6 +18,10 @@ public class HitBoxClip : PlayableAsset
     public HitBoxShape hitBoxShape;
     public Vector3 hitBoxSize;
 
+    [Header("÷ÿ∏¥≈–∂®…Ë÷√")]
+    public bool useRepeatScan;
+    public float scanInterval = 0.1f;
+
     public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
     {
         var b = new HitBoxBehaviour();

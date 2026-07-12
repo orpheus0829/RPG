@@ -14,8 +14,6 @@ public class CameraTimelineBehaviour : PlayableBehaviour
     public static int ActiveCameraClipCount = 0;
     public static bool IsLockMoveToCharForward = false;
     public bool isPlayer;
-
-    // 归位模式缓存：片段启动瞬间相机原始坐标（归位目标）
     private Vector3 _resetTargetPos;
 
     public override void OnGraphStart(Playable playable)
@@ -54,11 +52,8 @@ public class CameraTimelineBehaviour : PlayableBehaviour
         {
             return;
         }
-
-        // 初始化
         if (_isInit == false)
         {
-            // 归位模式：开播瞬间记录当前相机位置作为终点
             if (clip.cameraMoveMode == CamMoveMode.ResetOrigin)
             {
                 _resetTargetPos = camPivot.transform.position;
@@ -66,7 +61,6 @@ public class CameraTimelineBehaviour : PlayableBehaviour
             }
             else if (!clip.useLastFrameAsOrigin)
             {
-                // 原有直线/环绕初始化缓存
                 _cacheOriginRotX = camPivot.rotX;
                 _cacheOriginRotY = camPivot.rotY;
                 _cacheOriginDist = camPivot.distance;
@@ -78,8 +72,6 @@ public class CameraTimelineBehaviour : PlayableBehaviour
                 _isInit = true;
             }
         }
-
-        // ========== 归位模式独立分支 ==========
         if (clip.cameraMoveMode == CamMoveMode.ResetOrigin)
         {
             float progress = GetProgress(currentTime, totalDuration, clip.resetUseVariableSpeed, clip.resetStartSpeed, clip.resetEndSpeed);
@@ -87,24 +79,17 @@ public class CameraTimelineBehaviour : PlayableBehaviour
 
             if (clip.resetSubMode == ResetCamSubMode.Teleport)
             {
-                // 瞬间归位
                 camPivot.transform.position = _resetTargetPos;
             }
             else
             {
-                // 平滑缓动归位
                 Vector3 targetLerp = Vector3.Lerp(curCamPos, _resetTargetPos, clip.resetLerpFactor * Time.deltaTime);
                 camPivot.transform.position = targetLerp;
             }
-
-            // 朝向逻辑不变
             if (clip.lockLookAtPlayer)
                 camPivot.transform.LookAt(roleTrans.position + Vector3.up * 1.2f);
             return;
         }
-        // =====================================
-
-        // 原有直线/环绕进度计算
         float baseProgress;
         if (clip.useVariableSpeed == true)
         {
@@ -142,31 +127,21 @@ public class CameraTimelineBehaviour : PlayableBehaviour
         Vector3 finalTargetPos;
         if (!clip.useSurroundMode)
         {
-            // 直线模式完全保留原版逻辑
             finalTargetPos = worldTargetPos;
         }
         else
         {
             Vector3 roleFoot = roleTrans.position;
-            // 固定圆心高度，全程不变
             float circleY = roleFoot.y + clip.surroundFixedHeight;
             Vector3 circleCenter = new Vector3(roleFoot.x, circleY, roleFoot.z);
-
-            // 仅读取起点初始方位角，半径固定为面板surroundRadius，不受终点拖拽影响
             Vector3 originFlat = originWorldPos - roleFoot;
             originFlat.y = 0;
             float startAngleDeg = Mathf.Atan2(originFlat.x, originFlat.z) * Mathf.Rad2Deg;
-
-            // 进度叠加旋转角度
             float curAngleDeg = startAngleDeg + clip.surroundTotalAngle * baseProgress;
             float curRad = Mathf.Deg2Rad * curAngleDeg;
-
-            // 固定半径生成XZ圆弧
             float x = Mathf.Sin(curRad) * clip.surroundRadius;
             float z = Mathf.Cos(curRad) * clip.surroundRadius;
             Vector3 circleXZ = new Vector3(x, 0, z);
-
-            // 高度全程固定，不插值升降
             finalTargetPos = circleCenter + circleXZ;
         }
 
@@ -194,8 +169,6 @@ public class CameraTimelineBehaviour : PlayableBehaviour
             SetCameraLook(camPivot, roleTrans, finalTargetPos, lerpRot);
         }
     }
-
-    /// 统一进度计算函数（复用给归位变速）
     private float GetProgress(float curTime, float duration, bool useVarSpeed, float sSpd, float eSpd)
     {
         if (!useVarSpeed)
@@ -247,7 +220,6 @@ public class CameraTimelineBehaviour : PlayableBehaviour
         {
             return;
         }
-        // 归位模式不执行原始缓存还原
         if (clip.cameraMoveMode != CamMoveMode.ResetOrigin && isPlayer && !clip.useLastFrameAsOrigin)
         {
             camPivot.rotX = _cacheOriginRotX;

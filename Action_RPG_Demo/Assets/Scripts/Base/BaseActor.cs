@@ -4,17 +4,21 @@ using UnityEngine;
 
 public class BaseActor : MonoBehaviour
 {
-    //public float camRotX;
-    //public float camRotY;
-    //public float camDist;
-    //public float camHeight;
-    //public Quaternion camRot;
-    //public void UpdateCameraCache(float rx, float ry, float dist, float h, Quaternion rot)
-    //{
-    //    camRotX = rx;
-    //    camRotY = ry;
-    //    camDist = dist;
-    //    camHeight = h;
-    //    camRot = rot;
-    //}
+    public virtual void PlaySound(AudioClip clip)
+    {
+        if (clip == null)
+        {
+            return;
+        }
+        //AudioSource.PlayClipAtPoint(clip, transform.position);
+        SoundMgr.instance.PlaySingleSound(clip, this.transform.root.gameObject);
+    }
+    public virtual GameObject SpawnEffect(GameObject prefab, Vector3 pos, Quaternion rot)
+    {
+        if (prefab == null)
+        {
+            return null;
+        }
+        return ObjectPoolMgr.instance.GetObj(prefab, pos, rot);
+    }
 }

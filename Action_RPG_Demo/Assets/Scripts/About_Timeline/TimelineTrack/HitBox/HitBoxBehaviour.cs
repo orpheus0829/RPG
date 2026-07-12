@@ -6,44 +6,101 @@ public class HitBoxBehaviour : PlayableBehaviour
     public HitBoxClip clip;
 
     private bool isActive;
-    private ActionControl ctrlCache;
+    private BaseActor ctrlCache;
+    private float scanTimer;
 
     public override void OnBehaviourPlay(Playable playable, FrameData info)
     {
         isActive = false;
         ctrlCache = null;
+        scanTimer = 0f;
     }
 
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {
-        ActionControl ctrl = playerData as ActionControl;
-        ctrlCache = ctrl;
-        if (ctrl == null)
+        ctrlCache = playerData as BaseActor;
+        if (ctrlCache == null)
+        {
             return;
+        }
 
         float curTime = (float)playable.GetTime();
-        float duration = (float)playable.GetDuration();
-        bool inRange = /*duration > 0.0001f && */curTime >= clip.startTime && curTime <= clip.endTime;
-
+        float deltaTime = (float)info.deltaTime;
+        bool inRange = curTime >= clip.startTime && curTime <= clip.endTime;
         if (inRange != isActive)
         {
             isActive = inRange;
+            scanTimer = 0f;
+
             if (isActive)
             {
-                ctrl.SetHitBoxData(
-                    clip.boxOffset,
-                    clip.boxRadius,
-                    clip.hitBoxSize,
-                    clip.hitBoxShape,
-                    clip.damage,
-                    clip.HitForce
-                );
-                ctrl.DoSingleHitScan();
+                SetHitBoxDataToCtrl();
+                if (!clip.useRepeatScan)
+                {
+                    DoHitScan();
+                }
             }
             else
             {
-                ctrl.ClearHitBoxData();
+                ClearHitBoxDataToCtrl();
             }
+        }
+        if (isActive && clip.useRepeatScan)
+        {
+            scanTimer += deltaTime;
+            if (scanTimer >= clip.scanInterval)
+            {
+                DoHitScan();
+                scanTimer = 0f;
+            }
+        }
+    }
+    private void SetHitBoxDataToCtrl()
+    {
+        if (ctrlCache is ActionControl playerCtrl)
+        {
+            playerCtrl.SetHitBoxData(
+                clip.boxOffset,
+                clip.boxRadius,
+                clip.hitBoxSize,
+                clip.hitBoxShape,
+                clip.damage,
+                clip.HitForce
+            );
+        }
+        else if (ctrlCache is EnemyActionCtrl enemyCtrl)
+        {
+            enemyCtrl.SetHitBoxData(
+                clip.boxOffset,
+                clip.boxRadius,
+                clip.hitBoxSize,
+                clip.hitBoxShape,
+                clip.damage,
+                clip.HitForce
+            );
+        }
+    }
+    private void DoHitScan()
+    {
+        if (ctrlCache is ActionControl playerCtrl)
+        {
+            playerCtrl.DoSingleHitScan();
+        }
+        else if (ctrlCache is EnemyActionCtrl enemyCtrl)
+        {
+            enemyCtrl.DoSingleHitScan();
+            Debug.Log("´òÍæ¼Ò");
+        }
+    }
+    private void ClearHitBoxDataToCtrl()
+    {
+        if (ctrlCache is ActionControl playerCtrl)
+        {
+            playerCtrl.ClearHitBoxData();
+        }
+        else if (ctrlCache is EnemyActionCtrl enemyCtrl)
+        {
+            enemyCtrl.ClearHitBoxData();
         }
     }
 
@@ -51,9 +108,10 @@ public class HitBoxBehaviour : PlayableBehaviour
     {
         if (ctrlCache != null)
         {
-            ctrlCache.ClearHitBoxData();
+            ClearHitBoxDataToCtrl();
         }
         isActive = false;
+        scanTimer = 0f;
         ctrlCache = null;
     }
 }

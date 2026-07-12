@@ -170,7 +170,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.shadergraph": {
-      "version": "14.0.12",
+      "version": "17.0.4",
       "depth": 0,
       "source": "builtin",
       "dependencies": {

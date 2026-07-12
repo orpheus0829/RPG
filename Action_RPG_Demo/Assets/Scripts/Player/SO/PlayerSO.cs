@@ -23,4 +23,7 @@ public class PlayerSO : ScriptableObject
     public bool EnableBornAnim;
     public Vector3 SpawnPoint;
     public Quaternion SpwanRotation;
+    [Header("¼¼ÄÜ")]
+    public float MaxPower;
+    public float MaxCharge;
 }

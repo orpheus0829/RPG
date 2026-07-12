@@ -16,6 +16,9 @@ public class ActionControl : BaseActor, INotificationReceiver
     [Header("角色招式配置")]
     public CharacterActionSO Character;
     public ActionSO currentAction;
+    [Header("特殊技")]
+    public List<Single_SpecialATK> ActiveSkillPool;
+    public int ActiveSkillIndex;
     //[Header("待机动作")]
     //public ActionSO idleAction;
 
@@ -52,7 +55,7 @@ public class ActionControl : BaseActor, INotificationReceiver
     //[Header("死亡动作")]
     //public ActionSO DeathAction;
 
-    [Header("动作窗口（由 Timeline 信号控制）")]
+    [Header("动作窗口信号")]
     public int AttackLevel;
     public bool canCombo;
     public bool canInterrupt;
@@ -72,10 +75,11 @@ public class ActionControl : BaseActor, INotificationReceiver
     private HitBoxShape _curShape;
     private void Awake()
     {
-        player = GetComponent<Player>();
+        player = GetComponentInParent<Player>();
         roleAnimator = GetComponent<Animator>();
-        audioSource = GetComponent<AudioSource>();
+        audioSource = GetComponentInParent<AudioSource>();
         timelineDirector = GetComponent<PlayableDirector>();
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
     }
     public void Update()
     {
@@ -144,12 +148,34 @@ public class ActionControl : BaseActor, INotificationReceiver
         {
             return;
         }
+        bool isSpecialSkill = false;
+        var allSpecialLists = new List<List<Single_SpecialATK>>() { Character.RelatedFullE, Character.FullE, Character.RelatedUnfilledE, Character.UnfilledE };
+        foreach (var list in allSpecialLists)
+        {
+            foreach (var sp in list)
+            {
+                if (sp.Special == action)
+                {
+                    isSpecialSkill = true;
+                    break;
+                }
+            }
+            if (isSpecialSkill)
+            {
+                break;
+            }
+        }
+        if (!isSpecialSkill)
+        {
+            ActiveSkillIndex = 0;
+            ActiveSkillPool = null;
+        }
         if (IsInAttackAction(action))
         {
             player.InputMove = Vector3.zero;
             player.isWalking = false;
         }
-        //Debug.Log("切换为" + action.actionName);
+        Debug.Log("切换为" + action.actionName);
         if (currentAction == Character.Walk)
         {
             currentAction = Character.Walk;
@@ -262,26 +288,28 @@ public class ActionControl : BaseActor, INotificationReceiver
             hits = Physics.OverlapBox(worldCenter, _curBoxSize * 0.5f, transform.rotation);
         }
 
-        foreach (var col in hits)
+        foreach (var c in hits)
         {
-            if (!col.CompareTag("Enemy"))
+            if (!c.CompareTag("Enemy"))
             {
                 continue;
             }
-            if (!col.TryGetComponent(out IDamageable target))
+            if (!c.TryGetComponent(out IDamageable target))
             {
                 continue;
             }
-            target.TakeDamage<Enemy>(CurrentHitDamage, transform.forward);
+            target.TakeDamage<BaseEnemy>(CurrentHitDamage, transform.forward);
+            CameraPivot.instance.StartCameraShake(player.HitShakePower, player.HitShakeDuration, player.HitShakeFade);
+            DamageNumberMgr.instance.ShowDamageNumber(c.transform.position, CurrentHitDamage);
             if (currentAction.actionType == ActionType.Attack)
             {
                 player.Skill_PowerPool += CurrentHitDamage * player.PowerFactor;
-                player.Skill_PowerPool = Mathf.Clamp(player.Skill_PowerPool, 0, player.MaxPower);
+                player.Skill_PowerPool = Mathf.Clamp(player.Skill_PowerPool, 0, player.playerSO.MaxPower);
             }
             player.Charge += CurrentHitDamage * player.ChargeFactor;
-            player.Charge = Mathf.Clamp(player.Charge, 0, player.MaxCharge);
+            player.Charge = Mathf.Clamp(player.Charge, 0, player.playerSO.MaxCharge);
             //Debug.Log($"造成{CurrentHitDamage}伤害");
-            if (Hit_Force != 0 && col.TryGetComponent(out DamageReceiver rec))
+            if (Hit_Force != 0 && c.TryGetComponent(out DamageReceiver rec))
             {
                 rec.knockForce = Hit_Force;
             }
@@ -310,23 +338,21 @@ public class ActionControl : BaseActor, INotificationReceiver
     #region 动画/音效/特效
     public void PlayAnimation(AnimationClip clip)
     {
-        if (clip == null) return;
+        if (clip == null)
+        {
+            return;
+        }
         roleAnimator.Play(clip.name);
     }
 
-    public void PlaySound(AudioClip clip)
+    public override void PlaySound(AudioClip clip)
     {
-        if (clip == null) return;
-        AudioSource.PlayClipAtPoint(clip, player.transform.position);
+        base.PlaySound(clip);
     }
 
-    public GameObject SpawnEffect(GameObject prefab, Vector3 pos, Quaternion rot)
+    public override GameObject SpawnEffect(GameObject prefab, Vector3 pos, Quaternion rot)
     {
-        if (prefab == null)
-        {
-            return null;
-        }
-        return Instantiate(prefab, pos, rot);
+        return base.SpawnEffect(prefab, pos, rot);
     }
     #endregion
     #region 相机

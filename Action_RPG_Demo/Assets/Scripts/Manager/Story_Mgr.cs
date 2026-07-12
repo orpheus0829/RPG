@@ -28,7 +28,7 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
     public GameObject CurActor;
     public Vector3 CurQuestPos;
     [Header("数据盒debug")]
-    public bool StoryDebug;
+    public bool Init;
     public bool Advance;
     public bool Save;
 
@@ -99,10 +99,10 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
             Save_WorldStory(StoryPath);
             Save = false;
         }
-        if (StoryDebug)
+        if (Init)
         {
             Debug_Story();
-            StoryDebug = false;
+            Init = false;
         }
         CurQuestPos = CalculateQuestPos();
         //NavPathMgr.instance.targetPoint = CurQuestPos;
@@ -170,7 +170,7 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
             CurStory.QuestID = 0;
         }
         Save_WorldStory(StoryPath);
-        Refresh_StoryProgress();
+        //Refresh_StoryProgress();
     }
     public void QuestAdvance()
     {
@@ -275,7 +275,8 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
             {
                 //GameObject e = Instantiate(i.Enemy, i.Location, Quaternion.identity);
                 GameObject e = ObjectPoolMgr.instance.GetObj(i.Enemy, i.Location);
-                if (e.TryGetComponent(out Enemy enemyprefab))
+                Debug.Log($"生成{e.name}");
+                if (e.TryGetComponent(out BaseEnemy enemyprefab))
                 {
                     enemyprefab.IsQuest = true;
                     Game_Event.instance.ModifyDamage(i.Damage, enemyprefab);
@@ -360,7 +361,7 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
     {
         PickNoticeMgr.instance.MissionDone();
         QuestAdvance();
-        Refresh_StoryProgress();
+        //Refresh_StoryProgress();
         PickNoticeMgr.instance.MissionNext();
     }
     public void DeliverReward(QuestBase_SO quest)
@@ -414,15 +415,18 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
             }
         }
     }
-    public void ModifyD(float property, Enemy e)
+    public void ModifyD(float property, BaseEnemy e)
     {
         if (property == 0)
         {
             return;
         }
-        e.damage = property;
+        if(e is Enemy em)
+        {
+            em.damage = property;
+        }
     }
-    public void ModifyH(float property, Enemy e)
+    public void ModifyH(float property, BaseEnemy e)
     {
         if (property == 0)
         {
@@ -464,7 +468,7 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
     #endregion
     public void Debug_Story()
     {
-        if (!StoryDebug)
+        if (!Init)
         {
             return;
         }
@@ -473,43 +477,9 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
             Debug.Log("未赋值故事数据盒");
             return;
         }
-        for (int a = 0; a < Story.Chapters.Count; a++)
-        {
-            Chapter_SO chapter = Story.Chapters[a];
-            Debug.Log($"【第 {a + 1} 章】: {chapter.Chapter_Title}");
-            Debug.Log($"【第 {a + 1} 章】: {chapter.Chapter_Introduction}");
-            for (int b = 0; b < chapter.Episodes.Count; b++)
-            {
-                Episode_SO episode = chapter.Episodes[b];
-                Debug.Log($"【第 {b + 1} 节】: {episode.Episode_Title}");
-                Debug.Log($"【第 {b + 1} 节】: {episode.Episode_Introduction}");
-                for (int c = 0; c < episode.Quests.Count; c++)
-                {
-                    QuestBase_SO quest = episode.Quests[c];
-                    if (quest == null)
-                    {
-                        Debug.Log("任务为空！");
-                        continue;
-                    }
-                    if (quest is FightQuest_SO)
-                    {
-                        Debug.Log($"→ 战斗任务: {quest.Quest_Title}");
-                    }
-                    else if (quest is CollectQuest_SO)
-                    {
-                        Debug.Log($"→ 收集任务: {quest.Quest_Title}");
-                    }
-                    else if (quest is Dialogue_SO)
-                    {
-                        Debug.Log($"→ 对话任务: {quest.Quest_Title}");
-                    }
-                    else
-                    {
-                        Debug.Log($"→ 未知任务: {quest.Quest_Title}");
-                    }
-                }
-            }
-        }
-        Debug.Log("======= 遍历完成 =======");
+        CurStory.ChapterID = 1;
+        CurStory.EpisodeID = 1;
+        CurStory.QuestID = 0;
+        Save_WorldStory(StoryPath);
     }
 }

@@ -70,6 +70,7 @@ public static class TransformTimelineSceneDrawer
         if (curMode == MoveMode.FixedEndPos)
         {
             Vector3 worldEnd = bindTrans.TransformPoint(transClip.endPos);
+            Quaternion endRot = bindTrans.rotation * Quaternion.Euler(transClip.endEuler);
             Handles.DrawLine(worldStart, worldEnd, 4f);
 
             Handles.SphereHandleCap(0, worldStart, Quaternion.identity, 0.15f, EventType.Repaint);
@@ -84,8 +85,11 @@ public static class TransformTimelineSceneDrawer
                 EditorUtility.SetDirty(transClip);
             }
 
-            Handles.SphereHandleCap(0, worldEnd, Quaternion.identity, 0.15f, EventType.Repaint);
-            Handles.Label(worldEnd + Vector3.up * 0.3f, "瞬移终点（不影响速度）");
+            Handles.SphereHandleCap(0, worldEnd, endRot, 0.15f, EventType.Repaint);
+            Handles.color = Color.blue;
+            Handles.DrawLine(worldEnd, worldEnd + endRot * Vector3.forward * 0.6f, 2f);
+            Handles.color = Color.white;
+            Handles.Label(worldEnd + Vector3.up * 0.3f, "瞬移终点(本地偏移)");
         }
         else if (curMode == MoveMode.SpeedAndDistance || curMode == MoveMode.VariableSpeed)
         {
@@ -130,7 +134,60 @@ public static class TransformTimelineSceneDrawer
         else if (curMode == MoveMode.ClimbOver)
         {
             Handles.color = Color.yellow;
-            Handles.Label(worldStart + Vector3.up * 0.6f, "翻越模式：由跳跃检测生成点位，不可拖拽");
+            Handles.Label(worldStart + Vector3.up * 0.6f, "翻越模式(不可拖拽)");
+        }
+        else if (curMode == MoveMode.CircleRotate)
+        {
+            Vector3 WorldStart = bindTrans.position;
+            Vector3 originalWorldCenter = bindTrans.TransformPoint(transClip.circleCenterLocal);
+            Vector3 dragCenter = Handles.DoPositionHandle(originalWorldCenter, Quaternion.identity);
+            bool centerChanged = Vector3.Distance(dragCenter, originalWorldCenter) > 0.0001f;
+            if (centerChanged)
+            {
+                Undo.RecordObject(transClip, "修改绕圈中心点");
+                transClip.circleCenterLocal = bindTrans.InverseTransformPoint(dragCenter);
+                EditorUtility.SetDirty(transClip);
+            }
+            Vector3 realWorldCenter = bindTrans.TransformPoint(transClip.circleCenterLocal);
+            Vector3 radiusOrigin = realWorldCenter + (WorldStart - realWorldCenter).normalized * transClip.circleRadius;
+            Vector3 dragRadiusPoint = Handles.DoPositionHandle(radiusOrigin, Quaternion.identity);
+            float rawRadius = Vector3.Distance(dragRadiusPoint, realWorldCenter);
+            bool radiusChanged = !Mathf.Approximately(rawRadius, transClip.circleRadius);
+
+            //float finalRadius = Mathf.Max(0.01f, rawRadius);
+            float finalRadius = rawRadius;
+            if (radiusChanged)
+            {
+                Undo.RecordObject(transClip, "修改转圈半径");
+                transClip.circleRadius = finalRadius;
+                float neededAngSpeed = transClip.circleTotalAngle / clipDuration;
+                if (!transClip.circleVariableSpeed)
+                {
+                    transClip.circleConstantSpeed = neededAngSpeed;
+                }
+                EditorUtility.SetDirty(transClip);
+            }
+
+            Handles.color = Color.blue;
+            Handles.SphereHandleCap(0, realWorldCenter, Quaternion.identity, 1f, EventType.Repaint);
+            Handles.Label(realWorldCenter + Vector3.up * 2.2f, "绕圈中心点(可拖拽)");
+            Handles.color = Color.cyan;
+            int segCount = 60;
+            Vector3 prevPoint = realWorldCenter + (WorldStart - realWorldCenter).normalized * transClip.circleRadius;
+            for (int i = 1; i <= segCount; i++)
+            {
+                float ang = (360f / segCount) * i;
+                Quaternion rot = Quaternion.Euler(0, ang, 0);
+                Vector3 p = realWorldCenter + rot * (prevPoint - realWorldCenter);
+                Handles.DrawLine(prevPoint, p, 3f);
+                prevPoint = p;
+            }
+            Handles.color = Color.white;
+            Handles.Label(WorldStart + Vector3.up * 1.2f, $"绕圈｜半径:{transClip.circleRadius:F2} 总角度:{transClip.circleTotalAngle}°");
+            if (centerChanged || radiusChanged)
+            {
+                sceneView.Repaint();
+            }
         }
 
         sceneView.Repaint();

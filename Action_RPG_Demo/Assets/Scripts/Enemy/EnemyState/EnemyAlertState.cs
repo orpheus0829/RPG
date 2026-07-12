@@ -13,8 +13,12 @@ public class EnemyAlertState : Istate
     }
     public void OnEnter()
     {
+        if (enemy.tag == "DeadEnemy")
+        {
+            return;
+        }
         enemy.RotateForward();
-        enemy.SetChase(false);
+        enemy.SetChase(false, enemy.agent);
         //string cur= enemy.RandomAnim(2, "Detection");
         //Debug.Log($"±¾´Î²¥·Å{cur}");
         //if (enemy.IsSpawnInit)
@@ -54,12 +58,12 @@ public class EnemyAlertState : Istate
         else if(enemy.IsAnimFinished() && enemy.PlayerList.Count <= 0)
         {
             enemy.TransitionState(EnemyStateType.IdleAndPatrol);
-            enemy.SetChase(false);
+            enemy.SetChase(false, enemy.agent);
         }
     }
 
     public void OnUpdate()
     {
-        enemy.SetChase(false);
+        enemy.SetChase(false, enemy.agent);
     }
 }
