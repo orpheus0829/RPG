@@ -15,6 +15,10 @@ public class EffectAudioClip : PlayableAsset
     public Vector3 spawnEuler;
     public Vector3 spawnScale = Vector3.one;
 
+    [Header("÷ÿ∏¥¥•∑¢…Ë÷√")]
+    public bool useRepeatSpawn;
+    public float spawnInterval = 0.1f;
+
     public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
     {
         var b = new EffectAudioBehaviour();

@@ -26,3 +26,5 @@ MonoBehaviour:
   EnableBornAnim: 1
   SpawnPoint: {x: -16.17028, y: 2.009407, z: 17.07981}
   SpwanRotation: {x: 0, y: 0.94551855, z: 0, w: 0.32556814}
+  MaxPower: 500
+  MaxCharge: 100

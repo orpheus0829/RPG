@@ -41,8 +41,8 @@ public class Game_Event : Base_mgr<Game_Event>
     public event Action<Dialogue_SO> PressChoice2;
     public event Action DirectNextDialogue;
     //任务怪额外修改数据
-    public event Action<float,Enemy> ModifyEnemyDamage;
-    public event Action<float,Enemy> ModifyEnemyMaxHP;
+    public event Action<float,BaseEnemy> ModifyEnemyDamage;
+    public event Action<float,BaseEnemy> ModifyEnemyMaxHP;
     //死亡阶段
     public event Action DeathState;
     public event Action DeathSecState;
@@ -156,11 +156,11 @@ public class Game_Event : Base_mgr<Game_Event>
     }
     #endregion
     #region 修改任务怪物数值
-    public void ModifyDamage(float property,Enemy enemy)
+    public void ModifyDamage(float property,BaseEnemy enemy)
     {
         ModifyEnemyDamage?.Invoke(property, enemy);
     }
-    public void ModifyHP(float property, Enemy enemy)
+    public void ModifyHP(float property, BaseEnemy enemy)
     {
         ModifyEnemyMaxHP?.Invoke(property, enemy);
     }

@@ -13,6 +13,10 @@ public class EnemyIdleAndPatrolState : Istate
     }
     public void OnEnter()
     {
+        if (enemy.tag == "DeadEnemy")
+        {
+            return;
+        }
         //string cur = enemy.RandomAnim(9, "Idle");
         //Debug.Log($"±¾´Î²¥·Å{cur}");
         //if (enemy.IsSpawnInit)
@@ -24,7 +28,7 @@ public class EnemyIdleAndPatrolState : Istate
         //{
         //    am.CrossFade(cur, 0.3f);
         //}
-        enemy.SetChase(false);
+        enemy.SetChase(false, enemy.agent);
         enemy.PlayAnim(9,"Idle", 0.2f);
     }
 

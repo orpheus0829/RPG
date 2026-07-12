@@ -197,7 +197,7 @@ public class MiniMapMgr : Base_mgr<MiniMapMgr>
             usableIndex++;
         }
     }
-    void SpawnNewMark(ref List<Image> markPool)
+    public void SpawnNewMark(ref List<Image> markPool)
     {
         GameObject poolObj = ObjectPoolMgr.instance.GetObj(MarkPrefab.gameObject, MarksParent);
         MapPointer pointer = poolObj.GetComponent<MapPointer>();

@@ -5,7 +5,7 @@ using UnityEngine;
 public class DamageReceiver : MonoBehaviour, IDamageable
 {
     public EnemySO enemydata;
-    public Enemy em;
+    public BaseEnemy em;
     public PlayerSO playerdata;
     public Player pl;
     public float currentHp;
@@ -18,28 +18,60 @@ public class DamageReceiver : MonoBehaviour, IDamageable
     public bool isStiff;
     public Rigidbody Rb;
 
-    private void Awake()
+    public void Awake()
     {
         Rb = GetComponent<Rigidbody>();
-        if(this.gameObject.TryGetComponent(out Enemy enemy))
+        if (!Rb)
         {
-            enemydata = enemy.enemySO;
-            em = enemy;
-            playerdata = null;
-            pl = null;
-            Rb = enemy.rb;
+            Rb = gameObject.AddComponent<Rigidbody>();
         }
-        else if(this.gameObject.TryGetComponent(out Player player))
+        if (TryGetEnemyComponent(out BaseEnemy enemyBase))
         {
-            playerdata = player.playerSO;
-            pl = player;
-            enemydata = null;
-            em = null;
-            currentHp = playerdata.PlayerMaxHP;
-            Rb = player.rb;
+            InitEnemyData(enemyBase);
+        }
+        else if (TryGetComponent(out Player player))
+        {
+            InitPlayerData(player);
         }
     }
+    #region 初始化对象
+    private bool TryGetEnemyComponent(out BaseEnemy enemyBase)
+    {
+        enemyBase = null;
+        if (TryGetComponent(out Enemy enemy))
+        {
+            enemyBase = enemy;
+            return true;
+        }
+        if (TryGetComponent(out Raider raider))
+        {
+            enemyBase = raider;
+            return true;
+        }
+        return false;
+    }
 
+    private void InitEnemyData<T>(T enemy) where T : BaseEnemy
+    {
+        enemydata = enemy.enemySO;
+        em = enemy;
+        if (!em.IsQuest)
+        {
+            currentHp = enemydata.MaxHP;
+        }
+        playerdata = null;
+        pl = null;
+    }
+
+    private void InitPlayerData(Player player)
+    {
+        playerdata = player.playerSO;
+        pl = player;
+        enemydata = null;
+        em = null;
+        currentHp = playerdata.PlayerMaxHP;
+    }
+    #endregion
     private void Update()
     {
         if (isStiff)
@@ -58,57 +90,77 @@ public class DamageReceiver : MonoBehaviour, IDamageable
         {
             return;
         }
-        if ((target is Player p && p.IsDead) || (target is Enemy e && e.IsDead))
-        {
-            return;
-        }
-
-        if (damage <= 0 || isStiff)
+        if (IsTargetDead(target) || damage <= 0 || isStiff)
         {
             return;
         }
         bool killHit = false;
         if (target is Player player)
         {
-            pl = player;
-            em = null;
-            bool realDodge = pl.actionControl.currentAction == pl.actionControl.Character.Dodge || pl.actionControl.currentAction == pl.actionControl.Character.RunDodge;
-            if (realDodge)
-            {
-                TimeMgr.instance.BulletTime(pl.DownSpeed, pl.BulletScale, pl.BulletDuration, pl.UpSpeed);
-                isStiff = true;
-                stiffTimer = stiffDuration;
-                return;
-            }
-            currentHp -= damage;
-            CheckDead<T>(target);
-            if (player.IsDead)
-            {
-                killHit = true;
-            }
+            HandlePlayerDamage(player, damage, out killHit);
         }
-        else if (target is Enemy enemy)
+        else if (target is BaseEnemy enemy)
         {
-            em = enemy;
-            pl = null;
-            currentHp -= damage;
-            CheckDead<T>(target);
-            if (enemy.IsDead)
-            {
-                killHit = true;
-            }
+            HandleEnemyDamage(enemy, damage, out killHit);
         }
         if (killHit)
         {
             return;
         }
-        if (target is Enemy en)
+        ApplyHurtEffect(target, attackDir);
+    }
+    private bool IsTargetDead(MonoBehaviour target)
+    {
+        if (target is Player p)
         {
-            en.TransitionState(EnemyStateType.Hurt);
-            TimeMgr.instance.HitPause();
+            return p.IsDead;
         }
+        if (target is BaseEnemy e)
+        {
+            return e.IsDead;
+        }
+        return false;
+    }
+    private void HandlePlayerDamage(Player player, float damage, out bool killHit)
+    {
+        killHit = false;
+        pl = player;
+        em = null;
+        bool realDodge = pl.CurAC.currentAction == pl.CurAC.Character.Dodge || pl.CurAC.currentAction == pl.CurAC.Character.RunDodge;
+        if (realDodge)
+        {
+            TimeMgr.instance.BulletTime(pl.DownSpeed, pl.BulletScale, pl.BulletDuration, pl.UpSpeed);
+            isStiff = true;
+            stiffTimer = stiffDuration;
+            return;
+        }
+        currentHp -= damage;
+        CheckDead(player);
+        killHit = player.IsDead;
+    }
+    private void HandleEnemyDamage(BaseEnemy enemy, float damage, out bool killHit)
+    {
+        killHit = false;
+        em = enemy;
+        pl = null;
+        currentHp -= damage;
+        CheckDead(enemy);
+        killHit = enemy.IsDead;
+    }
+    private void ApplyHurtEffect(MonoBehaviour target, Vector3 attackDir)
+    {
         isStiff = true;
         stiffTimer = stiffDuration;
+        if(target.TryGetComponent(out HurtFlashRenderer hurtflash))
+        {
+            hurtflash.PlayFlashRed();
+        }
+        if (target is BaseEnemy enemy)
+        {
+            TimeMgr.instance.HitPause();
+            enemy.LookAtPlayer();
+            enemy.SwitchHurtState();
+        }
         if (Rb != null)
         {
             Rb.velocity = Vector3.zero;
@@ -117,45 +169,55 @@ public class DamageReceiver : MonoBehaviour, IDamageable
     }
     private void CheckDead<T>(T target) where T : MonoBehaviour
     {
-        if (target is Player p && p.IsDead)
+        if (IsTargetDead(target) || currentHp > 0)
         {
             return;
         }
-        if (target is Enemy e && e.IsDead)
+        if (target.TryGetComponent(out HurtFlashRenderer hurtflash))
         {
-            return;
-        }
-        if (currentHp > 0)
-        {
-            return;
+            hurtflash.PlayFlashRed();
         }
         if (target is Player player)
         {
-            Panel_Mgr.instance.HideAllPanel();
-            player.IsDead = true;
-            TimeMgr.instance.UnPauseGame();
-            player.StopCurrentAction();
-            player.Is_Action_Playing = true;
-            player.actionControl.PlayAction(player.actionControl.Character.Death);
-            player.gameObject.tag = "DeadPlayer";
-            GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
-            foreach (var obj in enemys)
+            HandlePlayerDeath(player);
+        }
+        else if (target is BaseEnemy enemy)
+        {
+            HandleEnemyDeath(enemy);
+        }
+    }
+    private void HandlePlayerDeath(Player player)
+    {
+        Panel_Mgr.instance.HideAllPanel();
+        player.IsDead = true;
+        TimeMgr.instance.UnPauseGame();
+        player.StopCurrentAction();
+        player.Is_Action_Playing = true;
+        player.CurAC.PlayAction(player.CurAC.Character.Death);
+        player.gameObject.tag = "DeadPlayer";
+        GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (var obj in enemys)
+        {
+            BaseEnemy enemy = obj.GetComponent<BaseEnemy>();
+            if (enemy == null)
             {
-                Enemy enemy = obj.GetComponent<Enemy>();
-                if (enemy == null) continue;
-                DamageTrigger trigger = enemy.damageTrigger;
-                if (trigger.WaitHurt.Contains(player))
-                {
-                    trigger.WaitHurt.Remove(player);
-                }
+                continue;
+            }
+            DamageTrigger trigger = enemy.damageTrigger;
+            if (trigger.WaitHurt.Contains(player))
+            {
+                trigger.WaitHurt.Remove(player);
             }
         }
-        else if (target is Enemy enemy)
+    }
+    private void HandleEnemyDeath(BaseEnemy enemy)
+    {
+        if (enemy.damageTrigger)
         {
             enemy.damageTrigger.WaitHurt.Clear();
-            enemy.IsDead = true;
-            enemy.col.isTrigger = true;
-            enemy.TransitionState(EnemyStateType.Dead);
         }
+        enemy.IsDead = true;
+        enemy.col.isTrigger = true;
+        enemy.SwitchDeadState();
     }
 }

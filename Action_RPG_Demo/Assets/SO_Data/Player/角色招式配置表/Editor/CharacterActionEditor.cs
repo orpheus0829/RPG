@@ -7,7 +7,8 @@ public class CharacterActionEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("Roledata"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("RoleParry"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Idle"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("AfkIdle"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("BornSet"));
@@ -68,6 +69,7 @@ public class CharacterActionEditor : Editor
             EditorGUI.indentLevel--;
         }
         EditorGUILayout.PropertyField(serializedObject.FindProperty("RushAttack"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("Block"));
         EditorGUILayout.Space(8);
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("RelatedFullE"));

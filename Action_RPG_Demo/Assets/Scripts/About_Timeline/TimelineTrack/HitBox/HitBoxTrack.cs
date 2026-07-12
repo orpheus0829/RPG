@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
-[TrackBindingType(typeof(ActionControl))]
+[TrackBindingType(typeof(BaseActor))]
 [TrackClipType(typeof(HitBoxClip))]
 public class HitBoxTrack : TrackAsset
 {

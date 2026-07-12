@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
-
 public enum MoveMode
 {
     FixedEndPos,
     SpeedAndDistance,
     VariableSpeed,
     ClimbOver,
+    CircleRotate,
 }
 public enum ClimbStage
 {
@@ -24,6 +24,7 @@ public class TransformTimelineClip : PlayableAsset, ITimelineClipAsset
 
     [Header("模式1;固定终点")]
     public Vector3 endPos;
+    public Vector3 endEuler;
 
     [Header("模式2;速度+距离(匀速)")]
     public float moveSpeed;
@@ -40,6 +41,16 @@ public class TransformTimelineClip : PlayableAsset, ITimelineClipAsset
     public float climbStartSpeed;
     public float climbEndSpeed;
     public float climbAfterExtraDistance;
+
+    [Header("模式5;绕圈旋转")]
+    public Vector3 circleCenterLocal;
+    public float circleRadius;
+    public float circleTotalAngle;
+    public bool circleClockwise = true;
+    public bool circleVariableSpeed;
+    public float circleConstantSpeed;
+    public float circleStartAngSpeed;
+    public float circleEndAngSpeed;
 
     public ClipCaps clipCaps => ClipCaps.Blending;
 

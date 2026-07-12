@@ -18,6 +18,7 @@ public class ActionBindingText : MonoBehaviour
     public void Awake()
     {
         t = GetComponent<TextMeshProUGUI>();
+        playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
         if (!LinkButton)
         {
             Transform parent = transform.parent;

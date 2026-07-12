@@ -7,7 +7,7 @@ using UnityEngine.Timeline;
 /// <summary>
 /// 特效音效轨道容器
 /// </summary>
-[TrackBindingType(typeof(ActionControl))]
+[TrackBindingType(typeof(BaseActor))]
 [TrackClipType(typeof(EffectAudioClip))]
 public class EffectAudioTrack : TrackAsset
 {

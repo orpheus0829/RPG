@@ -43,11 +43,11 @@ public class Interact_Trigger : MonoBehaviour
             Panel_Mgr.instance.TraderPanel?.HidePanel();
             //Panel_Mgr.instance.IsPanelOpen = false;
         }
-        if (interactableChatNPCS.Count <= 0)
-        {
-            Panel_Mgr.instance.DialoguePanel?.HidePanel();
-            //Panel_Mgr.instance.IsPanelOpen = false;
-        }
+        //if (interactableChatNPCS.Count <= 0)
+        //{
+        //    Panel_Mgr.instance.DialoguePanel?.HidePanel();
+        //    //Panel_Mgr.instance.IsPanelOpen = false;
+        //}
     }
     private void OnTriggerEnter(Collider other)
     {

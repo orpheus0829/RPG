@@ -1,19 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Playables;
 using UnityEngine.TextCore.Text;
 
+[System.Serializable]
+public class RoleList
+{
+    public string RoleID;
+    public GameObject RoleObj;
+    public ActionControl RoleAC;
+}
 public class Player : MonoBehaviour
 {
     public PlayerSO playerSO;
-    public ActionControl actionControl;
     public PlayerInput playerInput;
     public bool Is_Action_Playing;
     public float AFKTime;
     public float CurAFKCount;
-
+    [Header("角色切换")]
+    public List<RoleList> allrole;
+    public ActionControl CurAC;
+    public int CurRoleIndex;
+    public Dictionary<string, (float hp, float skillpool, float charge)> RoleStatusCache = new Dictionary<string, (float hp, float skillpool, float charge)>();
+    public bool IsSwitchingRole = false;
     [Header("移动")]
     public Vector3 InputMove;
     public InputAction moveaction;
@@ -53,6 +67,8 @@ public class Player : MonoBehaviour
     public readonly float rayOriginOffset = 0.2f;
 
     [Header("攻击")]
+    public GameObject AtkTo;
+    public float AttackStopDistance = 1.2f;
     public bool IsAttacking;
     public LayerMask EnemyLayer;
     public InputAction AtkAction;
@@ -86,6 +102,9 @@ public class Player : MonoBehaviour
 
     [Header("相机")]
     public Vector3 moveDir;
+    public float HitShakePower;
+    public float HitShakeDuration;
+    public float HitShakeFade;
 
     [Header("============背包相关============")]
 
@@ -113,7 +132,7 @@ public class Player : MonoBehaviour
     public void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        am = GetComponent<Animator>();
+        am = GetComponentInChildren<Animator>();
         col = GetComponent<CapsuleCollider>();
         playerInput = GetComponent<PlayerInput>();
         Speed = playerSO.WalkSpeed;
@@ -125,8 +144,6 @@ public class Player : MonoBehaviour
         au = GetComponent<AudioSource>();
         mouse = Mouse.current;
         rb.useGravity = true;
-        float savedVol = PlayerPrefs.GetFloat(volumeSaveKey, 0.7f);
-        au.volume = savedVol;
         if (PlayerPrefs.GetInt("Money", 0) <= 0)
         {
             PlayerPrefs.SetInt("Money", Start_Money);
@@ -145,6 +162,7 @@ public class Player : MonoBehaviour
             int matCount = rd.materials.Length;
             rd.materials = MatCopies.GetRange(MatCopies.Count - matCount, matCount).ToArray();
         }
+        InitRole();
     }
     public void OnEnable()
     {
@@ -171,9 +189,9 @@ public class Player : MonoBehaviour
     public void Start()
     {
         NavPathMgr.instance.OpenNavPath(new Vector3(2, 2, 2));
-        if (actionControl.timelineDirector != null)
+        if (CurAC.timelineDirector != null)
         {
-            actionControl.timelineDirector.stopped += (director) =>
+            CurAC.timelineDirector.stopped += (director) =>
             {
                 Is_Action_Playing = false;
                 rb.velocity = Vector3.zero;
@@ -184,16 +202,63 @@ public class Player : MonoBehaviour
         NavPathMgr.instance.player = this.transform;
         NavPathMgr.instance.CloseNavPath();
     }
+    public void InitRole()
+    {
+        allrole.Clear();
+        Transform[] childTrans = GetComponentsInChildren<Transform>(false);
+        foreach (Transform t in childTrans)
+        {
+            if (t == this.transform)
+            {
+                continue;
+            }
+            ActionControl ac = t.GetComponent<ActionControl>();
+            if (ac != null)
+            {
+                RoleList newRole = new RoleList();
+                newRole.RoleID = t.name;
+                newRole.RoleObj = t.gameObject;
+                newRole.RoleAC = ac;
+                allrole.Add(newRole);
+                t.gameObject.SetActive(false);
+                if (!RoleStatusCache.ContainsKey(newRole.RoleID))
+                {
+                    RoleStatusCache[newRole.RoleID] = (playerSO.PlayerMaxHP, 0f, 0f);
+                }
+            }
+        }
+
+        if (allrole.Count > 0)
+        {
+            CurRoleIndex = 0;
+            RoleList firstPack = allrole[0];
+            CurAC = firstPack.RoleAC;
+            firstPack.RoleObj.SetActive(true);
+            damageReceiver.currentHp = playerSO.PlayerMaxHP;
+            MaxPower = playerSO.MaxPower;
+            MaxCharge = playerSO.MaxCharge;
+            Speed = playerSO.WalkSpeed;
+        }
+    }
     public void Update()
     {
+        rb.AddForce(Vector3.down * 10f, ForceMode.Force);
+        if (IsSwitchingRole)
+        {
+            return;
+        }
+        if (CurAC.currentAction != CurAC.Character.EndSkill)
+        {
+            IsInvincible = false;
+        }
         moveDir = moveaction.ReadValue<Vector3>();
         IsHoldingMove = moveDir.sqrMagnitude > 0.0001f;
-        IsDodging = actionControl.currentAction == actionControl.Character.Dodge || actionControl.currentAction == actionControl.Character.RunDodge;
-        if (actionControl.currentAction == actionControl.Character.Walk)
+        IsDodging = CurAC.currentAction == CurAC.Character.Dodge || CurAC.currentAction == CurAC.Character.RunDodge;
+        if (CurAC.currentAction == CurAC.Character.Walk)
         {
             Speed = playerSO.WalkSpeed;
         }
-        else if (actionControl.currentAction == actionControl.Character.Run)
+        else if (CurAC.currentAction == CurAC.Character.Run)
         {
             Speed = playerSO.RunSpeed;
         }
@@ -202,27 +267,27 @@ public class Player : MonoBehaviour
         {
             InputMove = Vector3.zero;
         }
-        if (actionControl.canCombo && actionControl.currentAction != actionControl.Character.RushAttack)
-        {
-            AttackDectetcion();
-        }
+        //if (CurAC.canCombo && CurAC.currentAction != CurAC.Character.RushAttack)
+        //{
+        //    AttackDectetcion();
+        //}
         if (!Is_Action_Playing && !IsHoldingMove)
         {
-            if (actionControl.currentAction == actionControl.Character.WalkStart || actionControl.currentAction == actionControl.Character.Walk)
+            if (CurAC.currentAction == CurAC.Character.WalkStart || CurAC.currentAction == CurAC.Character.Walk)
             {
                 isWalking = false;
                 isStopping = true;
                 stopMoveLockTime = playerSO.LockDuration;
                 StopCurrentAction();
-                actionControl.PlayAction(actionControl.Character.WalkEnd);
+                CurAC.PlayAction(CurAC.Character.WalkEnd);
             }
-            else if (actionControl.currentAction == actionControl.Character.Run)
+            else if (CurAC.currentAction == CurAC.Character.Run)
             {
                 isWalking = false;
                 isStopping = true;
                 stopMoveLockTime = playerSO.LockDuration;
                 StopCurrentAction();
-                actionControl.PlayAction(actionControl.Character.RunEnd);
+                CurAC.PlayAction(CurAC.Character.RunEnd);
             }
         }
         if (mouse != null && !Panel_Mgr.instance.IsPanelOpen)
@@ -242,11 +307,11 @@ public class Player : MonoBehaviour
         {
             Move_Follow_Camera();
         }
-        if (actionControl.currentAction != actionControl.Character.Idle)
+        if (CurAC.currentAction != CurAC.Character.Idle)
         {
             CurAFKCount = 0;
         }
-        if(actionControl.currentAction == actionControl.Character.Idle)
+        if(CurAC.currentAction == CurAC.Character.Idle)
         {
             if (CurAFKCount < AFKTime)
             {
@@ -256,15 +321,15 @@ public class Player : MonoBehaviour
             {
                 Is_Action_Playing = true;
                 StopCurrentAction();
-                actionControl.PlayAction(actionControl.Character.AfkIdle);
+                CurAC.PlayAction(CurAC.Character.AfkIdle);
             }
         }
         if (stopMoveLockTime > 0)
         {
             stopMoveLockTime -= Time.fixedDeltaTime;
-            if ((actionControl.currentAction == actionControl.Character.WalkEnd || actionControl.currentAction == actionControl.Character.RunEnd) && isWalking)
+            if ((CurAC.currentAction == CurAC.Character.WalkEnd || CurAC.currentAction == CurAC.Character.RunEnd) && isWalking)
             {
-                actionControl.PlayAction(actionControl.Character.WalkStart);
+                CurAC.PlayAction(CurAC.Character.WalkStart);
             }
         }
         else
@@ -275,7 +340,7 @@ public class Player : MonoBehaviour
 
         if (!Is_Action_Playing )
         {
-            if (Panel_Mgr.instance.IsPanelOpen || IsDead)
+            if (Panel_Mgr.instance.IsPanelOpen || IsDead || IsSwitchingRole)
             {
                 InputMove = Vector3.zero;
                 return;
@@ -297,16 +362,20 @@ public class Player : MonoBehaviour
     public void StopCurrentAction()
     {
         Is_Action_Playing = false;
-        if (actionControl.timelineDirector != null)
+        if (CurAC.timelineDirector != null)
         {
-            actionControl.timelineDirector.Stop();
+            CurAC.timelineDirector.Stop();
         }
+        //CurAC.ActiveSkillIndex = 0;
+        //CurAC.ActiveSkillPool = null;
     }
     #region 移动
     public void Back_To_Move()
     {
-        if (actionControl.currentAction == actionControl.Character.RunDodge)
+        if (CurAC.currentAction == CurAC.Character.RunDodge || IsSwitchingRole)
+        {
             return;
+        }
         if (vaultFinishedFlag)
         {
             vaultFinishedFlag = false;
@@ -315,8 +384,8 @@ public class Player : MonoBehaviour
                 StopCurrentAction();
                 isStopping = false;
                 isWalking = true;
-                actionControl.AttackLevel = 0;
-                actionControl.PlayAction(actionControl.Character.WalkStart);
+                CurAC.AttackLevel = 0;
+                CurAC.PlayAction(CurAC.Character.WalkStart);
                 return;
             }
             else
@@ -324,7 +393,7 @@ public class Player : MonoBehaviour
                 StopCurrentAction();
                 isWalking = false;
                 isStopping = false;
-                actionControl.PlayAction(actionControl.Character.Idle);
+                CurAC.PlayAction(CurAC.Character.Idle);
                 return;
             }
         }
@@ -332,45 +401,45 @@ public class Player : MonoBehaviour
         {
             return;
         }
-        if (actionControl.currentAction == actionControl.Character.WalkStart || actionControl.currentAction == actionControl.Character.Walk)
+        if (CurAC.currentAction == CurAC.Character.WalkStart || CurAC.currentAction == CurAC.Character.Walk)
         {
             if (!IsHoldingMove)
             {
                 isWalking = false;
                 isStopping = true;
                 stopMoveLockTime = playerSO.LockDuration;
-                actionControl.PlayAction(actionControl.Character.WalkEnd);
+                CurAC.PlayAction(CurAC.Character.WalkEnd);
                 return;
             }
             return;
         }
-        if (actionControl.currentAction == actionControl.Character.Run)
+        if (CurAC.currentAction == CurAC.Character.Run)
         {
             if (!IsHoldingMove)
             {
                 isWalking = false;
                 isStopping = true;
                 stopMoveLockTime = playerSO.LockDuration;
-                actionControl.PlayAction(actionControl.Character.RunEnd);
+                CurAC.PlayAction(CurAC.Character.RunEnd);
                 Debug.Log("2");
                 return;
             }
             return;
         }
-        if (IsHoldingMove && actionControl.canInterrupt && actionControl.currentAction != actionControl.Character.Run)
+        if (IsHoldingMove && CurAC.canInterrupt && CurAC.currentAction != CurAC.Character.Run)
         {
             StopCurrentAction();
             isStopping = false;
             isWalking = true;
-            actionControl.AttackLevel = 0;
-            actionControl.PlayAction(actionControl.Character.WalkStart);
+            CurAC.AttackLevel = 0;
+            CurAC.PlayAction(CurAC.Character.WalkStart);
             return;
         }
         if (!Is_Action_Playing && !isStopping)
         {
-            if (actionControl.currentAction != actionControl.Character.Idle && actionControl.currentAction != actionControl.Character.AfkIdle && actionControl.currentAction != actionControl.Character.Walk && actionControl.currentAction != actionControl.Character.Run)
+            if (CurAC.currentAction != CurAC.Character.Idle && CurAC.currentAction != CurAC.Character.AfkIdle && CurAC.currentAction != CurAC.Character.Walk && CurAC.currentAction != CurAC.Character.Run)
             {
-                actionControl.PlayAction(actionControl.Character.Idle);
+                CurAC.PlayAction(CurAC.Character.Idle);
             }
         }
     }
@@ -378,7 +447,7 @@ public class Player : MonoBehaviour
     {
         try
         {
-            if (Panel_Mgr.instance.IsPanelOpen || IsDead)
+            if (Panel_Mgr.instance.IsPanelOpen || IsDead || IsSwitchingRole)
             {
                 return;
             }
@@ -387,10 +456,11 @@ public class Player : MonoBehaviour
                 IsBlock = false;
                 return;
             }
-            if (!actionControl.canInterrupt)
+            if (!CurAC.canInterrupt)
             {
                 return;
             }
+            IsInvincible = false;
             isWalking = true;
             IsBlock = false;
             InputMove = value.Get<Vector3>();
@@ -414,14 +484,14 @@ public class Player : MonoBehaviour
             {
                 StopCurrentAction();
                 Is_Action_Playing = true;
-                actionControl.PlayAction(actionControl.Character.RunDodge);
+                CurAC.PlayAction(CurAC.Character.RunDodge);
             }
             else
             {
                 AttackDectetcion();
                 StopCurrentAction();
                 Is_Action_Playing = true;
-                actionControl.PlayAction(actionControl.Character.Dodge);
+                CurAC.PlayAction(CurAC.Character.Dodge);
             }
         }
     }
@@ -446,12 +516,12 @@ public class Player : MonoBehaviour
     }
     public void TurnRun()
     {
-        if (actionControl.currentAction == actionControl.Character.RunDodge && InputMove.magnitude > 0.1f)
+        if (CurAC.currentAction == CurAC.Character.RunDodge && InputMove.magnitude > 0.1f)
         {
             if (IsHoldingMove)
             {
                 StopCurrentAction();
-                actionControl.PlayAction(actionControl.Character.Run);
+                CurAC.PlayAction(CurAC.Character.Run);
                 //Debug.Log("变为疾跑");
             }
         }
@@ -530,7 +600,7 @@ public class Player : MonoBehaviour
             isWalking = false;
             StopCurrentAction();
             Is_Action_Playing = true;
-            actionControl.PlayAction(actionControl.Character.Slide);
+            CurAC.PlayAction(CurAC.Character.Slide);
         }
     }
     #endregion
@@ -679,13 +749,13 @@ public class Player : MonoBehaviour
             StopCurrentAction();
             if (jumpResult == 1)
             {
-                actionControl.PlayAction(actionControl.Character.PreVault);
+                CurAC.PlayAction(CurAC.Character.PreVault);
                 Is_Action_Playing = true;
                 Debug.Log("翻越");
             }
             else
             {
-                actionControl.PlayAction(actionControl.Character.Jump);
+                CurAC.PlayAction(CurAC.Character.Jump);
                 Is_Action_Playing = true;
                 Debug.Log("跳跃");
             }
@@ -785,15 +855,15 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if (rb.isKinematic)
-                rb.isKinematic = false;
+            //if (rb.isKinematic)
+            //    rb.isKinematic = false;
         }
     }
     public void Vault_Aft()
     {
         StopCurrentAction();
         Is_Action_Playing = true;
-        actionControl.PlayAction(actionControl.Character.AftVault);
+        CurAC.PlayAction(CurAC.Character.AftVault);
         Debug.Log("后续翻越");
     }
     public void Climb_Scan() { }
@@ -805,39 +875,57 @@ public class Player : MonoBehaviour
         {
             return;
         }
-        if (!actionControl.canCombo && !actionControl.canInterrupt)
+        if (!CurAC.canCombo && !CurAC.canInterrupt)
         {
             return;
         }
-        if (value.isPressed)
+        if (!value.isPressed)
         {
-            actionControl.AttackLevel = 0;
-            AttackDectetcion();
-            StopCurrentAction();
-            Is_Action_Playing = true;
-            Single_SpecialATK action;
-            if (actionControl.canCombo && actionControl.currentAction.actionType == ActionType.Attack && actionControl.currentAction.Related)
-            {
-                action = TriggerPower <= Skill_PowerPool ? actionControl.Character.RelatedFullE : actionControl.Character.RelatedUnfilledE;
-                Debug.Log(action.Special.actionName);
-                actionControl.PlayAction(action.Special);
-            }
-            else
-            {
-                action = TriggerPower <= Skill_PowerPool ? actionControl.Character.FullE : actionControl.Character.UnfilledE;
-                Debug.Log(action.Special.actionName);
-                actionControl.PlayAction(action.Special);
-            }
-            Skill_PowerPool -= action.Cost;
-            Skill_PowerPool = Mathf.Clamp(Skill_PowerPool, 0, MaxPower);
-            actionControl.canCombo = false;
+            return;
         }
+        CurAC.AttackLevel = 0;
+        AttackDectetcion();
+        bool isAttackComboRelease = CurAC.canCombo && CurAC.currentAction.actionType == ActionType.Attack && CurAC.currentAction.Related;
+        bool powerEnough = Skill_PowerPool >= TriggerPower;
+        List<Single_SpecialATK> targetSkillPool;
+        if (isAttackComboRelease)
+        {
+            targetSkillPool = powerEnough ? CurAC.Character.RelatedFullE : CurAC.Character.RelatedUnfilledE;
+        }
+        else
+        {
+            targetSkillPool = powerEnough ? CurAC.Character.FullE : CurAC.Character.UnfilledE;
+        }
+        if (targetSkillPool == null || targetSkillPool.Count == 0)
+        {
+            Debug.Log("当前条件无可用特殊技池，释放失败");
+            return;
+        }
+        StopCurrentAction();
+        Is_Action_Playing = true;
+        bool canContinueSpecialCombo = CurAC.ActiveSkillPool == targetSkillPool;
+        if (canContinueSpecialCombo)
+        {
+            CurAC.ActiveSkillIndex = (CurAC.ActiveSkillIndex + 1) % targetSkillPool.Count;
+        }
+        else
+        {
+            CurAC.ActiveSkillPool = targetSkillPool;
+            CurAC.ActiveSkillIndex = 0;
+        }
+
+        Single_SpecialATK selectSkill = targetSkillPool[CurAC.ActiveSkillIndex];
+        CurAC.PlayAction(selectSkill.Special);
+        Debug.Log($"特殊技连招 第{CurAC.ActiveSkillIndex}段 | {selectSkill.Special.actionName}");
+        Skill_PowerPool -= selectSkill.Cost;
+        Skill_PowerPool = Mathf.Clamp(Skill_PowerPool, 0, playerSO.MaxPower);
+        CurAC.canCombo = false;
     }
     #endregion
     #region 终结技
     public void OnEndSkill(InputValue value)
     {
-        if (Charge < MaxCharge)
+        if (Charge < playerSO.MaxCharge)
         {
             return;
         }
@@ -845,7 +933,8 @@ public class Player : MonoBehaviour
         {
             StopCurrentAction();
             Is_Action_Playing = true;
-            actionControl.PlayAction(actionControl.Character.EndSkill);
+            AttackDectetcion();
+            CurAC.PlayAction(CurAC.Character.EndSkill);
             Charge = 0f;
         }
     }
@@ -892,25 +981,30 @@ public class Player : MonoBehaviour
         Vector3 LookDir;
         float mindistance;
         int index = -1;
-        //LayerMask enemyLayer = LayerMask.GetMask("Enemy");
-        int mask = ~(1 << LayerMask.NameToLayer("Enemy"));
         Collider[] enemies = Physics.OverlapSphere(transform.position, playerSO.DetectionRadius, EnemyLayer);
         if (enemies.Length > 0)
         {
             mindistance = Mathf.Infinity;
             for (int i = 0; i < enemies.Length; i++)
             {
-                bool BlockByObstacle = Physics.Linecast(transform.position, enemies[i].transform.position, mask);
-                //bool AngleTooLarge = Vector3.Angle(camForward, enemies[i].transform.position - transform.position) > 90;
-                if (BlockByObstacle/* || AngleTooLarge*/)
+                Collider col = enemies[i];
+                GameObject targetObj = col.gameObject;
+                if (targetObj.CompareTag("DeadEnemy"))
                 {
                     continue;
                 }
-                float distance = Vector3.Distance(enemies[i].transform.position, transform.position);
+                int ignoreMask = ~(1 << LayerMask.NameToLayer("Enemy"));
+                bool BlockByObstacle = Physics.Linecast(transform.position, col.transform.position, ignoreMask);
+                if (BlockByObstacle)
+                {
+                    continue;
+                }
+                float distance = Vector3.Distance(col.transform.position, transform.position);
                 if (distance < mindistance)
                 {
                     mindistance = distance;
                     index = i;
+                    AtkTo = enemies[index].gameObject;
                 }
             }
             if (index != -1)
@@ -920,20 +1014,29 @@ public class Player : MonoBehaviour
                 LookDir.Normalize();
                 transform.rotation = Quaternion.LookRotation(LookDir);
             }
+            else
+            {
+                AtkTo = null;
+            }
+        }
+        else
+        {
+            AtkTo = null;
         }
     }
     private void AtkDown(InputAction.CallbackContext context)
     {
-        if (Panel_Mgr.instance.IsPanelOpen || Panel_Mgr.instance.IsFullMapOpen || IsDead || actionControl.currentAction==actionControl.Character.RushAttack)
+        if (Panel_Mgr.instance.IsPanelOpen || Panel_Mgr.instance.IsFullMapOpen || IsDead || CurAC.currentAction==CurAC.Character.RushAttack)
         {
             return;
         }
+        IsInvincible = false;
         IsHoldAtk = false;
         HoldATK = StartCoroutine(HoldJudge());
     }
     private void AtkUp(InputAction.CallbackContext context)
     {
-        if (actionControl.currentAction == actionControl.Character.Run || actionControl.currentAction == actionControl.Character.Dodge)
+        if (CurAC.currentAction == CurAC.Character.Run || CurAC.currentAction == CurAC.Character.Dodge)
         {
             Debug.Log("rush");
             if (HoldATK != null)
@@ -943,7 +1046,7 @@ public class Player : MonoBehaviour
             }
             //InputMove = Vector3.zero;
             //actionControl.canInterrupt = false;
-            RushAttack();
+            TapRushAttack();
             return;
         }
         if (HoldATK != null)
@@ -964,7 +1067,11 @@ public class Player : MonoBehaviour
     }
     public void TapAttack()
     {
-        if (Panel_Mgr.instance.IsPanelOpen || Panel_Mgr.instance.IsFullMapOpen || IsDead)
+        if (!CurAC.canInterrupt)
+        {
+            return;
+        }
+        if (Panel_Mgr.instance.IsPanelOpen || Panel_Mgr.instance.IsFullMapOpen || IsDead || IsInvincible)
         {
             return;
         }
@@ -972,28 +1079,45 @@ public class Player : MonoBehaviour
         StopCurrentAction();
         Is_Action_Playing = true;
         AttackDectetcion();
-        actionControl.PlayAttackAction(false);
+        CurAC.PlayAttackAction(false);
     }
     public void HoldAttack()
     {
-        if (Panel_Mgr.instance.IsPanelOpen || Panel_Mgr.instance.IsFullMapOpen || IsDead)
+        if (Panel_Mgr.instance.IsPanelOpen || Panel_Mgr.instance.IsFullMapOpen || IsDead || IsInvincible)
         {
             return;
         }
         IsAttacking = true;
         StopCurrentAction();
         Is_Action_Playing = true;
-        AttackDectetcion();
-        actionControl.PlayAttackAction(true);
+        //AttackDectetcion();
+        CurAC.PlayAttackAction(true);
     }
-    public void RushAttack()
+    public void TapRushAttack()
     {
+        if (IsDead || IsInvincible)
+        {
+            return;
+        }
         StopCurrentAction();
         AttackDectetcion();
         Is_Action_Playing = true;
-        actionControl.canCombo = false;
-        actionControl.PlayAction(actionControl.Character.RushAttack);
+        CurAC.canCombo = false;
+        CurAC.PlayAction(CurAC.Character.RushAttack);
     }
+    //public void HoldRushAttack()
+    //{
+    //    if (IsDead || IsInvincible)
+    //    {
+    //        return;
+    //    }
+    //    Debug.Log("h");
+    //    StopCurrentAction();
+    //    AttackDectetcion();
+    //    Is_Action_Playing = true;
+    //    CurAC.canCombo = false;
+    //    CurAC.PlayAction(CurAC.Character.RushHoldAttack);
+    //}
     #endregion
     #region 受伤
     public void GetHurt(float damage,Vector3 dir)
@@ -1007,7 +1131,7 @@ public class Player : MonoBehaviour
             InputMove = Vector3.zero;
             StopCurrentAction();
             Is_Action_Playing = true;
-            actionControl.PlayAction(actionControl.Character.GetHit);
+            CurAC.PlayAction(CurAC.Character.GetHit);
             StartCoroutine(GetFly(dir));
         }
         damageReceiver.TakeDamage<Player>(damage, dir);
@@ -1060,10 +1184,64 @@ public class Player : MonoBehaviour
     {
         StopCurrentAction();
         Is_Action_Playing = true;
-        actionControl.PlayAction(actionControl.Character.Death);
+        CurAC.PlayAction(CurAC.Character.Death);
     }
     public void Dead()
     {
+        RoleList curRole = allrole[CurRoleIndex];
+        RoleStatusCache[curRole.RoleID] = (damageReceiver.currentHp, Skill_PowerPool, Charge);
+
+        bool HaveRoleAlive = false;
+        int aliveIndex = -1;
+        for (int i = 0; i < allrole.Count; i++)
+        {
+            string id = allrole[i].RoleID;
+            float hp;
+            if (RoleStatusCache.TryGetValue(id, out var stat))
+            {
+                hp = stat.hp;
+            }
+            else
+            {
+                hp = playerSO.PlayerMaxHP;
+            }
+
+            if (hp > 0)
+            {
+                HaveRoleAlive = true;
+                aliveIndex = i;
+                break;
+            }
+        }
+        if (HaveRoleAlive && aliveIndex != -1)
+        {
+            RoleList oldPack = allrole[CurRoleIndex];
+            ClearOldActionControl(oldPack.RoleAC);
+            oldPack.RoleObj.SetActive(false);
+            CurRoleIndex = aliveIndex;
+            RoleList newPack = allrole[CurRoleIndex];
+            newPack.RoleObj.SetActive(true);
+            CurAC = newPack.RoleAC;
+            ClearOldActionControl(CurAC);
+            if (RoleStatusCache.TryGetValue(newPack.RoleID, out var cacheData))
+            {
+                damageReceiver.currentHp = cacheData.hp;
+                Skill_PowerPool = cacheData.skillpool;
+                Charge = cacheData.charge;
+            }
+            else
+            {
+                damageReceiver.currentHp = playerSO.PlayerMaxHP;
+                Skill_PowerPool = 0;
+                Charge = 0;
+            }
+            IsDead = false;
+            gameObject.tag = "Player";
+            DeadTime = playerSO.Deadline;
+            InputMove = Vector3.zero;
+            CurAC.PlayAction(CurAC.Character.Idle);
+            return;
+        }
         DeathMgr.instance.DearhFade();
     }
     public void BornSet()
@@ -1071,8 +1249,13 @@ public class Player : MonoBehaviour
         gameObject.tag = "Player";
         rb.position = playerSO.SpawnPoint;
         rb.rotation = playerSO.SpwanRotation;
-        Skill_PowerPool = 0;
+        foreach (RoleList role in allrole)
+        {
+            RoleStatusCache[role.RoleID] = (playerSO.PlayerMaxHP, 0f, 0f);
+        }
         damageReceiver.currentHp = playerSO.PlayerMaxHP;
+        Skill_PowerPool = 0;
+        Charge = 0;
     }
     public void TrulyBorn()
     {
@@ -1080,27 +1263,63 @@ public class Player : MonoBehaviour
     }
     public void BornAction()
     {
+        int randomIndex = Random.Range(0, allrole.Count);
+        if (randomIndex != CurRoleIndex)
+        {
+            RoleList oldPack = allrole[CurRoleIndex];
+            RoleStatusCache[oldPack.RoleID] = (damageReceiver.currentHp, Skill_PowerPool, Charge);
+
+            oldPack.RoleObj.SetActive(false);
+            CurRoleIndex = randomIndex;
+            RoleList newPack = allrole[CurRoleIndex];
+            newPack.RoleObj.SetActive(true);
+            CurAC = newPack.RoleAC;
+            ClearOldActionControl(CurAC);
+            if (RoleStatusCache.TryGetValue(newPack.RoleID, out var cacheData))
+            {
+                damageReceiver.currentHp = cacheData.hp;
+                Skill_PowerPool = cacheData.skillpool;
+                Charge = cacheData.charge;
+            }
+            else
+            {
+                damageReceiver.currentHp = playerSO.PlayerMaxHP;
+                Skill_PowerPool = 0;
+                Charge = 0;
+            }
+            Speed = playerSO.WalkSpeed;
+            MaxPower = playerSO.MaxPower;
+            MaxCharge = playerSO.MaxCharge;
+        }
         if (playerSO.EnableBornAnim)
         {
             //CameraPivot.instance.PlayRevolveAroundPlayerAnim();
             StopCurrentAction();
             Is_Action_Playing = true;
-            actionControl.PlayAction(actionControl.Character.Born);
+            CurAC.PlayAction(CurAC.Character.Born);
         }
         else
         {
             StopCurrentAction();
             Is_Action_Playing = true;
-            actionControl.PlayAction(actionControl.Character.AfkIdle);
+            CurAC.PlayAction(CurAC.Character.AfkIdle);
         }
     }
     public void OnCameraFrame()
     {
         CameraPivot.instance.isPlayingCameraAnim = true;
+        if (CurAC.currentAction == CurAC.Character.EndSkill)
+        {
+            AttackDectetcion();
+        }
     }
     public void OffCameraFrame()
     {
         CameraPivot.instance.isPlayingCameraAnim = false;
+        if (CurAC.currentAction == CurAC.Character.EndSkill)
+        {
+            AttackDectetcion();
+        }
     }
     #endregion
     #region 地图
@@ -1128,11 +1347,107 @@ public class Player : MonoBehaviour
     #region 切换角色
     public void OnSwitchRole(InputValue value)
     {
-        if (value.isPressed && !IsDead && !Panel_Mgr.instance.IsPanelOpen)
+        if (value.isPressed && !IsDead && !Panel_Mgr.instance.IsPanelOpen && !IsInvincible)
         {
+            if (IsSwitchingRole)
+            {
+                return;
+            }
             //切换角色
+            IsSwitchingRole = true;
+            StopCurrentAction();
+            Is_Action_Playing = true;
+            CurAC.PlayAction(CurAC.Character.SwitchOut);
+            int nextindex = (CurRoleIndex + 1) % allrole.Count;
+            StartCoroutine(SwitchRoleCoroutine(nextindex));
         }
     }
+    public IEnumerator SwitchRoleCoroutine(int targetindex)
+    {
+        yield return new WaitForSeconds(0.3f);
+        RoleList oldPack = allrole[CurRoleIndex];
+        RoleList newPack = allrole[targetindex];
+        if (!RoleStatusCache.ContainsKey(oldPack.RoleID))
+        {
+            RoleStatusCache[oldPack.RoleID] = (damageReceiver.currentHp, Skill_PowerPool, Charge);
+        }
+        else
+        {
+            RoleStatusCache[oldPack.RoleID] = (damageReceiver.currentHp, Skill_PowerPool, Charge);
+        }
+
+        playerInput.actions.Disable();
+        ClearOldActionControl(oldPack.RoleAC);
+        damageReceiver.isStiff = false;
+        if (HoldATK != null)
+        {
+            StopCoroutine(HoldATK);
+        }
+        oldPack.RoleObj.SetActive(false);
+        newPack.RoleObj.SetActive(true);
+        CurAC = newPack.RoleAC;
+        ClearOldActionControl(CurAC);
+        StopCurrentAction();
+        Is_Action_Playing = true;
+        CurAC.PlayAction(CurAC.Character.SwitchIn);
+
+        SetModelAlpha(0);
+        float fadeDuration = 0.6f;
+        float t = 0;
+        while (t < fadeDuration)
+        {
+            t += Time.deltaTime;
+            float alpha = Mathf.Lerp(0, 1, t / fadeDuration);
+            SetModelAlpha(alpha);
+            yield return null;
+        }
+        SetModelAlpha(1f);
+
+        //yield return WaitPlayableFinish(CurAC.timelineDirector);
+        if (RoleStatusCache.TryGetValue(newPack.RoleID, out var cacheData))
+        {
+            damageReceiver.currentHp = cacheData.hp;
+            Skill_PowerPool = cacheData.skillpool;
+            Charge = cacheData.charge;
+        }
+        else
+        {
+            damageReceiver.currentHp = playerSO.PlayerMaxHP;
+            Skill_PowerPool = 0;
+            Charge = 0;
+        }
+        Speed = playerSO.WalkSpeed;
+        MaxPower = playerSO.MaxPower;
+        MaxCharge = playerSO.MaxCharge;
+        playerInput.actions.Enable();
+        Debug.Log("切换完成");
+        CurRoleIndex = targetindex;
+        IsSwitchingRole = false;
+    }
+    public void ClearOldActionControl(ActionControl oldAC)
+    {
+        if (oldAC == null)
+        {
+            return;
+        }
+        oldAC.timelineDirector.Stop();
+        oldAC.timelineDirector.time = 0;
+        oldAC.currentAction = null;
+        oldAC.AttackLevel = 0;
+        oldAC.canCombo = false;
+        oldAC.canInterrupt = true;
+        oldAC.ClearHitBoxData();
+    }
+    private IEnumerator WaitPlayableFinish(PlayableDirector dir)
+    {
+        yield return new WaitForEndOfFrame();
+        while (dir.state == PlayState.Playing)
+        {
+            yield return null;
+        }
+    }
+    #endregion
+    #region 角色辅助
     #endregion
     //#region 退出
     //public void OnEscape(InputValue value)
@@ -1190,7 +1505,7 @@ public class Player : MonoBehaviour
 
         moveDir = camForward * InputMove.z + camRight * InputMove.x;
 
-        if (moveDir.magnitude > 0.1f && actionControl.currentAction != actionControl.Character.RushAttack)
+        if (moveDir.magnitude > 0.1f && CurAC.currentAction != CurAC.Character.RushAttack)
         {
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(moveDir), 15f * Time.fixedDeltaTime);
         }
@@ -1198,8 +1513,7 @@ public class Player : MonoBehaviour
     #endregion
     public void RefreshAudioVolume()
     {
-        float vol = PlayerPrefs.GetFloat("GameSoundVolume", 0.7f);
-        au.volume = vol;
+        SoundMgr.instance.SyncSingleAudioSource(au);
     }
     #region 辅助调试显示
     //private void OnDrawGizmos()

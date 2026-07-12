@@ -58,6 +58,13 @@ public class CameraPivot : Base_mgr<CameraPivot>
     // 缓存原始常态高度
     public float cacheNormalHeight;
     public Coroutine currentCameraAnimCoroutine;
+
+    [Header("镜头震动设置")]
+    public Vector3 _originLocalPos;
+    public float _shakeTime;
+    public float _shakePower;
+    public float _shakeDamp;
+    public Transform camTrans;
     protected override void Awake()
     {
         base.Awake();
@@ -67,6 +74,11 @@ public class CameraPivot : Base_mgr<CameraPivot>
         }
         GameObject pl = GameObject.FindGameObjectWithTag("Player");
         target = pl.GetComponent<Transform>();
+        camTrans = GetComponentInChildren<Camera>().transform;
+        if (camTrans != null)
+        {
+            _originLocalPos = camTrans.localPosition;
+        }
     }
 
     public void Start()
@@ -76,6 +88,15 @@ public class CameraPivot : Base_mgr<CameraPivot>
         TargetDistance = distance;
         SaveNormalCameraState();
     }
+    public void OnEnable()
+    {
+        if (camTrans != null)
+        {
+            _originLocalPos = camTrans.localPosition;
+            _shakeTime = 0;
+            camTrans.localPosition = _originLocalPos;
+        }
+    }
     public void AddZoomDelta(float scrollDelta)
     {
         TargetDistance -= scrollDelta * ZoomSpeed;
@@ -83,6 +104,10 @@ public class CameraPivot : Base_mgr<CameraPivot>
 
     public void LateUpdate()
     {
+        if (!isPlayingCameraAnim)
+        {
+            UpdateCameraShake();
+        }
         if (isPlayingCameraAnim)
         {
             return;
@@ -99,12 +124,24 @@ public class CameraPivot : Base_mgr<CameraPivot>
         Quaternion cameraRotation = Quaternion.Euler(rotX, rotY, 0);
         distance = Mathf.Lerp(distance, _targetDistance, ZoomSmooth * Time.deltaTime);
         Vector3 cameraDir = cameraRotation * Vector3.back;
-        Vector3 cameraPos = target.position + cameraDir * distance;
-        cameraPos.y += height;
-        transform.position = Vector3.Lerp(transform.position, cameraPos, smooth * Time.deltaTime);
+        Vector3 targetOrigin = target.position + Vector3.up * height;
+        float safeCamDist = distance;
+        float wallBuffer = 0.1f;
+        RaycastHit hit;
+        int playerLayer = 1 << LayerMask.NameToLayer("Player");
+        int enemyLayer = 1 << LayerMask.NameToLayer("Enemy");
+        int ignoreMask = ~(playerLayer | enemyLayer);
+
+        if (Physics.Raycast(targetOrigin, cameraDir, out hit, distance, ignoreMask))
+        {
+            safeCamDist = hit.distance - wallBuffer;
+            safeCamDist = Mathf.Max(safeCamDist, ZoomMin);
+        }
+        Vector3 safeCamPos = targetOrigin + cameraDir * safeCamDist;
+        transform.position = Vector3.Lerp(transform.position, safeCamPos, smooth * Time.deltaTime);
         transform.rotation = cameraRotation;
     }
-
+    #region 镜头动画
     public void SaveNormalCameraState()
     {
         cacheNormalRotX = rotX;
@@ -131,6 +168,11 @@ public class CameraPivot : Base_mgr<CameraPivot>
         }
         isPlayingCameraAnim = false;
         RestoreNormalCameraState();
+        _shakeTime = 0;
+        if (camTrans != null)
+        {
+            camTrans.localPosition = _originLocalPos;
+        }
     }
 
     public void PlayRevolveAroundPlayerAnim()
@@ -200,5 +242,37 @@ public class CameraPivot : Base_mgr<CameraPivot>
 
         isPlayingCameraAnim = false;
         currentCameraAnimCoroutine = null;
+    }
+    #endregion
+    private void UpdateCameraShake()
+    {
+        if (camTrans == null) return;
+        if (_shakeTime <= 0)
+        {
+            camTrans.localPosition = _originLocalPos;
+            return;
+        }
+        _shakeTime -= Time.deltaTime;
+        float currentPower = _shakePower * Mathf.Clamp01(_shakeTime / _shakeDamp);
+        Vector3 randomOffset = Random.insideUnitSphere * currentPower;
+        camTrans.localPosition = _originLocalPos + randomOffset;
+    }
+    public void StopCameraShake()
+    {
+        _shakeTime = 0;
+        if (camTrans != null)
+        {
+            camTrans.localPosition = _originLocalPos;
+        }
+    }
+    public void StartCameraShake(float power, float duration, float damp = 2f)
+    {
+        if (camTrans == null)
+        {
+            return;
+        }
+        _shakePower = power;
+        _shakeTime = duration;
+        _shakeDamp = damp;
     }
 }

@@ -50,6 +50,8 @@ public class StoryRelation : MonoBehaviour
         {
             count++;
             GameObject ChapterD = ObjectPoolMgr.instance.GetObj(ChapterDropDown, Content);
+            RectTransform rect = ChapterD.GetComponent<RectTransform>();
+            rect.localScale = 4 * Vector3.one;
             ChapterRelation relation = ChapterD.GetComponent<ChapterRelation>();
             if (count == 1)
             {

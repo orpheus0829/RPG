@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f07cd29b8943cab4ca89a155dd596839, type: 3}
+  m_Name: Ellen_RunDodge
+  m_EditorClassIdentifier: 
+  actionID: 26
+  actionName: "\u5411\u524D\u95EA\u907F"
+  timeline: {fileID: 11400000, guid: 2dc3902e212a4ac438cd1ac32ab90198, type: 2}
+  actionType: 0
+  nextAction: {fileID: 11400000, guid: 201b5edae52e4cc438780a53fd9911a1, type: 2}
+  Related: 0

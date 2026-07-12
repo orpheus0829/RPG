@@ -14,6 +14,10 @@ public class EnemyLieState : Istate
 
     public void OnEnter()
     {
+        if (enemy.tag == "DeadEnemy")
+        {
+            return;
+        }
         //string cur = enemy.RandomAnim(3, "LieGround");
         //Debug.Log($"±¾´Î²¥·Å{cur}");
         //if (enemy.IsSpawnInit)
@@ -47,6 +51,6 @@ public class EnemyLieState : Istate
 
     public void OnUpdate()
     {
-        enemy.SetChase(false);
+        enemy.SetChase(false, enemy.agent);
     }
 }

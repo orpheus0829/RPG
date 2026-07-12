@@ -14,6 +14,10 @@ public class EnemyHurtState : Istate
 
     public void OnEnter()
     {
+        if (enemy.tag == "DeadEnemy")
+        {
+            return;
+        }
         enemy.PlayAnim(4, "Hit", 0.1f);
         enemy.IsChasing = false;
     }
@@ -37,6 +41,6 @@ public class EnemyHurtState : Istate
 
     public void OnUpdate()
     {
-        enemy.SetChase(false);
+        enemy.SetChase(false, enemy.agent);
     }
 }

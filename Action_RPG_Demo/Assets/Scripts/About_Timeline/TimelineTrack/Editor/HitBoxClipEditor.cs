@@ -13,6 +13,8 @@ public class HitBoxClipInspector : Editor
     private SerializedProperty HitForce;
     private SerializedProperty startTime;
     private SerializedProperty endTime;
+    private SerializedProperty useRepeatScan;
+    private SerializedProperty scanInterval;
 
     private void OnEnable()
     {
@@ -24,6 +26,8 @@ public class HitBoxClipInspector : Editor
         HitForce = serializedObject.FindProperty("HitForce");
         startTime = serializedObject.FindProperty("startTime");
         endTime = serializedObject.FindProperty("endTime");
+        useRepeatScan = serializedObject.FindProperty("useRepeatScan");
+        scanInterval = serializedObject.FindProperty("scanInterval");
     }
 
     public override void OnInspectorGUI()
@@ -31,6 +35,14 @@ public class HitBoxClipInspector : Editor
         serializedObject.Update();
 
         EditorGUILayout.LabelField("碰撞盒设置", EditorStyles.boldLabel);
+
+        EditorGUILayout.PropertyField(useRepeatScan, new GUIContent("间隔重复判定"));
+        if (useRepeatScan.boolValue)
+        {
+            EditorGUILayout.PropertyField(scanInterval, new GUIContent("扫描间隔(秒)"));
+        }
+        EditorGUILayout.Space();
+
         EditorGUILayout.PropertyField(hitBoxShape);
         EditorGUILayout.PropertyField(boxOffset, new GUIContent("局部偏移"));
 

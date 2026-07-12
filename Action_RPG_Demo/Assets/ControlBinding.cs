@@ -24,6 +24,10 @@ public class ControlBinding : MonoBehaviour
         }
         RefreshInputAsset();
     }
+    public void Update()
+    {
+        transform.localScale = transform.localScale == Vector3.one ? transform.localScale : Vector3.one;
+    }
     private void RefreshInputAsset()
     {
         if (playerInput != null)

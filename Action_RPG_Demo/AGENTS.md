@@ -2,7 +2,7 @@
 - Project name: Action_RPG_Demo
 - Unity version: Unity 2022.3.62f3c1
 - Active game object:
-  - Name: Interact_Radius
+  - Name: DamageTrigger
   - Tag: Untagged
-  - Layer: Player
+  - Layer: Enemy
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

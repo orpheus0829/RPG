@@ -13,6 +13,15 @@ MonoBehaviour:
   m_Name: CameraTimelineClip(Clone)(Clone)
   m_EditorClassIdentifier: 
   cameraMoveMode: 0
+  resetSubMode: 0
+  resetLerpFactor: 10
+  resetUseVariableSpeed: 0
+  resetStartSpeed: 1
+  resetEndSpeed: 3
+  useSurroundMode: 0
+  surroundRadius: 3.2
+  surroundTotalAngle: 180
+  surroundFixedHeight: 1.2
   cameraTargetLocalPos: {x: -6, y: 4, z: 3}
   cameraTargetEuler: {x: 30.851637, y: 215.05379, z: 356.4678}
   lockLookAtPlayer: 1
@@ -161,8 +170,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Version: 0
   m_Tracks:
-  - {fileID: 5529390780419654788}
   - {fileID: -121238460439561998}
+  - {fileID: 5529390780419654788}
   m_FixedDuration: 0
   m_EditorSettings:
     m_Framerate: 60
@@ -205,6 +214,15 @@ MonoBehaviour:
   m_Name: CameraTimelineClip
   m_EditorClassIdentifier: 
   cameraMoveMode: 1
+  resetSubMode: 0
+  resetLerpFactor: 10
+  resetUseVariableSpeed: 0
+  resetStartSpeed: 1
+  resetEndSpeed: 3
+  useSurroundMode: 0
+  surroundRadius: 3.2
+  surroundTotalAngle: 180
+  surroundFixedHeight: 1.2
   cameraTargetLocalPos: {x: 3.468704, y: 4, z: 5.193125}
   cameraTargetEuler: {x: 30.851637, y: 215.05379, z: 356.4678}
   lockLookAtPlayer: 1

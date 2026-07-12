@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36bd7a303486f024a82410c2652ec0b1, type: 3}
   m_Name: "\u5B89\u6BD4"
   m_EditorClassIdentifier: 
+  Roledata:
+    RoleIcom: {fileID: 21300000, guid: cd5b331b730c837478a55bb9ee00543a, type: 3}
+  RoleParry: 1
   Idle: {fileID: 11400000, guid: 81e8fad9bf1509a4f9b2b25eb2f24ea8, type: 2}
   AfkIdle: {fileID: 11400000, guid: 9d6740d0598ed044faadd986f5307669, type: 2}
   BornSet: {fileID: 11400000, guid: 2a7ba6e134110c8418ebad9fdff4e242, type: 2}
@@ -37,17 +40,18 @@ MonoBehaviour:
     HasVariantATK: 1
     PerfectATK: {fileID: 11400000, guid: 770cdb21c5d904442aa22ebadb41cf5b, type: 2}
   RushAttack: {fileID: 11400000, guid: edda97e81795ebb408d45fcd7e6ca35f, type: 2}
+  Block: {fileID: 0}
   RelatedFullE:
-    Special: {fileID: 11400000, guid: b95677a32e8afa64bac6921cdfeea47a, type: 2}
-    Cost: 60
+  - Special: {fileID: 11400000, guid: b95677a32e8afa64bac6921cdfeea47a, type: 2}
+    Cost: 40
   FullE:
-    Special: {fileID: 11400000, guid: 04dc7ebd2c546ca44983bdd98b553686, type: 2}
-    Cost: 80
+  - Special: {fileID: 11400000, guid: 04dc7ebd2c546ca44983bdd98b553686, type: 2}
+    Cost: 40
   RelatedUnfilledE:
-    Special: {fileID: 11400000, guid: 9b043eafcbb065c4f912de89435c5022, type: 2}
+  - Special: {fileID: 11400000, guid: 9b043eafcbb065c4f912de89435c5022, type: 2}
     Cost: 0
   UnfilledE:
-    Special: {fileID: 11400000, guid: bf3dc92e2fa3cda449de78069b2883cb, type: 2}
+  - Special: {fileID: 11400000, guid: bf3dc92e2fa3cda449de78069b2883cb, type: 2}
     Cost: 0
   EndSkill: {fileID: 11400000, guid: 77d3856e0ff037e4cb544797b34994d0, type: 2}
   Jump: {fileID: 11400000, guid: d84ade2055b4bd34abd8def0b87d7560, type: 2}
@@ -56,3 +60,5 @@ MonoBehaviour:
   Slide: {fileID: 11400000, guid: 7016c9c052360094780deb47b8dcc343, type: 2}
   GetHit: {fileID: 11400000, guid: 0790a58c4123f004aaa9573bdf0c46ee, type: 2}
   Death: {fileID: 11400000, guid: 2ee21f2f265c87d4c83b86ab02a919e1, type: 2}
+  SwitchIn: {fileID: 11400000, guid: fb6ebb67122876b469e799fb420f480e, type: 2}
+  SwitchOut: {fileID: 11400000, guid: 6ac96a91805466d41b6baa6a13b2cfa3, type: 2}

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,58 @@ public class TimeMgr : Base_mgr<TimeMgr>
     private Coroutine ActiveBulletTimeCor;
     private float DefaultLerpSpeedBackup;
 
+    public List<TimerTask> AllTimerTasks = new List<TimerTask>();
+
+    public enum TimerMode
+    {
+        DeltaTime,
+        FixedDeltaTime,
+        RealTimeUnscaled
+    }
+    [System.Serializable]
+    public class TimerTask
+    {
+        public TimerMode Mode;
+        public float CurrentTime;
+        public float TargetTime;
+        public Action OnStart;
+        public Action OnComplete;
+        public bool IsFinished;
+        public Coroutine TaskCor;
+
+        public bool IsRunning()
+        {
+            if (TaskCor == null)
+            {
+                return false;
+            }
+            if (IsFinished)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public float GetRemainTime()
+        {
+            float remain = TargetTime - CurrentTime;
+            if (remain < 0f)
+            {
+                return 0f;
+            }
+            return remain;
+        }
+
+        public float GetProgress()
+        {
+            if (TargetTime <= 0f)
+            {
+                return 1f;
+            }
+            float progress = CurrentTime / TargetTime;
+            return Mathf.Clamp01(progress);
+        }
+    }
     protected override void Awake()
     {
         base.Awake();
@@ -30,6 +83,7 @@ public class TimeMgr : Base_mgr<TimeMgr>
             OriginFixedDeltaTime = Time.fixedDeltaTime;
             TargetTimeScale = NormalTimeScale;
             Time.timeScale = NormalTimeScale;
+            DefaultLerpSpeedBackup = TimeLerpSpeed;
         }
         IsHitPausing = false;
     }
@@ -44,6 +98,15 @@ public class TimeMgr : Base_mgr<TimeMgr>
         {
             float curScale = Mathf.Lerp(Time.timeScale, TargetTimeScale, TimeLerpSpeed * Time.unscaledDeltaTime);
             SetTimeScaleDirect(curScale);
+        }
+
+        for (int i = AllTimerTasks.Count - 1; i >= 0; i--)
+        {
+            TimerTask task = AllTimerTasks[i];
+            if (task == null || task.IsFinished)
+            {
+                AllTimerTasks.RemoveAt(i);
+            }
         }
     }
     public void HitPause()
@@ -122,6 +185,80 @@ public class TimeMgr : Base_mgr<TimeMgr>
     {
         while (!Mathf.Approximately(Time.timeScale, target))
         {
+            yield return null;
+        }
+    }
+    public TimerTask CreateTimer(TimerMode mode, float initialTime, float targetTime, Action onStart, Action onComplete)
+    {
+        TimerTask newTask = new TimerTask();
+        newTask.Mode = mode;
+        newTask.CurrentTime = initialTime;
+        newTask.TargetTime = targetTime;
+        newTask.OnStart = onStart;
+        newTask.OnComplete = onComplete;
+        newTask.IsFinished = false;
+        Coroutine cor = StartCoroutine(TimerCoroutine(newTask));
+        newTask.TaskCor = cor;
+        AllTimerTasks.Add(newTask);
+        newTask.OnStart?.Invoke();
+        return newTask;
+    }
+    public void StopTimer(TimerTask task)
+    {
+        if (task == null || task.IsFinished)
+        {
+            return;
+        }
+        if (task.TaskCor != null)
+        {
+            StopCoroutine(task.TaskCor);
+        }
+        task.IsFinished = true;
+        AllTimerTasks.Remove(task);
+    }
+
+    public void ClearAllTimer()
+    {
+        foreach (TimerTask t in AllTimerTasks)
+        {
+            if (t.TaskCor != null)
+            {
+                StopCoroutine(t.TaskCor);
+            }
+            t.IsFinished = true;
+        }
+        AllTimerTasks.Clear();
+    }
+
+    private IEnumerator TimerCoroutine(TimerTask task)
+    {
+        while (!task.IsFinished)
+        {
+            switch (task.Mode)
+            {
+                case TimerMode.DeltaTime:
+                    {
+                        task.CurrentTime += Time.deltaTime;
+                        break;
+                    }
+                case TimerMode.FixedDeltaTime:
+                    {
+                        yield return new WaitForFixedUpdate();
+                        task.CurrentTime += Time.fixedDeltaTime;
+                        break;
+                    }
+                case TimerMode.RealTimeUnscaled:
+                    {
+                        task.CurrentTime += Time.unscaledDeltaTime;
+                        break;
+                    }
+            }
+            if (task.CurrentTime >= task.TargetTime)
+            {
+                task.IsFinished = true;
+                task.OnComplete?.Invoke();
+                yield break;
+            }
             yield return null;
         }
     }

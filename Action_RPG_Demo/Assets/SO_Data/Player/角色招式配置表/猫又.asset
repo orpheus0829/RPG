@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36bd7a303486f024a82410c2652ec0b1, type: 3}
+  m_Name: "\u732B\u53C8"
+  m_EditorClassIdentifier: 
+  Roledata:
+    RoleIcom: {fileID: 21300000, guid: bcc6b006e939abd4aa11ced514acf315, type: 3}
+  RoleParry: 1
+  Idle: {fileID: 11400000, guid: cfb68f26d77be4c4ea5f2a10081b0d40, type: 2}
+  AfkIdle: {fileID: 0}
+  BornSet: {fileID: 0}
+  Born: {fileID: 0}
+  WalkStart: {fileID: 0}
+  Walk: {fileID: 0}
+  WalkEnd: {fileID: 0}
+  Dodge: {fileID: 0}
+  RunDodge: {fileID: 0}
+  Run: {fileID: 0}
+  RunEnd: {fileID: 0}
+  AtkList: []
+  RushAttack: {fileID: 0}
+  RelatedFullE:
+    Special: {fileID: 0}
+    Cost: 0
+  FullE:
+    Special: {fileID: 0}
+    Cost: 0
+  RelatedUnfilledE:
+    Special: {fileID: 0}
+    Cost: 0
+  UnfilledE:
+    Special: {fileID: 0}
+    Cost: 0
+  EndSkill: {fileID: 0}
+  Jump: {fileID: 0}
+  PreVault: {fileID: 0}
+  AftVault: {fileID: 0}
+  Slide: {fileID: 0}
+  GetHit: {fileID: 0}
+  Death: {fileID: 0}
+  SwitchIn: {fileID: 11400000, guid: 2e5e5f4fe4b823b4a903a2d4b0c446e2, type: 2}
+  SwitchOut: {fileID: 11400000, guid: d874dd62fc82dbd42b553923ae1fec9f, type: 2}

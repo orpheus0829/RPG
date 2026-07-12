@@ -15,6 +15,10 @@ public class EnemyWalkState : Istate
 
     public void OnEnter()
     {
+        if (enemy.tag == "DeadEnemy")
+        {
+            return;
+        }
         //string cur = enemy.RandomAnim(1, "WalkFront");
         //Debug.Log($"±¾´Î²¥·Å{cur}");
         //if (enemy.IsSpawnInit)
@@ -62,7 +66,7 @@ public class EnemyWalkState : Istate
         {
             enemy.TransitionState(EnemyStateType.Dead);
         }
-        enemy.SetChase(true);
+        enemy.SetChase(true, enemy.agent);
         if (enemy.AtkCoolDown > 0)
         {
             enemy.TransitionState(EnemyStateType.IdleAndPatrol);
@@ -71,7 +75,7 @@ public class EnemyWalkState : Istate
         {
             ShutDownCorountine();
             enemy.TransitionState(EnemyStateType.IdleAndPatrol);
-            enemy.SetChase(false);
+            enemy.SetChase(false, enemy.agent);
         }
         //RaycastHit hit;
         //if (Physics.Raycast(enemy.transform.position, enemy.transform.forward, out hit, enemy.enemySO.HitLength))
@@ -98,6 +102,6 @@ public class EnemyWalkState : Istate
 
     public void OnUpdate()
     {
-        enemy.SetChase(true);
+        enemy.SetChase(true, enemy.agent);
     }
 }

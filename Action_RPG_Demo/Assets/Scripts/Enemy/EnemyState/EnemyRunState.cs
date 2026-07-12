@@ -14,6 +14,10 @@ public class EnemyRunState : Istate
 
     public void OnEnter()
     {
+        if (enemy.tag == "DeadEnemy")
+        {
+            return;
+        }
         enemy.PlayAnim(1, "RunFront", 0.3f);
         enemy.agent.speed = enemy.enemySO.RunSpeed;
     }
@@ -29,7 +33,7 @@ public class EnemyRunState : Istate
         {
             enemy.TransitionState(EnemyStateType.Dead);
         }
-        enemy.SetChase(true);
+        enemy.SetChase(true, enemy.agent);
         if (enemy.AtkCoolDown > 0)
         {
             enemy.TransitionState(EnemyStateType.IdleAndPatrol);
@@ -62,6 +66,6 @@ public class EnemyRunState : Istate
 
     public void OnUpdate()
     {
-        enemy.SetChase(true);
+        enemy.SetChase(true, enemy.agent);
     }
 }

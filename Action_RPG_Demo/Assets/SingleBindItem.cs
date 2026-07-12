@@ -67,7 +67,10 @@ public class SingleBindItem : MonoBehaviour
             rebindingOperation = null;
         }
     }
-
+    public void Update()
+    {
+        transform.localScale = transform.localScale == Vector3.one ? transform.localScale : Vector3.one;
+    }
     public void UpdateKeyDisplayText()
     {
         if (targetAction == null)

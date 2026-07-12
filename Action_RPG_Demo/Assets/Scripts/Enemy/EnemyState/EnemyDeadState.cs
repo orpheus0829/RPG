@@ -21,7 +21,7 @@ public class EnemyDeadState : Istate
         //Debug.Log("ËÀÍöenter");
         enemy.PlayAnim(2, "DeadDown", 0.1f);
         enemy.gameObject.tag = "DeadEnemy";
-        enemy.SetChase(false);
+        enemy.SetChase(false, enemy.agent);
     }
 
     public void OnExit()
@@ -35,6 +35,6 @@ public class EnemyDeadState : Istate
     }
     public void OnUpdate()
     {
-        enemy.SetChase(false);
+        enemy.SetChase(false, enemy.agent);
     }
 }

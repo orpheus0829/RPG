@@ -27,6 +27,8 @@ public class EpisodeRelation : MonoBehaviour
         foreach (var i in EpisodeLineData.Quests)
         {
             GameObject quest = ObjectPoolMgr.instance.GetObj(QuestBoard, QuestsParent);
+            RectTransform rect = quest.GetComponent<RectTransform>();
+            rect.localScale = Vector3.one;
             QuestRelation relation = quest.GetComponent<QuestRelation>();
             relation.NowEpisode = EpisodeLineData;
             relation.quest = i;
