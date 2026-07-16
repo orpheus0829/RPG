@@ -90,6 +90,10 @@ public class NavPathMgr : Base_mgr<NavPathMgr>
     }
     private void RefreshPath()
     {
+        if (!player || targetPoint == null || navPath == null)
+        {
+            return;
+        }
         bool findPath = NavMesh.CalculatePath(player.position, targetPoint, NavMesh.AllAreas, navPath);
         if (!findPath || navPath.corners.Length < 2)
         {

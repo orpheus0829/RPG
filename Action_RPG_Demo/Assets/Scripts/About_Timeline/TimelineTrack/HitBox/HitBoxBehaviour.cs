@@ -89,7 +89,6 @@ public class HitBoxBehaviour : PlayableBehaviour
         else if (ctrlCache is EnemyActionCtrl enemyCtrl)
         {
             enemyCtrl.DoSingleHitScan();
-            Debug.Log("´òÍæ¼Ò");
         }
     }
     private void ClearHitBoxDataToCtrl()

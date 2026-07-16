@@ -13,6 +13,8 @@ public class BaseEnemy : MonoBehaviour
     [Header("玩家追逐")]
     public List<GameObject> PlayerList = new List<GameObject>();
     public bool IsChasing;
+    [Header("格挡")]
+    public bool NeedBlock;
     [Header("敌人共有引用")]
     public CapsuleCollider col;
     public DamageTrigger damageTrigger;
@@ -72,6 +74,10 @@ public class BaseEnemy : MonoBehaviour
     }
     public virtual void TurnToPlayer(float time , float rotatesmmoth)
     {
+        if (!PlayerList[0])
+        {
+            return;
+        }
         Vector3 dir = PlayerList[0].transform.position - transform.position;
         Quaternion d = Quaternion.LookRotation(dir);
         transform.rotation = Quaternion.Lerp(transform.rotation, d, Time.deltaTime * rotatesmmoth);
@@ -83,6 +89,10 @@ public class BaseEnemy : MonoBehaviour
     }
     public virtual void SetChase(bool chase,NavMeshAgent agent)
     {
+        if (!agent)
+        {
+            return;
+        }
         if (chase && PlayerList.Count > 0)
         {
             agent.SetDestination(PlayerList[0].transform.position);
@@ -97,6 +107,18 @@ public class BaseEnemy : MonoBehaviour
 
     }
     public virtual void SwitchDeadState()
+    {
+
+    }
+    public virtual void BlockOn()
+    {
+        NeedBlock = true;
+    }
+    public virtual void BlockOff()
+    {
+        NeedBlock = false;
+    }
+    public virtual void BeParried()
     {
 
     }

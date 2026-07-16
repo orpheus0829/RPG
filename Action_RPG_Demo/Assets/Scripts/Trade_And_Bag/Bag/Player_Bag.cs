@@ -340,6 +340,39 @@ public class Player_Bag : MonoBehaviour
             Debug.Log("找不到存档数据，新建立背包");
         }
     }
+    public Bag_Save_Data ExportBagData()
+    {
+        Bag_Save_Data save = new Bag_Save_Data();
+        save.row = Bag_Row;
+        save.col = Bag_Col;
+        for (int y = 0; y < Bag_Row; y++)
+        {
+            for (int x = 0; x < Bag_Col; x++)
+            {
+                save.slots.Add(bag[y, x]);
+            }
+        }
+        return save;
+    }
+    public void ImportBagData(Bag_Save_Data saveData)
+    {
+        Bag_Row = saveData.row;
+        Bag_Col = saveData.col;
+        Init_Bag();
+        int index = 0;
+        for (int y = 0; y < Bag_Row; y++)
+        {
+            for (int x = 0; x < Bag_Col; x++)
+            {
+                bag[y, x] = saveData.slots[index];
+                index++;
+            }
+        }
+        ReClean_Bag_Display();
+        Refresh_Bag_Display();
+        Init_Resort_List();
+        Save_Bag(path);
+    }
     #endregion
     #region 放置与删除
     public void PlaceItem(Item_Data item, int x, int y)

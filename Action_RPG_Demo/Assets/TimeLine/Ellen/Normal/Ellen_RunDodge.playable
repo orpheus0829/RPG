@@ -179,15 +179,23 @@ MonoBehaviour:
   endPos: {x: 0, y: 0, z: 0}
   endEuler: {x: 0, y: 0, z: 0}
   moveSpeed: 4.684936
-  totalDistance: 5
-  startSpeed: 24
-  endSpeed: 0
+  totalDistance: 4
+  startSpeed: 16
+  endSpeed: 7
   climbStage: 0
   climbUseVariableSpeed: 0
   climbSpeed: 0
   climbStartSpeed: 0
   climbEndSpeed: 0
   climbAfterExtraDistance: 0
+  circleCenterLocal: {x: 0, y: 0, z: 0}
+  circleRadius: 0
+  circleTotalAngle: 0
+  circleClockwise: 1
+  circleVariableSpeed: 0
+  circleConstantSpeed: 0
+  circleStartAngSpeed: 0
+  circleEndAngSpeed: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0

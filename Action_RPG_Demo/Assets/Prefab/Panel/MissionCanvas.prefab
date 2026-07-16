@@ -139,6 +139,7 @@ GameObject:
   - component: {fileID: 4259553549007335880}
   - component: {fileID: 3944022439953048281}
   - component: {fileID: 1988643389306744426}
+  - component: {fileID: -2368108700907659708}
   m_Layer: 0
   m_Name: MissionCanvas
   m_TagString: Untagged
@@ -241,6 +242,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea6cef7132e91b242bff334cb7637a86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HideControl: 1
+--- !u!225 &-2368108700907659708
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642256395143410317}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2147931178479903574
 GameObject:
   m_ObjectHideFlags: 0

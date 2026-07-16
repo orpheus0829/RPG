@@ -123,7 +123,7 @@ MonoBehaviour:
   climbEndSpeed: 0
   climbAfterExtraDistance: 0
   circleCenterLocal: {x: 0, y: 0, z: 4}
-  circleRadius: 3
+  circleRadius: 2.5
   circleTotalAngle: 360
   circleClockwise: 1
   circleVariableSpeed: 0

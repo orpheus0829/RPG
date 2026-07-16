@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static UnityEditor.Progress;
 
 [System.Serializable]
@@ -38,44 +39,59 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
         if (instance == this)
         {
             DontDestroyOnLoad(this.gameObject);
+            SceneManager.sceneLoaded += OnSceneLoadComplete;
         }
         Debug_Story();
         //Init_Story();
     }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoadComplete;
+        DialogueActorToIdDict.Clear();
+        IdToDialogueActorDict.Clear();
+    }
     public void Start()
     {
         Load_WorldStory(StoryPath);
-        DialogActor.Clear();
         CurEnemys.Clear();
         CurDrops.Clear();
-        GameObject[] npcs = GameObject.FindGameObjectsWithTag("NPC");
-        foreach (var i in npcs)
-        {
-            if (i.TryGetComponent(out Dialogue_Set set))
-            {
-                DialogActor.Add(set);
-            }
-        }
-        DialogueActorToIdDict.Clear();
-        IdToDialogueActorDict.Clear();
-        foreach (var actor in DialogActor)
-        {
-            string curActorId = actor.CharacterId;
-            if (string.IsNullOrWhiteSpace(curActorId))
-            {
-                Debug.Log($"NPC {actor.gameObject.name}未配置角色ID");
-                continue;
-            }
-            DialogueActorToIdDict.Add(actor, curActorId);
-            if (!IdToDialogueActorDict.ContainsKey(curActorId))
-            {
-                IdToDialogueActorDict.Add(curActorId, actor);
-            }
-        }
-        //CurQuest = Story.Chapters[CurStory.ChapterID].Episodes[CurStory.EpisodeID].Quests[CurStory.QuestID - 1];
+        RefreshAllDialogActorCache();
         Refresh_StoryProgress();
         CurQuestPos = CalculateQuestPos();
-        //NavPathMgr.instance.OpenNavPath(CurQuestPos);
+    }
+    private void RefreshAllDialogActorCache()
+    {
+        DialogActor.Clear();
+        DialogueActorToIdDict.Clear();
+        IdToDialogueActorDict.Clear();
+        GameObject[] allNpcs = GameObject.FindGameObjectsWithTag("NPC");
+        foreach (GameObject obj in allNpcs)
+        {
+            if (obj.TryGetComponent(out Dialogue_Set ds))
+            {
+                DialogActor.Add(ds);
+            }
+        }
+        foreach (Dialogue_Set actor in DialogActor)
+        {
+            string aid = actor.CharacterId;
+            if (string.IsNullOrWhiteSpace(aid))
+            {
+                Debug.Log($"{actor.name}没写Id，跳过缓存");
+                continue;
+            }
+            DialogueActorToIdDict.Add(actor, aid);
+            if (!IdToDialogueActorDict.ContainsKey(aid))
+            {
+                IdToDialogueActorDict.Add(aid, actor);
+            }
+        }
+    }
+    private void OnSceneLoadComplete(Scene scene, LoadSceneMode mode)
+    {
+        RefreshAllDialogActorCache();
+        Refresh_StoryProgress();
+        CurQuestPos = CalculateQuestPos();
     }
     public void OnEnable()
     {
@@ -106,11 +122,6 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
         }
         CurQuestPos = CalculateQuestPos();
         //NavPathMgr.instance.targetPoint = CurQuestPos;
-    }
-    private void OnDestroy()
-    {
-        DialogueActorToIdDict.Clear();
-        IdToDialogueActorDict.Clear();
     }
     #region 设置数据
     public void Init_Story()

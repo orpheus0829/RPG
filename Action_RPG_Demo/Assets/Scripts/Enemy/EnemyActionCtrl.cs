@@ -178,9 +178,9 @@ public class EnemyActionCtrl : BaseActor, INotificationReceiver
             {
                 continue;
             }
-            Debug.Log("hit玩家");
             if (col.tag == "Player")
             {
+                Debug.Log("hit玩家");
                 Player p = col.GetComponent<Player>();
                 p.GetHurt(CurrentHitDamage, transform.forward);
                 p.InputMove = Vector3.zero;
@@ -196,7 +196,6 @@ public class EnemyActionCtrl : BaseActor, INotificationReceiver
         }
     }
     #endregion
-
     #region 动画/音效/特效
     public void PlayAnimation(AnimationClip clip)
     {

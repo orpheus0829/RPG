@@ -22,9 +22,17 @@ public class Dialogue_Set : BaseActor
     }
     public void Update()
     {
+        if (!Cur_Dialogue)
+        {
+            Switch_DialogueSO();
+        }
     }
     public void Switch_DialogueSO()
     {
+        if (!Panel_Mgr.instance.DialoguePanel)
+        {
+            return;
+        }
         Panel_Mgr.instance.HideAllPanel();
         Cur_Dialogue = Story_Dialogue ? Story_Dialogue : Chat_Dialogue;
         DialogueWriter writer = Panel_Mgr.instance.DialoguePanel.GetComponent<DialogueWriter>();

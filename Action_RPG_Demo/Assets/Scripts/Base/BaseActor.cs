@@ -10,7 +10,6 @@ public class BaseActor : MonoBehaviour
         {
             return;
         }
-        //AudioSource.PlayClipAtPoint(clip, transform.position);
         SoundMgr.instance.PlaySingleSound(clip, this.transform.root.gameObject);
     }
     public virtual GameObject SpawnEffect(GameObject prefab, Vector3 pos, Quaternion rot)

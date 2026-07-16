@@ -273,6 +273,7 @@ MonoBehaviour:
   DeadTime: 0
   PlayerList: []
   IsChasing: 0
+  NeedBlock: 0
   col: {fileID: 8384147850327429595}
   damageTrigger: {fileID: 0}
   damageReceiver: {fileID: 0}
@@ -481,6 +482,9 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 058d65e9abeed9c479ecff5838782e95, type: 2}
     - {fileID: 11400000, guid: bbb5367b0fba9aa468635ac8d80f7613, type: 2}
     - {fileID: 11400000, guid: a2d322991dd133f45a22c606954df407, type: 2}
+    - {fileID: 11400000, guid: 0d00d47169f8c7040a1a4ba879164173, type: 2}
+    - {fileID: 11400000, guid: 1a782c74053b3df4bb6bf36271cce599, type: 2}
+    - {fileID: 11400000, guid: f6fbbb886bf99c646a1422b170fc8359, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -519,6 +523,48 @@ MonoBehaviour:
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5733986377253482095}
+          m_TargetAssemblyTypeName: BaseEnemy, Assembly-CSharp
+          m_MethodName: BlockOn
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5733986377253482095}
+          m_TargetAssemblyTypeName: BaseEnemy, Assembly-CSharp
+          m_MethodName: BlockOff
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1498075138871015213}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: 
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: 
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 

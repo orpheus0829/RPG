@@ -126,14 +126,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da8d075dc41a51e408761beace65af41, type: 3}
   m_Name: HitBoxClip
   m_EditorClassIdentifier: 
-  boxOffset: {x: 0, y: 0.9870713, z: 1.6991143}
+  boxOffset: {x: 0, y: 0.9870713, z: 1.3779957}
   boxRadius: 1.6
   damage: 40
   startTime: 0
   endTime: 1
   HitForce: 2
   hitBoxShape: 1
-  hitBoxSize: {x: 3.05, y: 2.2108612, z: 2.2601378}
+  hitBoxSize: {x: 3.05, y: 2.2108612, z: 2.5030305}
+  useRepeatScan: 0
+  scanInterval: 0.1
 --- !u!114 &-7051931237840167014
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -158,6 +160,8 @@ MonoBehaviour:
   m_Markers:
     m_Objects:
     - {fileID: -1519032383727989799}
+    - {fileID: -3886717675609258257}
+    - {fileID: -3366632270420365695}
 --- !u!114 &-6379282257974614909
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -250,6 +254,22 @@ MonoBehaviour:
     m_DisplayName: EffectAudioClip
   m_Markers:
     m_Objects: []
+--- !u!114 &-3886717675609258257
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15c38f6fa1940124db1ab7f6fe7268d1, type: 3}
+  m_Name: Signal Emitter
+  m_EditorClassIdentifier: 
+  m_Time: 0.43333333333333335
+  m_Retroactive: 0
+  m_EmitOnce: 0
+  m_Asset: {fileID: 11400000, guid: 0d00d47169f8c7040a1a4ba879164173, type: 2}
 --- !u!114 &-3642915146143349709
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -265,6 +285,7 @@ MonoBehaviour:
   moveMode: 2
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
+  endEuler: {x: 0, y: 0, z: 0}
   moveSpeed: 10
   totalDistance: 5
   startSpeed: 10
@@ -275,6 +296,30 @@ MonoBehaviour:
   climbStartSpeed: 0
   climbEndSpeed: 0
   climbAfterExtraDistance: 0
+  circleCenterLocal: {x: 0, y: 0, z: 0}
+  circleRadius: 0
+  circleTotalAngle: 0
+  circleClockwise: 1
+  circleVariableSpeed: 0
+  circleConstantSpeed: 0
+  circleStartAngSpeed: 0
+  circleEndAngSpeed: 0
+--- !u!114 &-3366632270420365695
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15c38f6fa1940124db1ab7f6fe7268d1, type: 3}
+  m_Name: Signal Emitter
+  m_EditorClassIdentifier: 
+  m_Time: 0.7
+  m_Retroactive: 0
+  m_EmitOnce: 0
+  m_Asset: {fileID: 11400000, guid: 1a782c74053b3df4bb6bf36271cce599, type: 2}
 --- !u!114 &-1519032383727989799
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -333,6 +378,8 @@ MonoBehaviour:
   spawnOffset: {x: -0.09768781, y: 1.0690457, z: 0.5862467}
   spawnEuler: {x: 0, y: 0, z: 0}
   spawnScale: {x: 1.2, y: 1.2, z: 1.2}
+  useRepeatSpawn: 0
+  spawnInterval: 0.1
 --- !u!114 &282275790232852092
 MonoBehaviour:
   m_ObjectHideFlags: 1

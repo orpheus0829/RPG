@@ -58,7 +58,10 @@ MonoBehaviour:
   PreVault: {fileID: 11400000, guid: 439c2ba6142adc944b53e8a8a3863f3a, type: 2}
   AftVault: {fileID: 11400000, guid: 02e53aaaea6487d458a4fa62184ea914, type: 2}
   Slide: {fileID: 11400000, guid: 7016c9c052360094780deb47b8dcc343, type: 2}
-  GetHit: {fileID: 11400000, guid: 0790a58c4123f004aaa9573bdf0c46ee, type: 2}
+  GetHitB: {fileID: 11400000, guid: 0790a58c4123f004aaa9573bdf0c46ee, type: 2}
+  GetHitF: {fileID: 11400000, guid: 83ec6f4b1814d49468c2b0c2f6bb1c33, type: 2}
+  GetHitL: {fileID: 11400000, guid: 166284a34e33aac4794894799ca4fda7, type: 2}
+  GetHitR: {fileID: 11400000, guid: a4e48b7445082a4459503b725290dc3f, type: 2}
   Death: {fileID: 11400000, guid: 2ee21f2f265c87d4c83b86ab02a919e1, type: 2}
   SwitchIn: {fileID: 11400000, guid: fb6ebb67122876b469e799fb420f480e, type: 2}
   SwitchOut: {fileID: 11400000, guid: 6ac96a91805466d41b6baa6a13b2cfa3, type: 2}

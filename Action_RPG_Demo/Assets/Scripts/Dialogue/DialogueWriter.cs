@@ -47,6 +47,9 @@ public class DialogueWriter : MonoBehaviour
     }
     public void OnEnable()
     {
+        Game_Event.instance.PressChoice2 -= ReceiveChange;
+        Game_Event.instance.PressChoice1 -= WriteDialogue;
+        Game_Event.instance.DirectNextDialogue -= DirectNext;
         Game_Event.instance.PressChoice2 += ReceiveChange;
         Game_Event.instance.PressChoice1 += WriteDialogue;
         Game_Event.instance.DirectNextDialogue += DirectNext;
@@ -59,6 +62,11 @@ public class DialogueWriter : MonoBehaviour
     }
     public void WriteDialogue()
     {
+        if (!CurDialogue)
+        {
+            Debug.Log("CurDialogueÎª¿Õ");
+            return;
+        }
         if (IsTyping)
         {
             StopCoroutine(typ);
@@ -103,6 +111,7 @@ public class DialogueWriter : MonoBehaviour
     }
     public void ReceiveChange(Dialogue_SO dialogue)
     {
+        Debug.Log("qwe");
         CurDialogue = dialogue;
     }
     public void ClearAllChoice()
@@ -116,6 +125,11 @@ public class DialogueWriter : MonoBehaviour
     }
     public void DirectNext()
     {
+        if (!CurDialogue)
+        {
+            Debug.Log("CurDialogueÎª¿Õ");
+            return;
+        }
         if (IsTyping)
         {
             return;
@@ -135,6 +149,7 @@ public class DialogueWriter : MonoBehaviour
             Panel_Mgr.instance.HideAllPanel();
             if (CurDialogue.dialogueMode == DialogueMode.Quest)
             {
+                Debug.Log("shiduihua");
                 Story_Mgr.instance.CheckDialogue();
             }
         }

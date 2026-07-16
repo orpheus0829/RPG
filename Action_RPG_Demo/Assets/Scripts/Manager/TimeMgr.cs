@@ -141,7 +141,14 @@ public class TimeMgr : Base_mgr<TimeMgr>
     {
         TargetTimeScale = Mathf.Clamp(scale, 0f, 2f);
     }
-
+    public void SuddenStop()
+    {
+        SetCustomTimeScale(0f);
+    }
+    public void SuddenResume()
+    {
+        SetCustomTimeScale(NormalTimeScale);
+    }
     public void PauseGame()
     {
         TargetTimeScale = 0f;

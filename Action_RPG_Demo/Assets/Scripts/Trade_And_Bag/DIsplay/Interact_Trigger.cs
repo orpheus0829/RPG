@@ -154,6 +154,10 @@ public class Interact_Trigger : MonoBehaviour
         }
         else if (typeof(T) == typeof(Dialogue_Set))
         {
+            if (!Panel_Mgr.instance.DialoguePanel)
+            {
+                return;
+            }
             DialogueWriter writer = Panel_Mgr.instance.DialoguePanel.GetComponent<DialogueWriter>();
             if (lst.Count > 0)
             {

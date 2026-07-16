@@ -66,7 +66,8 @@ public class CharacterActionSO : ScriptableObject
     [Header("»¬²ù")]
     public ActionSO Slide;
     [Header("ÊÜ»÷")]
-    public ActionSO GetHit;
+    public ActionSO GetHitB;
+    public ActionSO GetHitF;
     [Header("ËÀÍö")]
     public ActionSO Death;
 

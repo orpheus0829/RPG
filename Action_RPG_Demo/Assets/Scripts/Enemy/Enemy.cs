@@ -210,4 +210,9 @@ public class Enemy : BaseEnemy
             Story_Mgr.instance.CheckAllEnemyDead();
         });
     }
+    public override void BeParried()
+    {
+        base.BeParried();
+        TransitionState(EnemyStateType.Hurt);
+    }
 }

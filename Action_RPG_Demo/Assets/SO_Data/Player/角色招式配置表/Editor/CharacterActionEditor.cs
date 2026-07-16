@@ -83,7 +83,8 @@ public class CharacterActionEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("PreVault"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("AftVault"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Slide"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("GetHit"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("GetHitB"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("GetHitF"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Death"));
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("SwitchIn"));

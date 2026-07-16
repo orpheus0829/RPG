@@ -91,10 +91,12 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
     #region 任务
     public void MissionDone()
     {
+        Debug.Log("任务完成");
         EnqueueCenterText(MissionSuccess, 0f);
     }
     public void MissionNext()
     {
+        Debug.Log("进入下一个任务");
         MissionUpdate = $"下一幕:{Story_Mgr.instance.CurQuest.Quest_Title}";
         float delay = CenterAnimRunning ? (CenterAnimDuration * 2 + CenterFadeDuration) : 0f;
         EnqueueCenterText(MissionUpdate, delay);

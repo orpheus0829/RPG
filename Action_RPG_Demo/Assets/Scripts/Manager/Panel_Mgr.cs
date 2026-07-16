@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -6,7 +7,8 @@ using UnityEngine;
 
 public class Panel_Mgr : Base_mgr<Panel_Mgr>
 {
-    [Header("面板")]
+    public GameObject PanelCollector;
+    [Header("常规面板")]
     public BasePanel BagPanel;
     public BasePanel TraderPanel;
     public BasePanel CraftPanel;
@@ -19,6 +21,9 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
 
     public BasePanel BuyPanel;
     public BasePanel SellPanel;
+
+    [Header("确认面板")]
+    public BasePanel ConfirmPanel;
     [Header("效果")]
     public float FadeInDuration;
     public float FadeOutDuration;
@@ -57,6 +62,16 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
         {
             DontDestroyOnLoad(this.gameObject);
         }
+        ActiveAllPanel(PanelCollector.transform);
+        FindAllPanel();
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+    public void Start()
+    {
+        
+    }
+    private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
+    {
         FindAllPanel();
     }
     public void On_PanelChanged()
@@ -75,7 +90,10 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
     }
     public void Update()
     {
-        MapPanel.gameObject.SetActive(true);
+        if (MapPanel)
+        {
+            MapPanel.gameObject.SetActive(true);
+        }
         //if (IsPanelOpen || IsFullMapOpen)
         //{
         //    NavPathMgr.instance.CloseNavPath();
@@ -105,12 +123,58 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
             }
         }
     }
+    private void ActiveAllPanel(Transform root)
+    {
+        if (root.TryGetComponent(out BasePanel panel))
+        {
+            root.gameObject.SetActive(true);
+        }
+        foreach (Transform child in root)
+        {
+            ActiveAllPanel(child);
+        }
+    }
+    public void AutoBindAllPanel()
+    {
+        PanelList.Clear();
+        GameObject collector = GameObject.Find("Panel_Collector");
+        if (!collector)
+        {
+            return;
+        }
+        BasePanel[] allPanels = collector.GetComponentsInChildren<BasePanel>(includeInactive: true);
+        foreach (var panel in allPanels)
+        {
+            string tag = panel.BindTag;
+            if (string.IsNullOrEmpty(tag))
+            {
+                continue;
+            }
+            FieldInfo field = GetType().GetField(tag, BindingFlags.Public | BindingFlags.Instance);
+            if (field != null && field.FieldType == typeof(BasePanel))
+            {
+                field.SetValue(this, panel);
+            }
+            if (!PanelList.Contains(panel))
+            {
+                PanelList.Add(panel);
+            }
+        }
+    }
     public void HideAllPanel()
     {
         IsPanelOpen = false;
         TimeMgr.instance.UnPauseGame();
         foreach (var panel in PanelList)
         {
+            if (!panel)
+            {
+                continue;
+            }
+            if (!panel.HideControl)
+            {
+                continue;
+            }
             if (panel == InteractTradePanel || panel == InteractChatPanel || panel == BuyPanel || panel == SellPanel || panel==MapPanel)
             {
                 panel.HidePanel();
@@ -207,7 +271,10 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
     }
     public void Control_InteractPanel(bool open, BasePanel panel)
     {
-        panel.gameObject.SetActive(open);
+        if (panel)
+        {
+            panel.gameObject.SetActive(open);
+        }
     }
     public bool IsPanelVisible(BasePanel panel)
     {
@@ -216,5 +283,15 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
             return false;
         }
         return panel.IsVisible();
+    }
+    public void ShowComfirmPanel(string tip,bool IsWarning,Action action)
+    {
+        ConfirmPanel.ShowPanel();
+        ConfirmPanleCtrl confirmPanle = ConfirmPanel.GetComponentInChildren<ConfirmPanleCtrl>();
+        if (!confirmPanle)
+        {
+            return;
+        }
+        confirmPanle.BuildCfm(tip, IsWarning, action);
     }
 }
