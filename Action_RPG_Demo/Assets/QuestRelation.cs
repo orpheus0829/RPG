@@ -192,6 +192,7 @@ public class QuestRelation : MonoBehaviour
     }
     public void OnTrack()
     {
+        Debug.Log("µã»÷×·×Ù");
         Vector3 questPos = Story_Mgr.instance.CalculateQuestPos();
         MiniMapMgr.instance.trackingTarget = null;
         NavPathMgr.instance.SwitchNavTarget(questPos);

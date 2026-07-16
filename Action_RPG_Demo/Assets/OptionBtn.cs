@@ -39,10 +39,13 @@ public class OptionBtn : MonoBehaviour
         Transform c = DetailContent.transform;
         for (int i = c.childCount - 1; i >= 0; i--)
         {
-            GameObject child = c.GetChild(i).gameObject;
-            ObjectPoolMgr.instance.PushObj(child);
+            GameObject j = c.GetChild(i).gameObject;
+            if (j)
+            {
+                ObjectPoolMgr.instance.PushObj(j);
+            }
         }
-        if (currentDetailPanel != null)
+        if (currentDetailPanel)
         {
             ObjectPoolMgr.instance.PushObj(currentDetailPanel);
             currentDetailPanel = null;
@@ -53,5 +56,6 @@ public class OptionBtn : MonoBehaviour
     {
         ClearDetailContent();
         currentDetailPanel = ObjectPoolMgr.instance.GetObj(DetailOption, DetailContent);
+        currentDetailPanel.GetComponent<RectTransform>().localScale = Vector3.one;
     }
 }

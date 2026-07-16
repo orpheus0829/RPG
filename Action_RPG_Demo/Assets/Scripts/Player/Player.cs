@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 using UnityEngine.TextCore.Text;
+using UnityEngine.Timeline;
 
 [System.Serializable]
 public class RoleList
@@ -173,7 +174,8 @@ public class Player : MonoBehaviour
         Game_Event.instance.DeathState += BornSet;
         Game_Event.instance.DeathSecState += BornAction;
         Game_Event.instance.SetDodgeAlpha += SetDodgeA;
-        Game_Event.instance.SetNormalAlpha += ResetA; ;
+        Game_Event.instance.SetNormalAlpha += ResetA;
+        CameraPivot.instance.target = this.gameObject.transform;
     }
     public void OnDisable()
     {
@@ -198,7 +200,7 @@ public class Player : MonoBehaviour
                 rb.isKinematic = false;
             };
         }
-        SetModelAlpha(1f);
+        //SetModelAlpha(1f);
         NavPathMgr.instance.player = this.transform;
         NavPathMgr.instance.CloseNavPath();
     }
@@ -242,6 +244,8 @@ public class Player : MonoBehaviour
     }
     public void Update()
     {
+        //Charge = MaxCharge;
+        //Skill_PowerPool = MaxPower;
         rb.AddForce(Vector3.down * 10f, ForceMode.Force);
         if (IsSwitchingRole)
         {
@@ -704,8 +708,13 @@ public class Player : MonoBehaviour
     #region 跳跃与翻越
     public void OnJump(InputValue value)
     {
+        //if (CurAC.currentAction == CurAC.Character.Block || CurAC.currentAction == CurAC.Character.Dodge)
+        //{
+        //    return;
+        //}
         if (Panel_Mgr.instance.MissionPanel.gameObject.activeSelf)
         {
+            Debug.Log("导航");
             Vector3 questPos = Story_Mgr.instance.CalculateQuestPos();
             MiniMapMgr.instance.trackingTarget = null;
             NavPathMgr.instance.SwitchNavTarget(questPos);
@@ -733,13 +742,47 @@ public class Player : MonoBehaviour
         {
             return;
         }
+        GameObject AtkEnemy = BlockScan();
+        if (AtkEnemy)
+        {
+            AttackDectetcion();
+            int nextrole = (CurRoleIndex + 1) % allrole.Count;
+            SwitchRolePure(nextrole);
+            BaseEnemy e = AtkEnemy.GetComponent<BaseEnemy>();
+            StopCurrentAction();
+            Is_Action_Playing = true;
+            bool CanBlock = CurAC.Character.RoleParry == ParryStyle.Block ? true : false;
+            if (CanBlock)
+            {
+                Vector3 pos = AtkEnemy.transform.position + AtkEnemy.transform.forward * 2.5f;
+                rb.MovePosition(pos);
+                AttackDectetcion();
+                CurAC.PlayAction(CurAC.Character.Block);
+                TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.RealTimeUnscaled, 0f, 0.3f, () =>
+                {
+                    e.am.speed = 0;
+                    TimeMgr.instance.SuddenStop();
+                    CameraPivot.instance.QuickRealTimeShake(2);
+                }, () =>
+                {
+                    e.am.speed = 1;
+                    TimeMgr.instance.SuddenResume();
+                    e.BeParried();
+                    e.NeedBlock = false;
+                });
+            }
+            else
+            {
+                CurAC.PlayAction(CurAC.Character.Dodge);
+            }
+        }
         //InputMove = Vector3.zero;
         int jumpResult = JumpScan();
         if (jumpResult > 1)
         {
             return;
         }
-        if (value.isPressed)
+        if (value.isPressed && IsHoldingMove)
         {
             if (Is_Action_Playing)
             {
@@ -761,7 +804,25 @@ public class Player : MonoBehaviour
             }
         }
     }
-
+    public GameObject BlockScan()
+    {
+        Collider[] c = Physics.OverlapSphere(transform.position, playerSO.DetectionRadius, EnemyLayer);
+        List<GameObject> lst = new List<GameObject>();
+        foreach (var i in c)
+        {
+            if (i.TryGetComponent(out BaseEnemy e) && e.NeedBlock)
+            {
+                lst.Add(i.gameObject);
+            }
+        }
+        lst.Sort((a, b) =>
+        {
+            float distA = Vector3.Distance(transform.position, a.transform.position);
+            float distB = Vector3.Distance(transform.position, b.transform.position);
+            return distA.CompareTo(distB);
+        });
+        return lst.Count > 0 ? lst[0] : null;
+    }
     public int JumpScan()
     {
         float CantJump = playerSO.HighClimbHeight;
@@ -1122,7 +1183,7 @@ public class Player : MonoBehaviour
     #region 受伤
     public void GetHurt(float damage,Vector3 dir)
     {
-        if (IsDead || IsInvincible)
+        if (IsDead || IsInvincible || CurAC.currentAction==CurAC.Character.Block)
         {
             return;
         }
@@ -1131,7 +1192,7 @@ public class Player : MonoBehaviour
             InputMove = Vector3.zero;
             StopCurrentAction();
             Is_Action_Playing = true;
-            CurAC.PlayAction(CurAC.Character.GetHit);
+            CurAC.PlayAction(HitDir(dir));
             StartCoroutine(GetFly(dir));
         }
         damageReceiver.TakeDamage<Player>(damage, dir);
@@ -1139,6 +1200,26 @@ public class Player : MonoBehaviour
         {
             TurnDeath();
             return;
+        }
+    }
+    public ActionSO HitDir(Vector3 dir)
+    {
+        Vector3 PlFwd = transform.forward;
+        PlFwd.y = 0;
+        PlFwd.Normalize();
+        dir.y = 0;
+        dir.Normalize();
+        float angle = Vector3.Angle(PlFwd, dir);
+        if (angle < 90f)
+        {
+            AttackDectetcion();
+            transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y + 180f, 0);
+            return CurAC.Character.GetHitF;
+        }
+        else
+        {
+            AttackDectetcion();
+            return CurAC.Character.GetHitB;
         }
     }
     public IEnumerator GetFly(Vector3 dir)
@@ -1264,13 +1345,30 @@ public class Player : MonoBehaviour
     public void BornAction()
     {
         int randomIndex = Random.Range(0, allrole.Count);
-        if (randomIndex != CurRoleIndex)
+        SwitchRolePure(randomIndex);
+        if (playerSO.EnableBornAnim)
+        {
+            //CameraPivot.instance.PlayRevolveAroundPlayerAnim();
+            StopCurrentAction();
+            Is_Action_Playing = true;
+            CurAC.PlayAction(CurAC.Character.Born);
+        }
+        else
+        {
+            StopCurrentAction();
+            Is_Action_Playing = true;
+            CurAC.PlayAction(CurAC.Character.AfkIdle);
+        }
+    }
+    public void SwitchRolePure(int index)
+    {
+        if (index != CurRoleIndex)
         {
             RoleList oldPack = allrole[CurRoleIndex];
             RoleStatusCache[oldPack.RoleID] = (damageReceiver.currentHp, Skill_PowerPool, Charge);
 
             oldPack.RoleObj.SetActive(false);
-            CurRoleIndex = randomIndex;
+            CurRoleIndex = index;
             RoleList newPack = allrole[CurRoleIndex];
             newPack.RoleObj.SetActive(true);
             CurAC = newPack.RoleAC;
@@ -1290,19 +1388,6 @@ public class Player : MonoBehaviour
             Speed = playerSO.WalkSpeed;
             MaxPower = playerSO.MaxPower;
             MaxCharge = playerSO.MaxCharge;
-        }
-        if (playerSO.EnableBornAnim)
-        {
-            //CameraPivot.instance.PlayRevolveAroundPlayerAnim();
-            StopCurrentAction();
-            Is_Action_Playing = true;
-            CurAC.PlayAction(CurAC.Character.Born);
-        }
-        else
-        {
-            StopCurrentAction();
-            Is_Action_Playing = true;
-            CurAC.PlayAction(CurAC.Character.AfkIdle);
         }
     }
     public void OnCameraFrame()
@@ -1336,6 +1421,10 @@ public class Player : MonoBehaviour
     {
         if (value.isPressed)
         {
+            if (Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.ConfirmPanel) || Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.EscPanel))
+            {
+                return;
+            }
             Panel_Mgr.instance.HideAllPanel();
             if (Panel_Mgr.instance.CurMapStyle == MapStyle.Max)
             {

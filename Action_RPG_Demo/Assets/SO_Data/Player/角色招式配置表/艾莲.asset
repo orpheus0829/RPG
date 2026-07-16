@@ -37,7 +37,7 @@ MonoBehaviour:
     HasVariantATK: 0
     PerfectATK: {fileID: 0}
   RushAttack: {fileID: 11400000, guid: a0a48f1580abff94cbaa3bc8c3704d2c, type: 2}
-  Block: {fileID: 0}
+  Block: {fileID: 11400000, guid: 6f6cb285fc0a52f43b3214ae99ac7930, type: 2}
   RelatedFullE:
   - Special: {fileID: 11400000, guid: bcb3994f9111879488a03b35c060b086, type: 2}
     Cost: 40
@@ -59,7 +59,8 @@ MonoBehaviour:
   PreVault: {fileID: 11400000, guid: 164763dbc1ba02742a31947f6cfea0e4, type: 2}
   AftVault: {fileID: 11400000, guid: d923fb7b96802eb46bffdb0d84ee4b0c, type: 2}
   Slide: {fileID: 11400000, guid: 24c170d255b42984aacad3c7c37893d1, type: 2}
-  GetHit: {fileID: 11400000, guid: 0b48714cb3d94de41a235a4b14c82e03, type: 2}
+  GetHitB: {fileID: 11400000, guid: 0b48714cb3d94de41a235a4b14c82e03, type: 2}
+  GetHitF: {fileID: 11400000, guid: 5c8fd46f2ed3d734387b00ba0540e87a, type: 2}
   Death: {fileID: 11400000, guid: e109cd751be373449b2f22b312490615, type: 2}
   SwitchIn: {fileID: 11400000, guid: a27464f15d901184c82f7aaeae842f13, type: 2}
   SwitchOut: {fileID: 11400000, guid: d0f601182e1a7c34a96d72cf9fef199f, type: 2}

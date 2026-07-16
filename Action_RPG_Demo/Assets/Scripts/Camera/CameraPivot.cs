@@ -65,6 +65,8 @@ public class CameraPivot : Base_mgr<CameraPivot>
     public float _shakePower;
     public float _shakeDamp;
     public Transform camTrans;
+
+    private Coroutine _quickShakeCor;
     protected override void Awake()
     {
         base.Awake();
@@ -165,6 +167,15 @@ public class CameraPivot : Base_mgr<CameraPivot>
         {
             StopCoroutine(currentCameraAnimCoroutine);
             currentCameraAnimCoroutine = null;
+        }
+        if (_quickShakeCor != null)
+        {
+            StopCoroutine(_quickShakeCor);
+            _quickShakeCor = null;
+            if (camTrans != null)
+            {
+                camTrans.localPosition = _originLocalPos;
+            }
         }
         isPlayingCameraAnim = false;
         RestoreNormalCameraState();
@@ -274,5 +285,35 @@ public class CameraPivot : Base_mgr<CameraPivot>
         _shakePower = power;
         _shakeTime = duration;
         _shakeDamp = damp;
+    }
+    public void QuickRealTimeShake(float shakePower)
+    {
+        if (camTrans == null)
+        {
+            return;
+        }
+        if (_quickShakeCor != null)
+        {
+            StopCoroutine(_quickShakeCor);
+        }
+        _quickShakeCor = StartCoroutine(QuickShakeCoroutine(shakePower));
+    }
+    private IEnumerator QuickShakeCoroutine(float power)
+    {
+        float totalRealTime = 0.22f;
+        float dampFactor = 1.6f;
+        float remainTime = totalRealTime;
+        while (remainTime > 0f)
+        {
+            float delta = Time.unscaledDeltaTime;
+            remainTime -= delta;
+            float fade = Mathf.Clamp01(remainTime / totalRealTime);
+            float currentPow = power * fade;
+            Vector3 offset = Random.insideUnitSphere * currentPow;
+            camTrans.localPosition = _originLocalPos + offset;
+            yield return null;
+        }
+        camTrans.localPosition = _originLocalPos;
+        _quickShakeCor = null;
     }
 }

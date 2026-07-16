@@ -1863,13 +1863,14 @@ GameObject:
   - component: {fileID: 1819285920326234438}
   - component: {fileID: 255109726874822859}
   - component: {fileID: 861492999355679592}
+  - component: {fileID: -3963147714187520874}
   m_Layer: 5
   m_Name: BackPacks_Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5583717941575365071
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1972,6 +1973,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea6cef7132e91b242bff334cb7637a86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HideControl: 1
+--- !u!225 &-3963147714187520874
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5909525059436653705}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &6514495514693521425
 GameObject:
   m_ObjectHideFlags: 0

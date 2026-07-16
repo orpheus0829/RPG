@@ -22,5 +22,6 @@ MonoBehaviour:
   AtkList:
   - {fileID: 11400000, guid: e3ceb1a465b35374cab3bc89963a9675, type: 2}
   HeavyAtk: {fileID: 0}
+  KnockBack: {fileID: 0}
   Hurt: {fileID: 11400000, guid: f2c8b66bcac7192488505d4bf861e499, type: 2}
   Die: {fileID: 11400000, guid: 45632961b351c1e4eb938435895db999, type: 2}

@@ -686,6 +686,7 @@ GameObject:
   - component: {fileID: 8190818639744214508}
   - component: {fileID: 4668555090585270180}
   - component: {fileID: 52638621503517234}
+  - component: {fileID: -3394820855810226612}
   m_Layer: 0
   m_Name: Esc_Canvas
   m_TagString: Untagged
@@ -788,6 +789,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea6cef7132e91b242bff334cb7637a86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HideControl: 1
+--- !u!225 &-3394820855810226612
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4109493821495098982}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &4532525405744536686
 GameObject:
   m_ObjectHideFlags: 0

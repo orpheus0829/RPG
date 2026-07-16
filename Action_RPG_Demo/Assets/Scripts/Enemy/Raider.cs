@@ -150,6 +150,7 @@ public class Raider : BaseEnemy
             TransitionState(RaiderStateType.Idle);
             return;
         }
+        LookAtPlayer();
         float dis = Vector3.Distance(NearestPl.transform.position, transform.position);
         float hesDist = enemySO.HesitantDistance;
         float rate;
@@ -302,5 +303,10 @@ public class Raider : BaseEnemy
             ObjectPoolMgr.instance.PushObj(gameObject);
             Story_Mgr.instance.CheckAllEnemyDead();
         });
+    }
+    public override void BeParried()
+    {
+        base.BeParried();
+        TransitionState(RaiderStateType.Hurt);
     }
 }

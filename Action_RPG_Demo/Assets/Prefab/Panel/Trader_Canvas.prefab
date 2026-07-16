@@ -198,6 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea6cef7132e91b242bff334cb7637a86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HideControl: 1
 --- !u!1 &1987706655412256124
 GameObject:
   m_ObjectHideFlags: 0
@@ -1520,6 +1521,7 @@ GameObject:
   - component: {fileID: 6937884861800132342}
   - component: {fileID: 6523333143989545649}
   - component: {fileID: 964265846547874409}
+  - component: {fileID: 1500573024287079788}
   m_Layer: 5
   m_Name: Trader_Canvas
   m_TagString: Untagged
@@ -1623,6 +1625,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea6cef7132e91b242bff334cb7637a86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HideControl: 1
+--- !u!225 &1500573024287079788
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5296525587891606978}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &5471235486374805018
 GameObject:
   m_ObjectHideFlags: 0
@@ -2082,6 +2097,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea6cef7132e91b242bff334cb7637a86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HideControl: 1
 --- !u!1 &6359416384172931329
 GameObject:
   m_ObjectHideFlags: 0

@@ -614,6 +614,7 @@ GameObject:
   - component: {fileID: 4137191831936098668}
   - component: {fileID: 4455299688064000733}
   - component: {fileID: 7018846431338256229}
+  - component: {fileID: 4791787482048464036}
   m_Layer: 0
   m_Name: Dialogue_Canvas
   m_TagString: Untagged
@@ -716,6 +717,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea6cef7132e91b242bff334cb7637a86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HideControl: 1
 --- !u!114 &4455299688064000733
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -732,6 +734,7 @@ MonoBehaviour:
   ButtonAppearInterval: 0.7
   IsTyping: 0
   FullContent: 
+  Actor: {fileID: 0}
   ChoiceParent: {fileID: 8813440700565830099}
   Speaker: {fileID: 2720274900491852528}
   Content: {fileID: 7025349920910975433}
@@ -751,6 +754,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Parent: {fileID: 8813440700565830099}
   ChoicePrefab: {fileID: 2867819939466565399, guid: 523bd3eaf46113c4ca24539c9385c112, type: 3}
+--- !u!225 &4791787482048464036
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5137556478370111009}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &5665077365869500061
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,8 +1,9 @@
-using UnityEngine;
-using UnityEngine.UI;
+using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
+using UnityEngine.UI;
 using static UnityEngine.InputSystem.InputActionRebindingExtensions;
 
 public class SingleBindItem : MonoBehaviour
@@ -16,7 +17,25 @@ public class SingleBindItem : MonoBehaviour
     private int bindIndex;
     private RebindingOperation rebindingOperation;
     private bool originActionEnabledState;
-
+    private readonly Dictionary<string, string> ActionNameTranslateDict = new Dictionary<string, string>(){
+    {"Dodge","闪避/疾跑"},
+    {"Jump","跳跃/继续对话"},
+    {"Attack","攻击"},
+    {"Move","移动"},
+    {"Slide","滑铲"},
+    {"SpecialSkill","特殊技"},
+    {"Trade","交易"},
+    {"Craft","合成"},
+    {"BackPack","背包"},
+    {"Drop_Item","丢弃物品"},
+    {"Chat","交谈"},
+    {"Map","地图缩放" },
+    {"Mission","剧情面板"},
+    {"ClosePanel","关闭面板"},
+    {"Esc","设置/回到主页"},
+    {"EndSkill","终结技"},
+    {"SwitchRole","切换角色"}
+    };
     public void Init(InputAction action, int bindIdx, ControlBinding panel)
     {
         if (rebindBtn == null)
@@ -38,7 +57,14 @@ public class SingleBindItem : MonoBehaviour
         bindPanel = panel;
         targetAction = action;
         bindIndex = bindIdx;
-        tmpActionName.text = action.name;
+        if (ActionNameTranslateDict.TryGetValue(action.name, out string chineseName))
+        {
+            tmpActionName.text = chineseName;
+        }
+        else
+        {
+            tmpActionName.text = action.name;
+        }
         UpdateKeyDisplayText();
 
         rebindBtn.onClick.RemoveAllListeners();

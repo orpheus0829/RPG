@@ -73,10 +73,13 @@ public class TransformBehaviour : PlayableBehaviour
         {
             _player = trans.GetComponentInParent<Player>();
         }
-        if (_player && _player.AtkTo && Vector3.Distance(trans.position, _player.AtkTo.transform.position) <= _player.AttackStopDistance)
+        if (_player && _player.CurAC.currentAction.actionType == ActionType.Attack && _player.AtkTo)
         {
-            trans.rotation = Rot;
-            return;
+            if(Vector3.Distance(trans.position, _player.AtkTo.transform.position) <= _player.AttackStopDistance)
+            {
+                trans.rotation = Rot;
+                return;
+            }
         }
         if (_rb == null)
         {

@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f07cd29b8943cab4ca89a155dd596839, type: 3}
-  m_Name: Ellen_GetHit
+  m_Name: GetHitF
   m_EditorClassIdentifier: 
-  actionID: 20
-  actionName: "\u53D7\u51FB"
-  timeline: {fileID: 11400000, guid: 37a4f14742938b542a049c62a30d78da, type: 2}
+  actionID: 31
+  actionName: "\u53D7\u51FB\u5411\u524D"
+  timeline: {fileID: 11400000, guid: c0f7e66f329b3ad4dbe4a0ee92c32fd0, type: 2}
   actionType: 0
-  nextAction: {fileID: 11400000, guid: 201b5edae52e4cc438780a53fd9911a1, type: 2}
+  nextAction: {fileID: 11400000}
   Related: 0
