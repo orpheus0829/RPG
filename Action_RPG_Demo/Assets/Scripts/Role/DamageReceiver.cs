@@ -9,6 +9,7 @@ public class DamageReceiver : MonoBehaviour, IDamageable
     public PlayerSO playerdata;
     public Player pl;
     public float currentHp;
+    public float maxHp;
     [Header("ÊÜ»÷»÷ÍË")]
     public float knockForce = 5f;
     public float SmoothLerp;
@@ -17,9 +18,18 @@ public class DamageReceiver : MonoBehaviour, IDamageable
     public float stiffTimer;
     public bool isStiff;
     public Rigidbody Rb;
+    public BuffReceiver buffReceiver;
 
     public void Awake()
     {
+        if(!gameObject.TryGetComponent(out BuffReceiver b))
+        {
+            buffReceiver = gameObject.AddComponent<BuffReceiver>();
+        }
+        else
+        {
+            buffReceiver = GetComponent<BuffReceiver>();
+        }
         Rb = GetComponent<Rigidbody>();
         if (!Rb)
         {
@@ -58,6 +68,7 @@ public class DamageReceiver : MonoBehaviour, IDamageable
         if (!em.IsQuest)
         {
             currentHp = enemydata.MaxHP;
+            maxHp = currentHp;
         }
         playerdata = null;
         pl = null;
@@ -70,6 +81,7 @@ public class DamageReceiver : MonoBehaviour, IDamageable
         enemydata = null;
         em = null;
         currentHp = playerdata.PlayerMaxHP;
+        maxHp = currentHp;
     }
     #endregion
     private void Update()

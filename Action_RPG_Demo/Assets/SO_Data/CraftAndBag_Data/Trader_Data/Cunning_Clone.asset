@@ -14,12 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CanBuy_Count: 20
   Can_Buy_List:
-  - {fileID: 11400000, guid: ce07d08303cb7dc47889f00d1ce0bc3c, type: 2}
-  - {fileID: 11400000, guid: e6c28d6f45a06c842a9c4e216329367d, type: 2}
+  - {fileID: 11400000, guid: 6b66a201705b3c94880429d6c2cc3d04, type: 2}
+  - {fileID: 11400000, guid: 1866ddd97aad4214283311c32320a376, type: 2}
   - {fileID: 11400000, guid: 8f3595e80e984594694a39b14017b3db, type: 2}
+  - {fileID: 11400000, guid: a821bbd2061849d42bdd78f655396f81, type: 2}
+  - {fileID: 11400000, guid: 19192936ba1b75a44b778d24af343b7e, type: 2}
+  - {fileID: 11400000, guid: 4f2722ff196b22943bf92a0066942337, type: 2}
   CanSell_Count: 20
   Can_Sell_List:
-  - {fileID: 11400000, guid: ce07d08303cb7dc47889f00d1ce0bc3c, type: 2}
-  - {fileID: 11400000, guid: e6c28d6f45a06c842a9c4e216329367d, type: 2}
+  - {fileID: 11400000, guid: 6b66a201705b3c94880429d6c2cc3d04, type: 2}
+  - {fileID: 11400000, guid: 1866ddd97aad4214283311c32320a376, type: 2}
   - {fileID: 11400000, guid: 8f3595e80e984594694a39b14017b3db, type: 2}
+  - {fileID: 11400000, guid: 19192936ba1b75a44b778d24af343b7e, type: 2}
+  - {fileID: 11400000, guid: a821bbd2061849d42bdd78f655396f81, type: 2}
+  - {fileID: 11400000, guid: 4f2722ff196b22943bf92a0066942337, type: 2}
   Rrstore_Time: 10

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63f08684b98d78448b711cb70203875e, type: 3}
+  m_Name: DamageDrink
+  m_EditorClassIdentifier: 
+  Display_In_Backpacks: {fileID: 21300000, guid: 055fd34a4ca90a84f8a5cfa950f5ee17, type: 3}
+  Drop: {fileID: 5727843108200075940, guid: 550c0c7d46296ed46b3144ab4a4c9024, type: 3}
+  item_name: "\u529B\u91CF\u836F\u6C34"
+  item_id: 3
+  Height: 2
+  Width: 2
+  PriceValue: 500
+  Introduction: "\u836F\u6027\u6781\u5927\u7684\u836F\u6C34\uFF0C\u559D\u4E0B\u540E\u53EF\u5728\u4E00\u6BB5\u65F6\u95F4\u5185\u653B\u51FB\u529B\u7FFB\u500D!"
+  item_Kind: 1
+  buff: {fileID: 11400000, guid: d924c06e720d1894bb80b6cf0aa61f9a, type: 2}

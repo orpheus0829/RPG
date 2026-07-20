@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -125,6 +126,8 @@ public class Player : MonoBehaviour
     public CapsuleCollider col;
     public Interact_Trigger Interact_Trigger;
     public DamageReceiver damageReceiver;
+    public BuffReceiver buffReceiver;
+    public QuickEquip equip;
     public AudioSource au;
     public Mouse mouse;
     public List<SkinnedMeshRenderer> AllRenderers = new List<SkinnedMeshRenderer>();
@@ -140,6 +143,7 @@ public class Player : MonoBehaviour
         bag = GetComponent<Player_Bag>();
         Interact_Trigger = GetComponentInChildren<Interact_Trigger>();
         damageReceiver = GetComponent<DamageReceiver>();
+        buffReceiver = GetComponent<BuffReceiver>();
         DeadTime = playerSO.Deadline;
         AFKTime = playerSO.AFKInterval;
         au = GetComponent<AudioSource>();
@@ -200,9 +204,14 @@ public class Player : MonoBehaviour
                 rb.isKinematic = false;
             };
         }
+        equip = Panel_Mgr.instance.PlayUiPanel.gameObject.GetComponentInChildren<QuickEquip>();
+
         //SetModelAlpha(1f);
         NavPathMgr.instance.player = this.transform;
         NavPathMgr.instance.CloseNavPath();
+
+        GameObject quick = Panel_Mgr.instance.PlayUiPanel.gameObject.GetComponentInChildren<QuickEquip>().transform.parent.gameObject;
+        quick.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = GetActionKey("Drop_Item");
     }
     public void InitRole()
     {
@@ -350,7 +359,7 @@ public class Player : MonoBehaviour
                 return;
             }
             float VerticalVelocity = rb.velocity.y;
-            Vector3 HorizontalVelocity = moveDir * Speed;
+            Vector3 HorizontalVelocity = moveDir * Speed * buffReceiver.MoveFactor;
             rb.velocity = new Vector3(HorizontalVelocity.x, VerticalVelocity, HorizontalVelocity.z);
         }
 
@@ -554,18 +563,38 @@ public class Player : MonoBehaviour
             }
         }
     }
-    public void OnDrop_Item(InputValue value)
-    {
-        if (value.isPressed && bag.IsDragging)
-        {
-            bag.currentDraggingItem.Throw_Item();
-            bag.ReClean_Bag_Display();
-            bag.Refresh_Bag_Display();
-        }
-    }
     public void Set_StorePanel(bool Is_Ready)
     {
         Panel_Mgr.instance.TraderPanel.gameObject.SetActive(Is_Ready);
+    }
+    #endregion
+    #region 使用快捷道具/丢弃背包物品
+    public void OnDrop_Item(InputValue value)
+    {
+        if (IsDead)
+        {
+            return;
+        }
+        if (value.isPressed)
+        {
+            if (bag.IsDragging && Panel_Mgr.instance.IsPanelOpen)
+            {
+                bag.currentDraggingItem.Throw_Item();
+                bag.ReClean_Bag_Display();
+                bag.Refresh_Bag_Display();
+            }
+            else if (!Panel_Mgr.instance.IsPanelOpen)
+            {
+                if (!equip.Tool)
+                {
+                    return;
+                }
+                Debug.Log("使用道具");
+                buffReceiver.ReceiveBuff(equip.Tool.buff);
+                bag.RemoveItemInData(equip.Tool);
+                bag.RefrshArms();
+            }
+        }
     }
     #endregion
     #region 制作
@@ -1536,7 +1565,24 @@ public class Player : MonoBehaviour
         }
     }
     #endregion
-    #region 角色辅助
+    #region 辅助
+    public string GetActionKey(string actionName)
+    {
+        InputAction action = playerInput.actions.FindAction(actionName);
+        if (action == null)
+        {
+            return "未绑定";
+        }
+        foreach(var i in action.bindings)
+        {
+            if (i.isComposite || i.isPartOfComposite)
+            {
+                continue;
+            }
+            return i.ToDisplayString();
+        }
+        return "未绑定";
+    }
     #endregion
     //#region 退出
     //public void OnEscape(InputValue value)

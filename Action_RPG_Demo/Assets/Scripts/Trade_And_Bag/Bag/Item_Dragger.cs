@@ -1,8 +1,9 @@
+using MMD4MecanimInternal;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
@@ -12,6 +13,7 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     public RectTransform rect;
     public Vector2 originalPos;
+    private Vector2 dragMouseOffset;
 
     public void Awake()
     {
@@ -129,15 +131,13 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         Introduction_Mrg.instance.Intro_Name.text = $"{_Data.item_name}";
         Introduction_Mrg.instance.Intro_Image.sprite = _Data.Display_In_Backpacks;
         Introduction_Mrg.instance.Intro_Value.text = $"价值:{_Data.PriceValue}";
-        if (_Data.item_Kind == Item_Kind.Weapon_Kind)
+        if (_Data.item_Kind == Item_Kind.Material)
         {
-            Introduction_Mrg.instance.Intro_Kind.text = $"类型:武器";
-            Introduction_Mrg.instance.Intro_Damage.text = $"伤害:{_Data.weapon.weapon_Damage}";
+            Introduction_Mrg.instance.Intro_Kind.text = $"类型:制造材料";
         }
-        else if (_Data.item_Kind == Item_Kind.Common_Kind)
+        else if (_Data.item_Kind == Item_Kind.Consumable)
         {
-            Introduction_Mrg.instance.Intro_Kind.text = $"类型:变卖物";
-            Introduction_Mrg.instance.Intro_Damage.text = "";
+            Introduction_Mrg.instance.Intro_Kind.text = $"类型:消耗品";
         }
         Introduction_Mrg.instance.Intro_Introduce.text = $"物品介绍:\n{_Data.Introduction}";
     }
@@ -150,10 +150,22 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
             Introduction_Mrg.instance.OnItem(data);
         }
         //右键点击
-        else if (eventData.button == PointerEventData.InputButton.Right)
+        else if (eventData.button == PointerEventData.InputButton.Middle)
         {
             Debug.Log("右键点击");
             //后面写使用
+            if (data.item_Kind != Item_Kind.Consumable)
+            {
+                Panel_Mgr.instance.ShowComfirmPanel("该物品无法放进快捷装备栏", true, null);
+                return;
+            }
+            bool HaveArmed = Game_Event.instance.SameEquip(this);
+            Panel_Mgr.instance.ShowComfirmPanel($"确定将{data.item_name}{(HaveArmed ? "从装备栏卸下" : "装备至装备栏")}?", false, () =>
+            {
+                Debug.Log(HaveArmed);
+                Game_Event.instance.EquipInQuick(HaveArmed ? null : this);
+                Player_Bag.RefrshArms();
+            });
         }
     }
     #endregion
@@ -162,21 +174,23 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         Player_Bag.IsDragging = true;
         originalPos = rect.anchoredPosition;
         Player_Bag.currentDraggingItem = this;
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rect, eventData.position, eventData.pressEventCamera, out dragMouseOffset);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         Player_Bag.IsDragging = true;
-        rect.anchoredPosition += eventData.delta / CanvasScale();
 
-        Vector2 localPoint;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(Player_Bag.Images, eventData.position, eventData.pressEventCamera, out localPoint);
+        Vector2 localMousePos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(Player_Bag.Images, eventData.position, eventData.pressEventCamera, out localMousePos);
+        rect.anchoredPosition = localMousePos - dragMouseOffset;
 
         float cellW = Player_Bag.cellSize + Player_Bag.horizontalSpace;
         float cellH = Player_Bag.cellSize + Player_Bag.verticalSpace;
 
-        int gridX = Mathf.RoundToInt(localPoint.x / cellW);
-        int gridY = Mathf.RoundToInt(-localPoint.y / cellH);
+        int gridX = Mathf.RoundToInt(localMousePos.x / cellW);
+        int gridY = Mathf.RoundToInt(-localMousePos.y / cellH);
 
         Debug.Log($"拖拽格子 X:{gridX} Y:{gridY}");
     }

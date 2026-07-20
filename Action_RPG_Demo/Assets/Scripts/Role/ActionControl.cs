@@ -298,9 +298,9 @@ public class ActionControl : BaseActor, INotificationReceiver
             {
                 continue;
             }
-            target.TakeDamage<BaseEnemy>(CurrentHitDamage, transform.forward);
+            target.TakeDamage<BaseEnemy>(CurrentHitDamage * player.buffReceiver.DamageFactor, transform.forward);
             CameraPivot.instance.StartCameraShake(player.HitShakePower, player.HitShakeDuration, player.HitShakeFade);
-            DamageNumberMgr.instance.ShowDamageNumber(c.transform.position, CurrentHitDamage);
+            DamageNumberMgr.instance.ShowDamageNumber(c.transform.position, CurrentHitDamage * player.buffReceiver.DamageFactor);
             if (currentAction.actionType == ActionType.Attack)
             {
                 player.Skill_PowerPool += CurrentHitDamage * player.PowerFactor;

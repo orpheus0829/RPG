@@ -45,6 +45,9 @@ public class Player_Bag : MonoBehaviour
     public int Bag_Col;
     [Header("背包")]
     public Bag_SingleSlot[,] bag;
+    [Header("道具栏")]
+    public List<Item_Data> Armed = new List<Item_Data>();
+    public QuickEquip quick;
     [Header("整理")]
     public List<Item_Data> resort_list;
     public Bag_SingleSlot[,] bagBackup;
@@ -73,8 +76,6 @@ public class Player_Bag : MonoBehaviour
         //    PlaceItem(sword, 0, 0);
         //    Debug.Log("测试：背包里硬塞了一把铁剑！");
         //}
-
-        //Enable的东西提前挪到这里
         Game_Event.instance.Buy_Item += Add_Good;
         Game_Event.instance.Sell_Item += Sell_Good;
         Game_Event.instance.Last_Item_By_ID += Search_By_ID;
@@ -82,6 +83,7 @@ public class Player_Bag : MonoBehaviour
 
         Game_Event.instance.Craft_Check += Craft_Need;
         Game_Event.instance.Crafting_Start += Craft_Add;
+        quick = Panel_Mgr.instance.PlayUiPanel.gameObject.GetComponentInChildren<QuickEquip>();
     }
     public void OnEnable()
     {
@@ -136,6 +138,7 @@ public class Player_Bag : MonoBehaviour
         if (Coin_Now < item.PriceValue)
         {
             Game_Event.instance.Send_Real_BuyItem(false);
+            Panel_Mgr.instance.ShowComfirmPanel("存款不足", true, null);
             Debug.Log("存款不足");
             return;
         }
@@ -143,11 +146,13 @@ public class Player_Bag : MonoBehaviour
         if (!is_Ok)
         {
             Game_Event.instance.Send_Real_BuyItem(is_Ok);
+            Panel_Mgr.instance.ShowComfirmPanel("背包容量不足，清腾出空间后再购买", true, null);
             Debug.Log("背包容量不足，清腾出空间后再购买");
         }
         else
         {
             Game_Event.instance.Send_Real_BuyItem(is_Ok);
+            Panel_Mgr.instance.ShowComfirmPanel($"买入{item.item_name}", true, null);
             Debug.Log("买入" + item.item_name);
             Init_Resort_List();
         }
@@ -174,6 +179,7 @@ public class Player_Bag : MonoBehaviour
             int haveNum = Search_By_ID(matItem.Material);
             if (haveNum < matItem.Number)
             {
+                Panel_Mgr.instance.ShowComfirmPanel("材料不足:" + matItem.Material.item_name + "需" + matItem.Number + "个，仅有" + haveNum + "个", true, null);
                 Debug.Log("材料不足:" + matItem.Material.item_name + "需" + matItem.Number + "个，仅有" + haveNum + "个");
                 return false;
             }
@@ -235,6 +241,7 @@ public class Player_Bag : MonoBehaviour
         }
         if (!canAllPlace)
         {
+            Panel_Mgr.instance.ShowComfirmPanel("背包容量不足，已返还材料", true, null);
             Debug.Log("材料足够，但腾空后背包空间放不下合成产物");
             return false;
         }
@@ -275,6 +282,7 @@ public class Player_Bag : MonoBehaviour
         Refresh_Bag_Display();
         Init_Resort_List();
         Save_Bag(path);
+        Panel_Mgr.instance.ShowComfirmPanel("合成成功", true, null);
         Debug.Log("合成完成");
     }
     #endregion
@@ -391,6 +399,48 @@ public class Player_Bag : MonoBehaviour
         bag[y, x].Start_x = x;
         bag[y, x].Start_y = y;
         Save_Bag(path);
+    }
+    public bool RemoveItemInData(Item_Data data)
+    {
+        int startX = -1;
+        int startY = -1;
+        bool findItem = false;
+        for (int y = 0; y < Bag_Row; y++)
+        {
+            for (int x = 0; x < Bag_Col; x++)
+            {
+                Bag_SingleSlot slot = bag[y, x];
+                if (slot.Have_Item && slot.Start_x == x && slot.Start_y == y && slot.item_ID == data.item_id)
+                {
+                    startX = x;
+                    startY = y;
+                    findItem = true;
+                    break;
+                }
+            }
+            if (findItem)
+            {
+                break;
+            }
+        }
+        if (!findItem)
+        {
+            Debug.Log($"背包内没有{data.item_name}");
+            return false;
+        }
+        RemoveItem(startX, startY, data.Width, data.Height);
+        for (int i = resort_list.Count - 1; i >= 0; i--)
+        {
+            if (resort_list[i] == data)
+            {
+                resort_list.RemoveAt(i);
+                break;
+            }
+        }
+        ReClean_Bag_Display();
+        Refresh_Bag_Display();
+        Save_Bag(path);
+        return true;
     }
     public void RemoveItem(int x, int y, int w, int h)
     {
@@ -554,12 +604,12 @@ public class Player_Bag : MonoBehaviour
             {
                 if (bag[i, j].Have_Item == true && bag[i, j].Start_x != -1 && bag[i, j].Start_y != -1) {
                     Item_Data item = allData_Item.Data_List.Find(t => t.item_id == bag[i, j].item_ID);
-                    if (item == null)
+                    if (!item)
                     {
                         continue;
                     }
                     Vector3 drop_pos = new Vector3(gameObject.transform.position.x + Random.Range(0, 5), gameObject.transform.position.y + Random.Range(0, 5), gameObject.transform.position.z + Random.Range(0, 5));
-                    Instantiate( item.Drop,drop_pos, Quaternion.identity);
+                    ObjectPoolMgr.instance.GetObj(item.Drop, drop_pos, Quaternion.identity);
                     RemoveItem(j, i, item.Width, item.Height);
                 }
             }
@@ -662,6 +712,28 @@ public class Player_Bag : MonoBehaviour
         ReClean_Bag_Display();
         Refresh_Bag_Display();
         Save_Bag(path);
+    }
+    #endregion
+    #region 装备栏道具
+    public void RefrshArms()
+    {
+        Item_Data d = quick.Tool;
+        Armed.Clear();
+        if (d)
+        {
+            foreach (var i in resort_list)
+            {
+                if (i.item_id == d.item_id)
+                {
+                    Armed.Add(i);
+                }
+            }
+        }
+        if (Armed.Count <= 0)
+        {
+            Game_Event.instance.EquipInQuick(null);
+            Panel_Mgr.instance.BagPanel.GetComponentInChildren<QuickEquip>().EquipToHotbar(null);
+        }
     }
     #endregion
 }

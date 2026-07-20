@@ -27,14 +27,14 @@ public class SingleBindItem : MonoBehaviour
     {"Trade","交易"},
     {"Craft","合成"},
     {"BackPack","背包"},
-    {"Drop_Item","丢弃物品"},
+    {"Drop_Item","丢弃/使用道具"},
     {"Chat","交谈"},
     {"Map","地图缩放" },
     {"Mission","剧情面板"},
     {"ClosePanel","关闭面板"},
     {"Esc","设置/回到主页"},
     {"EndSkill","终结技"},
-    {"SwitchRole","切换角色"}
+    {"SwitchRole","切换角色"},
     };
     public void Init(InputAction action, int bindIdx, ControlBinding panel)
     {

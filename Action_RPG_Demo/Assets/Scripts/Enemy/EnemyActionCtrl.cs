@@ -182,7 +182,14 @@ public class EnemyActionCtrl : BaseActor, INotificationReceiver
             {
                 Debug.Log("hitÍæ¼Ò");
                 Player p = col.GetComponent<Player>();
-                p.GetHurt(CurrentHitDamage, transform.forward);
+                if (enemy.buffReceiver)
+                {
+                    p.GetHurt(CurrentHitDamage * enemy.buffReceiver.DamageFactor, transform.forward);
+                }
+                else
+                {
+                    p.GetHurt(CurrentHitDamage, transform.forward);
+                }
                 p.InputMove = Vector3.zero;
             }
             else

@@ -38,6 +38,11 @@ public class TimeMgr : Base_mgr<TimeMgr>
         public float TargetTime;
         public Action OnStart;
         public Action OnComplete;
+
+        public Action OnTick;
+        public float TickInterval;
+        public float _tickTimer;
+
         public bool IsFinished;
         public Coroutine TaskCor;
 
@@ -197,12 +202,19 @@ public class TimeMgr : Base_mgr<TimeMgr>
     }
     public TimerTask CreateTimer(TimerMode mode, float initialTime, float targetTime, Action onStart, Action onComplete)
     {
+        return CreateTimer(mode, initialTime, targetTime, onStart, onComplete, null, 0);
+    }
+    public TimerTask CreateTimer(TimerMode mode, float initialTime, float targetTime, Action onStart, Action onComplete, Action onTick, float tickInterval)
+    {
         TimerTask newTask = new TimerTask();
         newTask.Mode = mode;
         newTask.CurrentTime = initialTime;
         newTask.TargetTime = targetTime;
         newTask.OnStart = onStart;
         newTask.OnComplete = onComplete;
+        newTask.OnTick = onTick;
+        newTask.TickInterval = Mathf.Max(tickInterval, 0f);
+        newTask._tickTimer = newTask.TickInterval;
         newTask.IsFinished = false;
         Coroutine cor = StartCoroutine(TimerCoroutine(newTask));
         newTask.TaskCor = cor;
@@ -241,24 +253,32 @@ public class TimeMgr : Base_mgr<TimeMgr>
     {
         while (!task.IsFinished)
         {
+            float delta = 0f;
             switch (task.Mode)
             {
                 case TimerMode.DeltaTime:
-                    {
-                        task.CurrentTime += Time.deltaTime;
-                        break;
-                    }
+                    delta = Time.deltaTime;
+                    task.CurrentTime += delta;
+                    break;
                 case TimerMode.FixedDeltaTime:
-                    {
-                        yield return new WaitForFixedUpdate();
-                        task.CurrentTime += Time.fixedDeltaTime;
-                        break;
-                    }
+                    yield return new WaitForFixedUpdate();
+                    delta = Time.fixedDeltaTime;
+                    task.CurrentTime += delta;
+                    break;
                 case TimerMode.RealTimeUnscaled:
-                    {
-                        task.CurrentTime += Time.unscaledDeltaTime;
-                        break;
-                    }
+                    delta = Time.unscaledDeltaTime;
+                    task.CurrentTime += delta;
+                    break;
+            }
+
+            if (task.OnTick != null && task.TickInterval > 0f)
+            {
+                task._tickTimer += delta;
+                if (task._tickTimer >= task.TickInterval)
+                {
+                    task.OnTick.Invoke();
+                    task._tickTimer -= task.TickInterval;
+                }
             }
             if (task.CurrentTime >= task.TargetTime)
             {
@@ -268,5 +288,9 @@ public class TimeMgr : Base_mgr<TimeMgr>
             }
             yield return null;
         }
+    }
+    private void OnDestroy()
+    {
+        ClearAllTimer();
     }
 }

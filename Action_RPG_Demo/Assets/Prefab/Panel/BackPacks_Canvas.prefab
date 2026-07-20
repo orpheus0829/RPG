@@ -1529,7 +1529,7 @@ MonoBehaviour:
   m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8589043476df8d84a997f2ab0f3e1382, type: 2}
-  m_sharedMaterial: {fileID: -1128179943381907798, guid: 545452379b9b0d64ba52db24863772e5, type: 2}
+  m_sharedMaterial: {fileID: -4417412825078858609, guid: 8589043476df8d84a997f2ab0f3e1382, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1888,9 +1888,9 @@ RectTransform:
   - {fileID: 877125335319369605}
   - {fileID: 7142502182090217239}
   - {fileID: 1183408270544262260}
-  - {fileID: 1943168917748305518}
   - {fileID: 8362871102240142643}
   - {fileID: 6624735684958219507}
+  - {fileID: 1943168917748305518}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1973,7 +1973,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea6cef7132e91b242bff334cb7637a86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BindTag: 
   HideControl: 1
+  ConstantShow: 0
 --- !u!225 &-3963147714187520874
 CanvasGroup:
   m_ObjectHideFlags: 0
