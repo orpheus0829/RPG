@@ -49,6 +49,9 @@ public class Game_Event : Base_mgr<Game_Event>
     //玩家虚化
     public event Action SetDodgeAlpha;
     public event Action SetNormalAlpha;
+    //快捷栏
+    public event Action<Item_Dragger> Equip;
+    public event Func<Item_Dragger, bool> AlreadyEquip;
     protected override void Awake()
     {
         base.Awake();
@@ -184,5 +187,15 @@ public class Game_Event : Base_mgr<Game_Event>
         SetNormalAlpha?.Invoke();
     }
     #endregion
+    #endregion
+    #region 快捷栏
+    public void EquipInQuick(Item_Dragger dragger)
+    {
+        Equip?.Invoke(dragger);
+    }
+    public bool SameEquip(Item_Dragger dragger)
+    {
+        return AlreadyEquip.Invoke(dragger);
+    }
     #endregion
 }

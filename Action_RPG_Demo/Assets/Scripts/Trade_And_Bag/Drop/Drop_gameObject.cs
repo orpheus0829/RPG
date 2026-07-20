@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.PackageManager.Requests;
@@ -23,9 +24,10 @@ public class Drop_gameObject : MonoBehaviour
     public List<Item_Data> QuestGets = new List<Item_Data>();
     [Header("具体类别")]
     public Item_Kind Drop_Kind;
-    public Weapon Drop_weapon;
+    public BoxCollider col;
     public void Awake()
     {
+        col = GetComponent<BoxCollider>();
         Picture = item_Data.Display_In_Backpacks;
         //Introduction_Pic = item_Data.Introduction_Image;
         Drop_name = item_Data.item_name;
@@ -35,19 +37,11 @@ public class Drop_gameObject : MonoBehaviour
         Drop_PriceValue = item_Data.PriceValue;
         Drop_Description = item_Data.Introduction;
         Drop_Kind = item_Data.item_Kind;
-        if (Drop_Kind == Item_Kind.Weapon_Kind)
-        {
-            Drop_weapon = new Weapon();
-            Drop_weapon.weapon_Damage = item_Data.weapon.weapon_Damage;
-        }
-        else
-        {
-            Drop_weapon = null;
-        }
     }
     public void OnEnable()
     {
-        
+        col.enabled = true;
+        transform.DOScale(1f, 0.2f);
     }
     public void OnDisable()
     {
@@ -77,7 +71,11 @@ public class Drop_gameObject : MonoBehaviour
                 {
                     PickNoticeMgr.instance.AddNote(item_Data);
                     other.gameObject.GetComponent<Player_Bag>().resort_list.Add(item_Data);
-                    ObjectPoolMgr.instance.PushObj(gameObject);
+                    col.enabled = false;
+                    transform.DOScale(0f, 0.3f).OnComplete(() =>
+                    {
+                        ObjectPoolMgr.instance.PushObj(gameObject);
+                    });
                 }
             }
             else
@@ -126,8 +124,12 @@ public class Drop_gameObject : MonoBehaviour
                 }
 
                 Debug.Log("已消除任务物品");
-                ObjectPoolMgr.instance.PushObj(gameObject);
-                Story_Mgr.instance.CheckAllDrop();
+                col.enabled = false;
+                transform.DOScale(0f, 0.3f).OnComplete(() =>
+                {
+                    ObjectPoolMgr.instance.PushObj(gameObject);
+                    Story_Mgr.instance.CheckAllDrop();
+                });
             }
         }
     }

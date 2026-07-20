@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: AllCrafting_Maps
   m_EditorClassIdentifier: 
   Crafting_Maps:
-  - {fileID: 11400000, guid: 1b42b47fb34bd814aa37d48f2e207faf, type: 2}
+  - {fileID: 11400000, guid: 9570f6de0ebcaf849814b0aa6f8214df, type: 2}
   - {fileID: 11400000, guid: cbb01a1b868196a41abb563c727489b9, type: 2}
-  - {fileID: 11400000, guid: 4e739491ffab1494fb263a101cb85073, type: 2}
-  - {fileID: 11400000, guid: e8b373e2dea49ec4aa5a5dcca0da8bf0, type: 2}
-  - {fileID: 11400000, guid: 6aa5a87ee06b85d4281b69f4415bb291, type: 2}
+  - {fileID: 11400000, guid: 1b42b47fb34bd814aa37d48f2e207faf, type: 2}
+  - {fileID: 11400000, guid: 3036dfdd8b6230b4f9f857ed9504e8cf, type: 2}
   Allmap_FolderPath: Assets/SO_Data/CraftAndBag_Data/Crafting_Map

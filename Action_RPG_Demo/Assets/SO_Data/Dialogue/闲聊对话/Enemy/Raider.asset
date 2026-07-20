@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyType: 1
   Damage: 50
-  MaxHP: 600
+  MaxHP: 100
   WalkSpeed: 1.3
   RunSpeed: 2
   ChaseRadius: 8

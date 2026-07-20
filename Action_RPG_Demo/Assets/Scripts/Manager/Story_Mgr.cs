@@ -1,6 +1,8 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static UnityEditor.Progress;
@@ -28,6 +30,9 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
     public List<GameObject> CurDrops = new List<GameObject>();
     public GameObject CurActor;
     public Vector3 CurQuestPos;
+    [Header("对外UI")]
+    public TextMeshProUGUI MissionTitle;
+    public TextMeshProUGUI MissionContent;
     [Header("数据盒debug")]
     public bool Init;
     public bool Advance;
@@ -55,9 +60,14 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
         Load_WorldStory(StoryPath);
         CurEnemys.Clear();
         CurDrops.Clear();
+        MissionTitle = Panel_Mgr.instance.PlayUiPanel.gameObject.GetComponentInChildren<BaseStoryUI>().GetComponent<TextMeshProUGUI>();
+        MissionContent = MissionTitle.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
         RefreshAllDialogActorCache();
         Refresh_StoryProgress();
         CurQuestPos = CalculateQuestPos();
+
+        PickNoticeMgr.instance.MissionNext();
+        Refresh_StoryUI(CurQuest);
     }
     private void RefreshAllDialogActorCache()
     {
@@ -212,6 +222,7 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
         }
 
         Refresh_StoryProgress();
+        Refresh_StoryUI(CurQuest);
         CurQuestPos = CalculateQuestPos();
         NavPathMgr.instance.OpenNavPath(CurQuestPos);
     }
@@ -445,13 +456,74 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
         }
         e.damageReceiver.currentHp = property;
     }
-    public void Refresh_StoryUI()
+    public void Refresh_StoryUI(QuestBase_SO quest)
     {
+        if (!MissionTitle|| !MissionContent)
+        {
+            return;
+        }
+        HashSet<string> nameSet = new HashSet<string>();
+        string itemText = string.Empty;
+        if (quest is CollectQuest_SO c)
+        {
+            foreach (var i in c.single_QuestItems)
+            {
+                foreach (var j in i.ItemGets)
+                {
+                    var drop = j.ItemGet.GetComponent<Drop_gameObject>();
+                    nameSet.Add(drop.item_Data.item_name);
+                }
+            }
+        }
+        else if (quest is FightQuest_SO f)
+        {
+            foreach (var i in f.Rewards)
+            {
+                var drop = i.Reward.GetComponent<Drop_gameObject>();
+                nameSet.Add(drop.item_Data.item_name);
+            }
+        }
+        if (nameSet.Count > 0)
+        {
+            itemText = string.Join("、", nameSet);
+        }
 
+        MissionTitle.text = quest.Quest_Title;
+        MissionContent.text = $"·{quest.Quest_Description}\n\t{(itemText == string.Empty ? "":"奖励: ")}{itemText}";
+
+        CanvasGroup titleCG = MissionTitle.GetComponent<CanvasGroup>();
+        if (!titleCG)
+        {
+            titleCG = MissionTitle.gameObject.AddComponent<CanvasGroup>();
+        }
+        CanvasGroup contentCG = MissionContent.GetComponent<CanvasGroup>();
+        if (!contentCG)
+        {
+            contentCG = MissionContent.gameObject.AddComponent<CanvasGroup>();
+        }
+        RectTransform titleRect = MissionTitle.rectTransform;
+        RectTransform contentRect = MissionContent.rectTransform;
+        titleRect.DOKill();
+        titleCG.DOKill();
+        contentRect.DOKill();
+        contentCG.DOKill();
+        Vector2 titleTargetPos = titleRect.anchoredPosition;
+        Vector2 contentTargetPos = contentRect.anchoredPosition;
+        float offsetX = -80f;
+        titleRect.anchoredPosition = new Vector2(titleTargetPos.x + offsetX, titleTargetPos.y);
+        titleCG.alpha = 0f;
+        contentRect.anchoredPosition = new Vector2(contentTargetPos.x + offsetX, contentTargetPos.y);
+        contentCG.alpha = 0f;
+        Sequence seq = DOTween.Sequence();
+        seq.Append(titleRect.DOAnchorPos(titleTargetPos, 0.3f).SetEase(Ease.OutCubic));
+        seq.Join(titleCG.DOFade(1f, 0.3f));
+        seq.AppendInterval(1f);
+        seq.Append(contentRect.DOAnchorPos(contentTargetPos, 0.3f).SetEase(Ease.OutCubic));
+        seq.Join(contentCG.DOFade(1f, 0.3f));
     }
     public Dialogue_Set GetDialogueActorByDialogueSO(Dialogue_SO curDialogueSO)
     {
-        if (curDialogueSO == null)
+        if (!curDialogueSO)
         {
             return null;
         }
@@ -483,7 +555,7 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
         {
             return;
         }
-        if (Story == null)
+        if (!Story)
         {
             Debug.Log("未赋值故事数据盒");
             return;

@@ -7,6 +7,7 @@ public class BasePanel : MonoBehaviour
 {
     public string BindTag = "";
     public bool HideControl = true;
+    public bool ConstantShow = false;
     public void Awake()
     {
 
@@ -16,6 +17,10 @@ public class BasePanel : MonoBehaviour
         BindTag = gameObject.name;
         Panel_Mgr.instance.AutoBindAllPanel();
         HidePanel();
+        if (ConstantShow)
+        {
+            ShowPanel();
+        }
     }
     public virtual void ShowPanel()
     {

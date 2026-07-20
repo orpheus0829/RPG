@@ -24,9 +24,14 @@ public class BaseEnemy : MonoBehaviour
     public NavMeshAgent agent;
     public SkinnedMeshRenderer renderer;
     public HurtFlashRenderer flashRenderer;
+    public BuffReceiver buffReceiver;
     public virtual void Awake()
     {
-
+        buffReceiver = GetComponent<BuffReceiver>();
+        if (!buffReceiver)
+        {
+            buffReceiver = gameObject.AddComponent<BuffReceiver>();
+        }
     }
     public virtual void OnEnable()
     {

@@ -18,6 +18,10 @@ public class ObjectPoolMgr : Base_mgr<ObjectPoolMgr>
     }
     public GameObject GetObj(GameObject gameObj, Transform parent)
     {
+        if (!parent)
+        {
+            return GetObj(gameObj, Vector3.zero, Quaternion.identity, null);
+        }
         return GetObj(gameObj, parent.position, parent.rotation, parent);
     }
     public GameObject GetObj(GameObject gameObj, Vector3 pos)

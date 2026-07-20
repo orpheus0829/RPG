@@ -49,7 +49,7 @@ public class Bought_Control : MonoBehaviour
     {
         if (Current_Store <= 0)
         {
-            Debug.Log("暂时缺货");
+            Panel_Mgr.instance.ShowComfirmPanel("商品缺货中", true, null);
             return;
         }
         Debug.Log("查询是否有空间容纳" + Buy_Item.item_name + "中......");

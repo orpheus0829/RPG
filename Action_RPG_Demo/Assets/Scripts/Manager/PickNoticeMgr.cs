@@ -10,6 +10,9 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
     public Queue<GameObject> CenterAnounce = new Queue<GameObject>();
     [Header("拾取提示")]
     public Queue<GameObject> Notices = new Queue<GameObject>();
+    public Queue<Item_Data> NoticeWaitQueue = new Queue<Item_Data>();
+    public int ActiveNoticeCount = 0;
+    public int MaxNoticeCount = 5;
     public GameObject Note;
     public Transform NoteParent;
     public float FadeDuration;
@@ -43,6 +46,18 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
     #region 拾取
     public void AddNote(Item_Data data)
     {
+        if (ActiveNoticeCount < MaxNoticeCount)
+        {
+            SpawnNotice(data);
+        }
+        else
+        {
+            NoticeWaitQueue.Enqueue(data);
+        }
+    }
+    private void SpawnNotice(Item_Data data)
+    {
+        ActiveNoticeCount++;
         GameObject n = ObjectPoolMgr.instance.GetObj(Note, NoteParent);
         Transform noteTrans = n.transform;
         CanvasGroup cg = n.GetComponent<CanvasGroup>();
@@ -64,7 +79,6 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
 
         Notices.Enqueue(n);
         StartCoroutine(WaitExitAnim(n, noteTrans, cg));
-        //DOmove
     }
     public IEnumerator WaitExitAnim(GameObject obj, Transform trans, CanvasGroup cg)
     {
@@ -86,6 +100,13 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
         image = null;
         NoteText.text = string.Empty;
         ObjectPoolMgr.instance.PushObj(obj);
+
+        ActiveNoticeCount--;
+        if (NoticeWaitQueue.Count > 0)
+        {
+            Item_Data next = NoticeWaitQueue.Dequeue();
+            SpawnNotice(next);
+        }
     }
     #endregion
     #region 任务
