@@ -8,6 +8,7 @@ public class Item_Data : ScriptableObject
 {
     public Sprite Display_In_Backpacks;
     public GameObject Drop;
+    public bool Stackable;
     public string item_name;
     public int item_id;
     public int Height;

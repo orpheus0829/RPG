@@ -66,6 +66,12 @@ public class CameraPivot : Base_mgr<CameraPivot>
     public float _shakeDamp;
     public Transform camTrans;
 
+    [Header("¶Ô»°¾µÍ·»º´æ")]
+    public float cacheDiaRotX;
+    public float cacheDiaRotY;
+    public float cacheDiaDistance;
+    public float cacheDiaHeight;
+
     private Coroutine _quickShakeCor;
     protected override void Awake()
     {
@@ -118,14 +124,20 @@ public class CameraPivot : Base_mgr<CameraPivot>
         {
             return;
         }
-        float mX = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
-        float mY = Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;
-        rotY += mX;
-        rotX -= mY;
-        rotX = Mathf.Clamp(rotX, minAngle, maxAngle);
-        Quaternion cameraRotation = Quaternion.Euler(rotX, rotY, 0);
-        distance = Mathf.Lerp(distance, _targetDistance, ZoomSmooth * Time.deltaTime);
+        Quaternion cameraRotation = transform.rotation;
         Vector3 cameraDir = cameraRotation * Vector3.back;
+        if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.DialoguePanel))
+        {
+            float mX = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
+            float mY = Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;
+            rotY += mX;
+            rotX -= mY;
+            rotX = Mathf.Clamp(rotX, minAngle, maxAngle);
+            cameraRotation = Quaternion.Euler(rotX, rotY, 0);
+            distance = Mathf.Lerp(distance, _targetDistance, ZoomSmooth * Time.deltaTime);
+            cameraDir = cameraRotation * Vector3.back;
+        }
+
         Vector3 targetOrigin = target.position + Vector3.up * height;
         float safeCamDist = distance;
         float wallBuffer = 0.1f;
@@ -315,5 +327,20 @@ public class CameraPivot : Base_mgr<CameraPivot>
         }
         camTrans.localPosition = _originLocalPos;
         _quickShakeCor = null;
+    }
+    public void SaveDialogueCameraState()
+    {
+        cacheDiaRotX = rotX;
+        cacheDiaRotY = rotY;
+        cacheDiaDistance = distance;
+        cacheDiaHeight = height;
+    }
+    public void RestoreDialogueCameraState()
+    {
+        rotX = cacheDiaRotX;
+        rotY = cacheDiaRotY;
+        distance = cacheDiaDistance;
+        height = cacheDiaHeight;
+        TargetDistance = distance;
     }
 }

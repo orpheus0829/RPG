@@ -95,14 +95,6 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
         {
             MapPanel.gameObject.SetActive(true);
         }
-        //if (IsPanelOpen || IsFullMapOpen)
-        //{
-        //    NavPathMgr.instance.CloseNavPath();
-        //}
-        //else
-        //{
-        //    NavPathMgr.instance.OpenNavPath(NavPathMgr.instance.targetPoint);
-        //}
     }
     public void FindAllPanel()
     {
@@ -185,21 +177,15 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
             {
                 CurMapStyle = MapStyle.Min;
             }
-            CanvasGroup cg = panel.GetComponent<CanvasGroup>();
-            if (cg == null)
-            {
-                cg = panel.gameObject.AddComponent<CanvasGroup>();
-            }
             if (panel.IsVisible())
             {
-                cg.DOFade(0, FadeOutDuration).SetEase(Ease.OutQuad).OnComplete(() =>
+                panel.PlayHideAnim(() =>
                 {
                     panel.HidePanel();
                 });
             }
             else
             {
-                cg.alpha = 0;
                 panel.HidePanel();
             }
         }
@@ -212,15 +198,7 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
     public void OpenPanel(BasePanel panel)
     {
         HideAllPanel();
-        RectTransform rt = panel.GetComponent<RectTransform>();
-        CanvasGroup cg = panel.GetComponent<CanvasGroup>();
-        if (cg == null)
-        {
-            cg = panel.gameObject.AddComponent<CanvasGroup>();
-        }
-        cg.alpha = 0;
-        panel.ShowPanel();
-        cg.DOFade(1, FadeInDuration).SetEase(Ease.OutQuad);
+        panel.PlayShowAnim();
         IsPanelOpen = true;
         if (panel != DialoguePanel)
         {
@@ -230,44 +208,15 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
     public void OpenTraderBuyPanel()
     {
         HideAllPanel();
-        CanvasGroup traderCg = TraderPanel.GetComponent<CanvasGroup>();
-        CanvasGroup buyCg = BuyPanel.GetComponent<CanvasGroup>();
-        if (traderCg == null)
-        {
-            traderCg = TraderPanel.gameObject.AddComponent<CanvasGroup>();
-        }
-        if (buyCg == null)
-        {
-            buyCg = BuyPanel.gameObject.AddComponent<CanvasGroup>();
-        }
-        traderCg.alpha = 0;
-        buyCg.alpha = 0;
-        TraderPanel.ShowPanel();
-        BuyPanel.ShowPanel();
-        traderCg.DOFade(1, FadeInDuration).SetEase(Ease.OutQuad);
-        buyCg.DOFade(1, FadeInDuration).SetEase(Ease.OutQuad);
+        TraderPanel.PlayShowAnim();
+        BuyPanel.PlayShowAnim();
         IsPanelOpen = true;
     }
     public void OpenTraderSellPanel()
     {
         HideAllPanel();
-
-        CanvasGroup traderCg = TraderPanel.GetComponent<CanvasGroup>();
-        CanvasGroup sellCg = SellPanel.GetComponent<CanvasGroup>();
-        if (traderCg == null)
-        {
-            traderCg = TraderPanel.gameObject.AddComponent<CanvasGroup>();
-        }
-        if (sellCg == null)
-        {
-            sellCg = SellPanel.gameObject.AddComponent<CanvasGroup>();
-        }
-        traderCg.alpha = 0;
-        sellCg.alpha = 0;
-        TraderPanel.ShowPanel();
-        SellPanel.ShowPanel();
-        traderCg.DOFade(1, FadeInDuration).SetEase(Ease.OutQuad);
-        sellCg.DOFade(1, FadeInDuration).SetEase(Ease.OutQuad);
+        TraderPanel.PlayShowAnim();
+        SellPanel.PlayShowAnim();
         IsPanelOpen = true;
     }
     public void Control_InteractPanel(bool open, BasePanel panel)

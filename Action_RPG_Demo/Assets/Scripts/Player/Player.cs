@@ -558,7 +558,7 @@ public class Player : MonoBehaviour
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 bag.Save_Bag("Bag_Data");
-                bag.ReClean_Bag_Display();
+                //bag.ReClean_Bag_Display();
                 Panel_Mgr.instance.HideAllPanel();
             }
         }
@@ -590,8 +590,9 @@ public class Player : MonoBehaviour
                     return;
                 }
                 Debug.Log("使用道具");
+                PickNoticeMgr.instance.ShowFieldTip($"使用{equip.Tool.item_name}");
                 buffReceiver.ReceiveBuff(equip.Tool.buff);
-                bag.RemoveItemInData(equip.Tool);
+                bag.RemoveItemInData(equip.Tool,1);
                 bag.RefrshArms();
             }
         }
@@ -669,6 +670,7 @@ public class Player : MonoBehaviour
             {
                 Cursor.lockState = CursorLockMode.None;
                 Panel_Mgr.instance.OpenPanel(Panel_Mgr.instance.DialoguePanel);
+                CameraPivot.instance.SaveDialogueCameraState();
                 dialogueWriter.CurDialogue = Interact_Trigger.interactableChatNPCS[0].Cur_Dialogue;
                 dialogueWriter.Actor = Interact_Trigger.interactableChatNPCS[0];
                 dialogueWriter.WriteDialogue();

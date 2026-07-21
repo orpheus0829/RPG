@@ -16,6 +16,7 @@ MonoBehaviour:
   - Player
   - Enemy
   BuffName: "\u77AC\u95F4\u56DE\u88403"
+  BuffIntro: "\u77AC\u95F4\u56DE\u590D100\u7684\u8840\u91CF"
   BuffIcon: {fileID: 21300000, guid: bc3267bebf8ce71498cf9d7fbfd586ff, type: 3}
   Duration: 0
   ActiveInterval: 0

@@ -105,7 +105,7 @@ public class Raider : BaseEnemy
         IsIdlePausing = false;
         CurrentState = RaiderStates[type];
         CurType = type;
-        Debug.Log($"进入{type}");
+        //Debug.Log($"进入{type}");
         CurrentState.OnEnter();
     }
     public void Update()

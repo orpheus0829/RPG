@@ -175,7 +175,7 @@ public class ActionControl : BaseActor, INotificationReceiver
             player.InputMove = Vector3.zero;
             player.isWalking = false;
         }
-        Debug.Log("ÇÐ»»Îª" + action.actionName);
+        //Debug.Log("ÇÐ»»Îª" + action.actionName);
         if (currentAction == Character.Walk)
         {
             currentAction = Character.Walk;
@@ -189,7 +189,10 @@ public class ActionControl : BaseActor, INotificationReceiver
 
     public void OnActionEnd()
     {
-        player.IsBlock = false;
+        if (player)
+        {
+            player.IsBlock = false;
+        }
         if (currentAction == null)
         {
             return;

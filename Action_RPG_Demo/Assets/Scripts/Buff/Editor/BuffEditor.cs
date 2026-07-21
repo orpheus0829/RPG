@@ -9,6 +9,7 @@ public class BuffSOEditor : Editor
         serializedObject.Update();
         EditorGUILayout.PropertyField(serializedObject.FindProperty("SuitableTags"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("BuffName"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("BuffIntro"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("BuffIcon"));
         SerializedProperty isInstantProp = serializedObject.FindProperty("IsInstant");
         EditorGUILayout.PropertyField(serializedObject.FindProperty("TargetValue"));

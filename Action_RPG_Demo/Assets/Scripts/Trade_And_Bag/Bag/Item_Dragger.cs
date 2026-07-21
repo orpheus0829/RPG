@@ -1,13 +1,18 @@
+using DG.Tweening;
 using MMD4MecanimInternal;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
+public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public Item_Data data;
+    public TextMeshProUGUI Count;
+    public int CNum;
     public Vector2Int startPos;
     public Player_Bag Player_Bag;
 
@@ -18,6 +23,7 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     public void Awake()
     {
         rect = GetComponent<RectTransform>();
+        Count = GetComponentInChildren<TextMeshProUGUI>();
     }
     public void OnEnable()
     {
@@ -26,6 +32,23 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     public void OnDisable()
     {
         Introduction_Mrg.instance.ClickOnItem -= Display_Intro;
+    }
+    public void SetStackCount(int count)
+    {
+        CNum = count;
+        if (!Count)
+        {
+            return;
+        }
+        if (CNum <= 1)
+        {
+            Count.gameObject.SetActive(false);
+        }
+        else
+        {
+            Count.gameObject.SetActive(true);
+            Count.text = CNum.ToString();
+        }
     }
     #region 扔东西
     public void Throw_Item()
@@ -46,15 +69,15 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         Vector3 drop_pos;
         if (vaildpoint.Count <= 0)
         {
-            drop_pos = new Vector3(Player_Bag.gameObject.transform.position.x + Random.Range(-2f, 2f), Player_Bag.gameObject.transform.position.y + 0.5f, Player_Bag.gameObject.transform.position.z + Random.Range(-2f, 2f));
+            drop_pos = new Vector3(Player_Bag.gameObject.transform.position.x + UnityEngine.Random.Range(-2f, 2f), Player_Bag.gameObject.transform.position.y + 0.5f, Player_Bag.gameObject.transform.position.z + UnityEngine.Random.Range(-2f, 2f));
             while (Vector3.Distance(drop_pos, Player_Bag.gameObject.transform.position) < 1f)
             {
-                drop_pos = new Vector3(Player_Bag.gameObject.transform.position.x + Random.Range(-2f, 2f), Player_Bag.gameObject.transform.position.y + 0.5f, Player_Bag.gameObject.transform.position.z + Random.Range(-2f, 2f));
+                drop_pos = new Vector3(Player_Bag.gameObject.transform.position.x + UnityEngine.Random.Range(-2f, 2f), Player_Bag.gameObject.transform.position.y + 0.5f, Player_Bag.gameObject.transform.position.z + UnityEngine.Random.Range(-2f, 2f));
             }
         }
         else
         {
-            drop_pos = vaildpoint[Random.Range(0, vaildpoint.Count)];
+            drop_pos = vaildpoint[UnityEngine.Random.Range(0, vaildpoint.Count)];
         }
         ObjectPoolMgr.instance.GetObj(data.Drop, drop_pos, Quaternion.identity);
 
@@ -81,15 +104,15 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         Vector3 drop_pos;
         if (vaildpoint.Count <= 0)
         {
-            drop_pos = new Vector3(Player_Bag.gameObject.transform.position.x + Random.Range(-2f, 2f), Player_Bag.gameObject.transform.position.y + 0.5f, Player_Bag.gameObject.transform.position.z + Random.Range(-2f, 2f));
+            drop_pos = new Vector3(Player_Bag.gameObject.transform.position.x + UnityEngine.Random.Range(-2f, 2f), Player_Bag.gameObject.transform.position.y + 0.5f, Player_Bag.gameObject.transform.position.z + UnityEngine.Random.Range(-2f, 2f));
             while (Vector3.Distance(drop_pos, Player_Bag.gameObject.transform.position) < 1f)
             {
-                drop_pos = new Vector3(Player_Bag.gameObject.transform.position.x + Random.Range(-2f, 2f), Player_Bag.gameObject.transform.position.y + 0.5f, Player_Bag.gameObject.transform.position.z + Random.Range(-2f, 2f));
+                drop_pos = new Vector3(Player_Bag.gameObject.transform.position.x + UnityEngine.Random.Range(-2f, 2f), Player_Bag.gameObject.transform.position.y + 0.5f, Player_Bag.gameObject.transform.position.z + UnityEngine.Random.Range(-2f, 2f));
             }
         }
         else
         {
-            drop_pos = vaildpoint[Random.Range(0, vaildpoint.Count)];
+            drop_pos = vaildpoint[UnityEngine.Random.Range(0, vaildpoint.Count)];
         }
         ObjectPoolMgr.instance.GetObj(dropitem.Drop, drop_pos, Quaternion.identity);
 
@@ -130,14 +153,17 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     {
         Introduction_Mrg.instance.Intro_Name.text = $"{_Data.item_name}";
         Introduction_Mrg.instance.Intro_Image.sprite = _Data.Display_In_Backpacks;
-        Introduction_Mrg.instance.Intro_Value.text = $"价值:{_Data.PriceValue}";
         if (_Data.item_Kind == Item_Kind.Material)
         {
-            Introduction_Mrg.instance.Intro_Kind.text = $"类型:制造材料";
+            string a = $"类型:制造材料";
+            string content = $"价值:{_Data.PriceValue}\n{a}";
+            Introduction_Mrg.instance.Intro_Value.text = $"{content}";
         }
         else if (_Data.item_Kind == Item_Kind.Consumable)
         {
-            Introduction_Mrg.instance.Intro_Kind.text = $"类型:消耗品";
+            string a = $"类型:消耗品";
+            string content = $"价值:{_Data.PriceValue}\n{a}";
+            Introduction_Mrg.instance.Intro_Value.text = $"{content}";
         }
         Introduction_Mrg.instance.Intro_Introduce.text = $"物品介绍:\n{_Data.Introduction}";
     }
@@ -146,8 +172,7 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         //左键点击
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            Introduction_Mrg.instance.gameObject.SetActive(true);
-            Introduction_Mrg.instance.OnItem(data);
+
         }
         //右键点击
         else if (eventData.button == PointerEventData.InputButton.Middle)
@@ -171,6 +196,7 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     #endregion
     public void OnBeginDrag(PointerEventData eventData)
     {
+        Introduction_Mrg.instance.CanShow = false;
         Player_Bag.IsDragging = true;
         originalPos = rect.anchoredPosition;
         Player_Bag.currentDraggingItem = this;
@@ -181,6 +207,7 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     public void OnDrag(PointerEventData eventData)
     {
         Player_Bag.IsDragging = true;
+        Introduction_Mrg.instance.CanShow = false;
 
         Vector2 localMousePos;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(Player_Bag.Images, eventData.position, eventData.pressEventCamera, out localMousePos);
@@ -196,6 +223,7 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     }
     public void OnEndDrag(PointerEventData eventData)
     {
+        Introduction_Mrg.instance.CanShow = true;
         Vector2 localPoint;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(Player_Bag.Images, eventData.position, eventData.pressEventCamera, out localPoint);
 
@@ -211,20 +239,107 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         Try_New_Place(targetX, targetY);
         Player_Bag.currentDraggingItem = null;
         Player_Bag.IsDragging = false;
-    }
-    public void Try_New_Place(int x, int y)
-    {
-        Player_Bag.RemoveItem(startPos.x, startPos.y, data.Width, data.Height);
-        if (x < 0 || y < 0 || x + data.Width > Player_Bag.Bag_Col || y + data.Height > Player_Bag.Bag_Row || !Player_Bag.Empty_Check(x, y, data.Height, data.Width))
-        {
-            Player_Bag.PlaceItem(data, startPos.x, startPos.y);
-            Back_To_OriginPlace();
-            return;
-        }
-        Player_Bag.PlaceItem(data, x, y);
-
         Player_Bag.ReClean_Bag_Display();
         Player_Bag.Refresh_Bag_Display();
+    }
+    public void Try_New_Place(int targetX, int targetY)
+    {
+        int selfStackCount = Player_Bag.bag[startPos.y, startPos.x].stackCount;
+        int selfMainX = startPos.x;
+        int selfMainY = startPos.y;
+        Item_Data selfItem = data;
+        int selfW = data.Width;
+        int selfH = data.Height;
+        if (GetSlotItemInfo(targetX, targetY, out Item_Data targetItem, out int tMainX, out int tMainY, out int tW, out int tH, out int tStack))
+        {
+            if (selfItem.item_id == targetItem.item_id && selfItem.Stackable)
+            {
+                Player_Bag.RemoveItem(selfMainX, selfMainY, selfW, selfH);
+                int newTotal = Player_Bag.bag[tMainY, tMainX].stackCount + selfStackCount;
+                newTotal = Mathf.Min(newTotal, 99);
+                Player_Bag.bag[tMainY, tMainX].stackCount = newTotal;
+
+                Destroy(gameObject);
+                Player_Bag.Init_Resort_List();
+                Player_Bag.ReClean_Bag_Display();
+                Player_Bag.Refresh_Bag_Display();
+                return;
+            }
+            if (selfW != tW || selfH != tH)
+            {
+                Back_To_OriginPlace();
+                return;
+            }
+            Bag_SingleSlot[,] tempBag = Player_Bag.DeepCloneBag();
+            Player_Bag.RemoveItem(selfMainX, selfMainY, selfW, selfH);
+            Player_Bag.RemoveItem(tMainX, tMainY, tW, tH);
+            bool aCanPutAtB = Player_Bag.Empty_Check(tMainX, tMainY, selfH, selfW);
+            bool bCanPutAtA = Player_Bag.Empty_Check(selfMainX, selfMainY, tH, tW);
+            if (aCanPutAtB && bCanPutAtA)
+            {
+                Player_Bag.bag[tMainY, tMainX].stackCount = selfStackCount;
+                Player_Bag.PlaceItem(selfItem, tMainX, tMainY);
+                Player_Bag.bag[selfMainY, selfMainX].stackCount = tStack;
+                Player_Bag.PlaceItem(targetItem, selfMainX, selfMainY);
+                Player_Bag.Save_Bag(Player_Bag.path);
+                Destroy(gameObject);
+                Player_Bag.Init_Resort_List();
+                Player_Bag.ReClean_Bag_Display();
+                Player_Bag.Refresh_Bag_Display();
+                Player_Bag.StartCoroutine(PlaySwapAnimDelay(tMainX, tMainY, selfMainX, selfMainY));
+                return;
+            }
+            else
+            {
+                Back_To_OriginPlace();
+                Player_Bag.bag = tempBag;
+                Player_Bag.ReClean_Bag_Display();
+                Player_Bag.Refresh_Bag_Display();
+                return;
+            }
+        }
+        Player_Bag.RemoveItem(selfMainX, selfMainY, selfW, selfH);
+        bool canPlace = !(targetX < 0 || targetY < 0 || targetX + selfW > Player_Bag.Bag_Col || targetY + selfH > Player_Bag.Bag_Row || !Player_Bag.Empty_Check(targetX, targetY, selfH, selfW));
+        if (!canPlace)
+        {
+            Back_To_OriginPlace();
+            Player_Bag.bag[selfMainY, selfMainX].stackCount = selfStackCount;
+            Player_Bag.PlaceItem(selfItem, selfMainX, selfMainY);
+            Player_Bag.ReClean_Bag_Display();
+            Player_Bag.Refresh_Bag_Display();
+            return;
+        }
+        Player_Bag.bag[targetY, targetX].stackCount = selfStackCount;
+        Player_Bag.PlaceItem(selfItem, targetX, targetY);
+        Player_Bag.Init_Resort_List();
+        Player_Bag.ReClean_Bag_Display();
+        Player_Bag.Refresh_Bag_Display();
+    }
+    public bool GetSlotItemInfo(int x, int y, out Item_Data targetItem, out int mainX, out int mainY, out int w, out int h, out int stackNum)
+    {
+        targetItem = null;
+        mainX = -1;
+        mainY = -1;
+        w = 0;
+        h = 0;
+        stackNum = 0;
+        if (x < 0 || y < 0 || x >= Player_Bag.Bag_Col || y >= Player_Bag.Bag_Row)
+        {
+            return false;
+        }
+
+        Bag_SingleSlot slot = Player_Bag.bag[y, x];
+        if (!slot.Have_Item)
+        {
+            return false;
+        }
+        targetItem = Player_Bag.allData_Item.Data_List.Find(t => t.item_id == slot.item_ID);
+        mainX = slot.Start_x;
+        mainY = slot.Start_y;
+        w = slot.real_width;
+        h = slot.real_height;
+        stackNum = slot.stackCount;
+        return true;
     }
     public void Back_To_OriginPlace()
     {
@@ -233,5 +348,51 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     public float CanvasScale()
     {
         return GetComponentInParent<Canvas>().scaleFactor;
+    }
+    private IEnumerator PlaySwapAnimDelay(int oldX, int oldY, int newX, int newY)
+    {
+        yield return null;
+        float cellW = Player_Bag.cellSize + Player_Bag.horizontalSpace;
+        float cellH = Player_Bag.cellSize + Player_Bag.verticalSpace;
+        Vector2 oldPos = new Vector2(
+            oldX * cellW + cellW * 0.5f,
+            -(oldY * cellH + cellH * 0.5f)
+        );
+        Vector2 newPos = new Vector2(
+            newX * cellW + cellW * 0.5f,
+            -(newY * cellH + cellH * 0.5f)
+        );
+        Transform imagesRoot = Player_Bag.Images;
+        foreach (Transform child in imagesRoot)
+        {
+            Item_Dragger drag = child.GetComponent<Item_Dragger>();
+            if (drag != null && drag.startPos.x == newX && drag.startPos.y == newY)
+            {
+                drag.rect.anchoredPosition = oldPos;
+
+                drag.rect.DOAnchorPos(newPos, 0.22f)
+                    .SetEase(Ease.OutBack, 1.3f)
+                    .SetUpdate(UpdateType.Normal, true);
+                break;
+            }
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        //Introduction_Mrg.instance.StopTrack();
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        Introduction_Mrg.instance.gameObject.SetActive(true);
+        Introduction_Mrg.instance.OnItem(data);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+        Player_Bag.Images,
+        eventData.position,
+        eventData.pressEventCamera,
+        out Vector2 localMousePos
+    );
+        Introduction_Mrg.instance.StartTrack();
     }
 }
