@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Display_In_Backpacks: {fileID: 21300000, guid: 292976f962526dd489fc82e6ab6ef812, type: 3}
   Drop: {fileID: 69093387330780800, guid: f08e0b8aa212c7f49a7a85faa443bc52, type: 3}
+  Stackable: 1
   item_name: "\u7EB1\u5E03"
   item_id: 1
   Height: 1
@@ -21,5 +22,4 @@ MonoBehaviour:
   PriceValue: 10
   Introduction: "\u51E0\u6BB5\u7EB1\u5E03\uFF0C\u53EF\u7528\u4E8E\u5236\u4F5C\u7EF7\u5E26"
   item_Kind: 0
-  weapon:
-    weapon_Damage: 0
+  buff: {fileID: 0}

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Display_In_Backpacks: {fileID: 21300000, guid: 488cd00b122d889429e54a0ab8fb2db5, type: 3}
   Drop: {fileID: 69093387330780800, guid: f08e0b8aa212c7f49a7a85faa443bc52, type: 3}
+  Stackable: 1
   item_name: "\u7A7A\u74F6"
   item_id: 11
   Height: 1

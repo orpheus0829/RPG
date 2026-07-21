@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Display_In_Backpacks: {fileID: 21300000, guid: 6d704a4519b315d41a8f356421a4a281, type: 3}
   Drop: {fileID: 69093387330780800, guid: f08e0b8aa212c7f49a7a85faa443bc52, type: 3}
+  Stackable: 1
   item_name: "\u517D\u722A"
   item_id: 9
-  Height: 2
-  Width: 2
+  Height: 1
+  Width: 1
   PriceValue: 50
   Introduction: "\u731B\u517D\u7684\u5229\u722A\uFF0C\u7814\u78E8\u6210\u7C89\u53EF\u5165\u836F"
   item_Kind: 0
+  buff: {fileID: 0}

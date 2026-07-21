@@ -15136,6 +15136,7 @@ RectTransform:
   m_Children:
   - {fileID: 403564407}
   - {fileID: 1088570038}
+  - {fileID: 1349888161}
   m_Father: {fileID: 702343932}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -15204,7 +15205,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 12
   m_TargetDisplay: 0
 --- !u!114 &498267824
 MonoBehaviour:
@@ -16899,7 +16900,7 @@ PlayableDirector:
   m_GameObject: {fileID: 571498888}
   m_Enabled: 1
   serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: 55d47d9e0bc464b4fba830b5dfe889d4, type: 2}
+  m_PlayableAsset: {fileID: 11400000, guid: 0c4d5ecd4b6562f4197c9f3082206447, type: 2}
   m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
@@ -29610,6 +29611,36 @@ MonoBehaviour:
   boneID: 92
   ikEnabled: 0
   ikWeight: 1
+--- !u!21 &595800674
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MMD4Mecanim/MMDLit-NEXTEdge-Pass8
+  m_Shader: {fileID: 4800000, guid: ff1e1d0bbf6980244a107d25ff535f9a, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 2001
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _EdgeSize: 0.005
+    - _PostfixRenderQueue: 1
+    m_Colors:
+    - _EdgeColor: {r: 0.39999998, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
 --- !u!114 &598008045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31246,6 +31277,14 @@ MonoBehaviour:
   CenterAnimDuration: 0.25
   CenterSlideOffsetx: -35
   CenterAnimRunning: 0
+  TextNote: {fileID: 8711983876031225936, guid: dcde8b15d52883b4b93d55b964503720, type: 3}
+  TextNoteParent: {fileID: 1349888161}
+  FieldEnterTime: 0.4
+  FieldStayMoveTime: 0.5
+  FieldExitTime: 0.2
+  EnterOffsetY: -300
+  StayMoveY: 60
+  ExitExtraMoveY: 300
 --- !u!1 &708790211 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 893679852839679488, guid: aa5cb9ffb8bff0347881c916a0f1bb36, type: 3}
@@ -32295,8 +32334,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dbcb8f64d6a7a640a973b2df934eb10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextEdgeMaterial_Pass4: {fileID: 1932070611}
-  nextEdgeMaterial_Pass8: {fileID: 1484186326}
+  nextEdgeMaterial_Pass4: {fileID: 2100748328}
+  nextEdgeMaterial_Pass8: {fileID: 595800674}
   nextEdgePass: 0
   nextEdgeSize: 1
   nextEdgeColor: {r: 0.4, g: 1, b: 1, a: 1}
@@ -37037,6 +37076,10 @@ MonoBehaviour:
   _shakePower: 0
   _shakeDamp: 0
   camTrans: {fileID: 0}
+  cacheDiaRotX: 0
+  cacheDiaRotY: 0
+  cacheDiaDistance: 0
+  cacheDiaHeight: 0
 --- !u!4 &810955223 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2841177077996703938, guid: 20a0f79d659034241a91db5cfdf3a8b9, type: 3}
@@ -50158,7 +50201,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 55839ea96dff66447a61366a3c1d4f5d, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -3.992521e-14
+      value: -4.0164283e-14
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 55839ea96dff66447a61366a3c1d4f5d, type: 3}
       propertyPath: m_LocalRotation.y
@@ -50166,7 +50209,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 55839ea96dff66447a61366a3c1d4f5d, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -2.5322335e-14
+      value: -2.5473965e-14
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 55839ea96dff66447a61366a3c1d4f5d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -57820,8 +57863,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2131832504}
-  - {fileID: 571498890}
   - {fileID: 727624417}
+  - {fileID: 571498890}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1240476935
@@ -57985,25 +58028,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd8ee2c6285d90948b021d4735555dda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allData_Item: {fileID: 11400000, guid: 5cc23bc557aa96e4cab3f4f51d4e1613, type: 2}
-  Images: {fileID: 1860228295}
-  cellSize: 300
-  iconScale: 0.8
-  horizontalSpace: 65
-  verticalSpace: -20
-  iconOffset: {x: 0, y: 0}
-  Bag_Row: 6
+  IsStackableBag: 1
+  Bag_Row: 7
   Bag_Col: 8
-  Armed: []
-  quick: {fileID: 0}
-  resort_list: []
-  currentDraggingItem: {fileID: 0}
-  IsDragging: 0
+  cellSize: 100
+  horizontalSpace: 10
+  verticalSpace: 10
+  SlotContainer: {fileID: 1426471217}
+  Images: {fileID: 1860228295}
+  allData_Item: {fileID: 11400000, guid: 5cc23bc557aa96e4cab3f4f51d4e1613, type: 2}
+  SingleItemPrefab: {fileID: 5720411041261155300, guid: 32516b781adb58e4eb21f8402fd9d529, type: 3}
+  slotSprite: {fileID: 21300000, guid: d01a03eb9b340c44683fd9c5e8d14c1e, type: 3}
+  iconOffset: {x: 0, y: 0}
+  iconScale: 1
   DropRadius: 1
   objXZ: 1
   objH: 1
   SearchCount: 1000
   path: Bag_Data
+  currentDraggingItem: {fileID: 0}
+  IsDragging: 0
+  Armed: []
+  quick: {fileID: 1654061179}
+  resort_list: []
 --- !u!114 &1240476940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62787,6 +62834,41 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23fc8fc226ad58e41b8cc3746ec050dd, type: 3}
+--- !u!1 &1349888160
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1349888161}
+  m_Layer: 0
+  m_Name: FieldParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1349888161
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1349888160}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 496864805}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -354}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1350180359 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5019551283671322478, guid: 55839ea96dff66447a61366a3c1d4f5d, type: 3}
@@ -64016,6 +64098,11 @@ MonoBehaviour:
   boneID: 211
   ikEnabled: 0
   ikWeight: 1
+--- !u!224 &1426471217 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2775301486247097440, guid: 122757bad47bceb45ace4dbb90c1b1b7, type: 3}
+  m_PrefabInstance: {fileID: 8938405138886936647}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1428204541 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3979009399861407665, guid: 55839ea96dff66447a61366a3c1d4f5d, type: 3}
@@ -64861,36 +64948,6 @@ MonoBehaviour:
   boneID: 194
   ikEnabled: 0
   ikWeight: 1
---- !u!21 &1484186326
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: MMD4Mecanim/MMDLit-NEXTEdge-Pass8
-  m_Shader: {fileID: 4800000, guid: ff1e1d0bbf6980244a107d25ff535f9a, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2001
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs: []
-    m_Ints: []
-    m_Floats:
-    - _EdgeSize: 0.005
-    - _PostfixRenderQueue: 1
-    m_Colors:
-    - _EdgeColor: {r: 0.39999998, g: 1, b: 1, a: 1}
-  m_BuildTextureStacks: []
 --- !u!1 &1484279786 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1661215302475788404, guid: aa5cb9ffb8bff0347881c916a0f1bb36, type: 3}
@@ -75452,6 +75509,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -235560201492415094, guid: aa5cb9ffb8bff0347881c916a0f1bb36, type: 3}
   m_PrefabInstance: {fileID: 1996186539}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1654061179 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4717256724860614214, guid: 122757bad47bceb45ace4dbb90c1b1b7, type: 3}
+  m_PrefabInstance: {fileID: 8938405138886936647}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6466a098aab8d0419fdd7104802a6ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1658871072 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -7830081912423847082, guid: aa5cb9ffb8bff0347881c916a0f1bb36, type: 3}
@@ -75877,7 +75945,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NormalTimeScale: 1
   SlowTimeScale: 0.3
-  TimeLerpSpeed: 4
+  TimeLerpSpeed: 3
   OriginFixedDeltaTime: 0
   TargetTimeScale: 0
   HitPauseTime: 0.05
@@ -79369,36 +79437,6 @@ MonoBehaviour:
   boneID: 279
   ikEnabled: 0
   ikWeight: 1
---- !u!21 &1932070611
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: MMD4Mecanim/MMDLit-NEXTEdge-Pass4
-  m_Shader: {fileID: 4800000, guid: 684f8af9b4ff4bc459588db5b0f6275d, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2001
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs: []
-    m_Ints: []
-    m_Floats:
-    - _EdgeSize: 0.005
-    - _PostfixRenderQueue: 1
-    m_Colors:
-    - _EdgeColor: {r: 0.39999998, g: 1, b: 1, a: 1}
-  m_BuildTextureStacks: []
 --- !u!114 &1932195712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87097,6 +87135,36 @@ MonoBehaviour:
   boneID: 178
   ikEnabled: 0
   ikWeight: 1
+--- !u!21 &2100748328
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MMD4Mecanim/MMDLit-NEXTEdge-Pass4
+  m_Shader: {fileID: 4800000, guid: 684f8af9b4ff4bc459588db5b0f6275d, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 2001
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _EdgeSize: 0.005
+    - _PostfixRenderQueue: 1
+    m_Colors:
+    - _EdgeColor: {r: 0.39999998, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
 --- !u!1 &2100977035 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7185942813068760143, guid: aa5cb9ffb8bff0347881c916a0f1bb36, type: 3}
@@ -88316,6 +88384,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1110001613193134020, guid: 122757bad47bceb45ace4dbb90c1b1b7, type: 3}
+      propertyPath: mouseXOffset
+      value: 200
+      objectReference: {fileID: 0}
     - target: {fileID: 1284289285055498863, guid: 122757bad47bceb45ace4dbb90c1b1b7, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -88384,6 +88456,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7406833324140788325, guid: 122757bad47bceb45ace4dbb90c1b1b7, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 80
+      objectReference: {fileID: 0}
     - target: {fileID: 7461465871192796511, guid: 122757bad47bceb45ace4dbb90c1b1b7, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -88432,7 +88508,9 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1240476939}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5249359523650065323, guid: 122757bad47bceb45ace4dbb90c1b1b7, type: 3}
+    - {fileID: 7889432959721695539, guid: 122757bad47bceb45ace4dbb90c1b1b7, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

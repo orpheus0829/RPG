@@ -1,74 +1,25 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
-[System.Serializable]
-public class Bag_SingleSlot
+public class Player_Bag : BaseBag
 {
-    public int item_ID;
-    public int Start_x;
-    public int Start_y;
-    public bool Have_Item;
-
-    public int json_x;
-    public int json_y;
-
-    public int real_width;
-    public int real_height;
-}
-[System.Serializable]
-public class Bag_Save_Data
-{
-    public List<Bag_SingleSlot> slots = new List<Bag_SingleSlot>();
-    public int row;
-    public int col;
-}
-public class Player_Bag : MonoBehaviour
-{
-    //public Item_Data sword;
-    public AllData_Item allData_Item;
-    public RectTransform Images;
-    [Header("格子与图标全局配置")]
-    [Tooltip("单个背包格子长宽尺寸")]
-    public float cellSize = 80f;
-    [Tooltip("图标整体缩放大小")]
-    public float iconScale = 1f;
-    [Header("行列独立间隔控制")]
-    public float horizontalSpace = 0f;
-    public float verticalSpace = 0f;
-    [Header("物品对齐方式")]
-    [Tooltip("图标左上角偏移")]
-    public Vector2 iconOffset = Vector2.zero;
-    [Header("背包大小")]
-    public int Bag_Row;
-    public int Bag_Col;
-    [Header("背包")]
-    public Bag_SingleSlot[,] bag;
-    [Header("道具栏")]
+    [Header("玩家专属")]
     public List<Item_Data> Armed = new List<Item_Data>();
     public QuickEquip quick;
-    [Header("整理")]
     public List<Item_Data> resort_list;
-    public Bag_SingleSlot[,] bagBackup;
-    public Item_Dragger currentDraggingItem;
-    public bool IsDragging;
-    [Header("丢弃")]
-    public float DropRadius = 5f;
-    public float objXZ = 1f;
-    public float objH = 2f;
-    public int SearchCount = 100;
-    [HideInInspector]
-    [Header("地址")] public string path = "Bag_Data";
-    public void Awake()
+    private Bag_SingleSlot[,] bagBackup;
+    protected override void Awake()
     {
-        Init_Bag();
+        base.Awake();
     }
     public void Start()
     {
         Load_Data(path);
-        ReClean_Bag_Display();
-        Refresh_Bag_Display();
+        //ReClean_Bag_Display();
+        //Refresh_Bag_Display();
         Init_Resort_List();
         //DeleteBagSaveFile();
         //if (sword)
@@ -138,7 +89,7 @@ public class Player_Bag : MonoBehaviour
         if (Coin_Now < item.PriceValue)
         {
             Game_Event.instance.Send_Real_BuyItem(false);
-            Panel_Mgr.instance.ShowComfirmPanel("存款不足", true, null);
+            PickNoticeMgr.instance.ShowFieldTip("存款不足");
             Debug.Log("存款不足");
             return;
         }
@@ -146,7 +97,7 @@ public class Player_Bag : MonoBehaviour
         if (!is_Ok)
         {
             Game_Event.instance.Send_Real_BuyItem(is_Ok);
-            Panel_Mgr.instance.ShowComfirmPanel("背包容量不足，清腾出空间后再购买", true, null);
+            PickNoticeMgr.instance.ShowFieldTip("背包容量不足，清腾出空间后再购买");
             Debug.Log("背包容量不足，清腾出空间后再购买");
         }
         else
@@ -179,7 +130,7 @@ public class Player_Bag : MonoBehaviour
             int haveNum = Search_By_ID(matItem.Material);
             if (haveNum < matItem.Number)
             {
-                Panel_Mgr.instance.ShowComfirmPanel("材料不足:" + matItem.Material.item_name + "需" + matItem.Number + "个，仅有" + haveNum + "个", true, null);
+                PickNoticeMgr.instance.ShowFieldTip("材料不足:" + matItem.Material.item_name + "需" + matItem.Number + "个，仅有" + haveNum + "个");
                 Debug.Log("材料不足:" + matItem.Material.item_name + "需" + matItem.Number + "个，仅有" + haveNum + "个");
                 return false;
             }
@@ -241,7 +192,7 @@ public class Player_Bag : MonoBehaviour
         }
         if (!canAllPlace)
         {
-            Panel_Mgr.instance.ShowComfirmPanel("背包容量不足，已返还材料", true, null);
+            PickNoticeMgr.instance.ShowFieldTip("背包容量不足，已返还材料");
             Debug.Log("材料足够，但腾空后背包空间放不下合成产物");
             return false;
         }
@@ -282,70 +233,61 @@ public class Player_Bag : MonoBehaviour
         Refresh_Bag_Display();
         Init_Resort_List();
         Save_Bag(path);
-        Panel_Mgr.instance.ShowComfirmPanel("合成成功", true, null);
+        PickNoticeMgr.instance.ShowFieldTip("合成成功");
         Debug.Log("合成完成");
     }
     #endregion
-    public void Init_Bag()
+    public override void Init_Bag()
     {
-        bag = new Bag_SingleSlot[Bag_Row, Bag_Col];
-        for (int y = 0; y < Bag_Row; y++)
-        {
-            for (int x = 0; x < Bag_Col; x++)
-            {
-                bag[y, x] = new Bag_SingleSlot();
-                bag[y, x].item_ID = 0;
-                bag[y, x].Have_Item = false;
-
-                bag[y, x].json_x = x;
-                bag[y, x].json_y = y;
-            }
-        }
-        ReClean_Bag_Display();
-        Refresh_Bag_Display();
+        base.Init_Bag();
     }
     #region 保存与读取
-    public void Save_Bag(string path)
+    public override void Save_Bag(string path)
     {
-        Bag_Save_Data save_Data = new Bag_Save_Data();
-        save_Data.row = Bag_Row;
-        save_Data.col = Bag_Col;
+        string fullPath = Application.persistentDataPath + "/" + path + ".json";
+        Bag_Save_Data save = new Bag_Save_Data { row = Bag_Row, col = Bag_Col };
         for (int y = 0; y < Bag_Row; y++)
         {
             for (int x = 0; x < Bag_Col; x++)
             {
-                save_Data.slots.Add(bag[y, x]);
+                save.slots.Add(bag[y, x]);
             }
         }
-        string json_bag_data = JsonUtility.ToJson(save_Data);
-        File.WriteAllText(Application.persistentDataPath + "/" + path + ".json", json_bag_data);
-        Debug.Log("背包保存成功，地址为" + Application.persistentDataPath + "/" + path + ".json");
+        string jsonStr = JsonUtility.ToJson(save);
+        File.WriteAllText(fullPath, jsonStr);
+        Debug.Log($"存档路径:{fullPath}");
     }
-    public void Load_Data(string path)
+    public override void Load_Data(string path)
     {
-        string json_bag_data = Application.persistentDataPath + "/" + path + ".json";
-        if (File.Exists(json_bag_data))
+        string pathFull = Application.persistentDataPath + "/" + path + ".json";
+        Debug.Log($"文件地址：{pathFull}");
+        if (File.Exists(pathFull))
         {
-            string json = File.ReadAllText(json_bag_data);
-            Bag_Save_Data save_Data = JsonUtility.FromJson<Bag_Save_Data>(json);
-            //Bag_Row = save_Data.row;
-            //Bag_Col = save_Data.col;
+            string json = File.ReadAllText(pathFull);
+            Bag_Save_Data save = JsonUtility.FromJson<Bag_Save_Data>(json);
             Init_Bag();
             int index = 0;
-            for (int y = 0; y < Bag_Row; y++)
+            for (int y = 0; y < save.row; y++)
             {
-                for (int x = 0; x < Bag_Col; x++)
+                for (int x = 0; x < save.col; x++)
                 {
-                    bag[y, x] = save_Data.slots[index];
+                    if (index >= save.slots.Count)
+                    {
+                        Debug.Log("存档列表长度不足，停止读取");
+                        break;
+                    }
+                    if (y < Bag_Row && x < Bag_Col)
+                    {
+                        bag[y, x] = save.slots[index];
+                    }
                     index++;
                 }
             }
-            Debug.Log("背包已读取");
         }
         else
         {
+            Debug.LogWarning($"存档文件不存在，{pathFull},初始化空白背包");
             Init_Bag();
-            Debug.Log("找不到存档数据，新建立背包");
         }
     }
     public Bag_Save_Data ExportBagData()
@@ -383,27 +325,15 @@ public class Player_Bag : MonoBehaviour
     }
     #endregion
     #region 放置与删除
-    public void PlaceItem(Item_Data item, int x, int y)
+    public override void PlaceItem(Item_Data item, int x, int y)
     {
-        for (int yy = y; yy < y + item.Height; yy++)
-        {
-            for (int xx = x; xx < x + item.Width; xx++)
-            {
-                //在物品占地面积里全部存储物品数据
-                bag[yy, xx].item_ID = item.item_id;
-                bag[yy, xx].Start_x = -1;
-                bag[yy, xx].Start_y = -1;
-                bag[yy, xx].Have_Item = true;
-            }
-        }
-        bag[y, x].Start_x = x;
-        bag[y, x].Start_y = y;
-        Save_Bag(path);
+        base.PlaceItem(item, x, y);
     }
-    public bool RemoveItemInData(Item_Data data)
+    public bool RemoveItemInData(Item_Data data, int removeCount = 1)
     {
         int startX = -1;
         int startY = -1;
+        Bag_SingleSlot targetSlot = null;
         bool findItem = false;
         for (int y = 0; y < Bag_Row; y++)
         {
@@ -414,6 +344,7 @@ public class Player_Bag : MonoBehaviour
                 {
                     startX = x;
                     startY = y;
+                    targetSlot = slot;
                     findItem = true;
                     break;
                 }
@@ -423,167 +354,69 @@ public class Player_Bag : MonoBehaviour
                 break;
             }
         }
-        if (!findItem)
+        if (!findItem || targetSlot == null)
         {
             Debug.Log($"背包内没有{data.item_name}");
             return false;
         }
-        RemoveItem(startX, startY, data.Width, data.Height);
-        for (int i = resort_list.Count - 1; i >= 0; i--)
+        int currentStack = targetSlot.stackCount;
+        if (currentStack > removeCount)
         {
-            if (resort_list[i] == data)
+            targetSlot.stackCount -= removeCount;
+            for (int i = 0; i < removeCount; i++)
             {
-                resort_list.RemoveAt(i);
-                break;
+                int index = resort_list.FindIndex(it => it.item_id == data.item_id);
+                if (index >= 0)
+                {
+                    resort_list.RemoveAt(index);
+                }
             }
         }
+        else
+        {
+            RemoveItem(startX, startY, data.Width, data.Height);
+            resort_list.RemoveAll(it => it.item_id == data.item_id);
+        }
+
         ReClean_Bag_Display();
         Refresh_Bag_Display();
         Save_Bag(path);
         return true;
     }
-    public void RemoveItem(int x, int y, int w, int h)
+    public override void RemoveItem(int x, int y, int w, int h)
     {
-        for (int yy = y; yy < y + h; yy++)
-        {
-            for (int xx = x; xx < x + w; xx++)
-            {
-                bag[yy, xx].Have_Item = false;
-                bag[yy, xx].item_ID = 0;
-                bag[yy, xx].Start_x = -1;
-                bag[yy, xx].Start_y = -1;
-            }
-        }
-        Save_Bag(path);
+        base.RemoveItem(x, y, w, h);
     }
     #endregion
     #region 寻找与刷新
-    public void Find_Image_By_id(Item_Data item, int posX, int posY)
+    public override void Find_Image_By_id(Item_Data item, int posX, int posY)
     {
-        int w = item.Width;
-        int h = item.Height;
-        GameObject iconObj = new GameObject("ItemIcon");
-        iconObj.transform.SetParent(Images, false);
-
-        Image image = iconObj.AddComponent<Image>();
-        image.sprite = item.Display_In_Backpacks;
-
-        iconObj.AddComponent<Item_Dragger>();
-        var drag = iconObj.GetComponent<Item_Dragger>();
-        drag.data = item;
-        drag.startPos = new Vector2Int(posX, posY);
-        drag.Player_Bag = this;
-
-        float cellW = cellSize + horizontalSpace;
-        float cellH = cellSize + verticalSpace;
-
-        float centerX = posX * cellW + (w * cellSize) / 2f;
-        float centerY = -posY * cellH - (h * cellSize) / 2f;
-
-
-        float finalW = w * cellSize * iconScale;
-        float finalH = h * cellSize * iconScale;
-
-        centerX += iconOffset.x;
-        centerY += iconOffset.y;
-
-        image.rectTransform.anchoredPosition = new Vector2(centerX, centerY);
-        image.rectTransform.sizeDelta = new Vector2(finalW, finalH);
+        base.Find_Image_By_id(item, posX, posY);
     }
-    public void Refresh_Bag_Display()
+    public override void Refresh_Bag_Display()
     {
-        for (int i = 0; i < Bag_Row; i++)
-        {
-            for (int j = 0; j < Bag_Col; j++)
-            {
-                if (bag[i, j].Have_Item == true && bag[i, j].Start_x != -1 && bag[i, j].Start_y != -1)
-                {
-                    int id = bag[i, j].item_ID;
-                    int sx = bag[i, j].Start_x;
-                    int sy = bag[i, j].Start_y;
-                    Item_Data tempItem = allData_Item.Data_List.Find(t => t.item_id == bag[i, j].item_ID);
-                    if (tempItem == null)
-                    {
-                        continue;
-                    }
-                    Find_Image_By_id(tempItem, sx, sy);
-                }
-            }
-        }
+        base.Refresh_Bag_Display();
     }
-    public void ReClean_Bag_Display()
+    public override void ReClean_Bag_Display()
     {
-        for (int i = Images.childCount - 1; i >= 0; i--)
-        {
-            Destroy(Images.GetChild(i).gameObject);
-        }
+        base.ReClean_Bag_Display();
     }
     #endregion
     #region 是否有可以储存的位置
-    public void Find_Empty_Location(int _height, int _width, out int result_x, out int result_y)
+    public override void Find_Empty_Location(int _height, int _width, out int result_x, out int result_y)
     {
-        for (int i = 0; i < Bag_Row; i++)
-        {
-            for (int j = 0; j < Bag_Col; j++)
-            {
-                if (!Empty_Check(j, i, _height, _width))
-                {
-                    continue;
-                }
-                else
-                {
-                    result_x = j;
-                    result_y = i;
-                    return;
-                }
-            }
-        }
-        Debug.Log("找不到可容纳物品的位置");
-        result_x = -1;
-        result_y = -1;
+        base.Find_Empty_Location(_height, _width, out result_x, out result_y);
     }
-    public bool Empty_Check(int x, int y, int h, int w)
+    public override bool Empty_Check(int x, int y, int h, int w)
     {
-        if (y + h > Bag_Row || x + w > Bag_Col)
-        {
-            return false;
-        }
-        for (int a = y; a < y + h; a++)
-        {
-            for (int b = x; b < x + w; b++)
-            {
-                if (bag[a, b].Have_Item == true)
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return base.Empty_Check(x, y, h, w);
     }
     #endregion
-    public bool Pick_Up(Item_Data data)
+    public override bool Pick_Up(Item_Data data,int c)
     {
-        int data_height = data.Height;
-        int data_width = data.Width;
-        int res_x = -1;
-        int res_y = -1;
-        Find_Empty_Location(data_height, data_width, out res_x, out res_y);
-        if (res_x == -1 && res_y == -1)
-        {
-            //写拒绝捡起来
-            data = null;
-            return false;
-        }
-        PlaceItem(data, res_x, res_y);
-        ReClean_Bag_Display();
-        Refresh_Bag_Display();
-        Save_Bag(path);
-        Game_Event.instance.Refresh_Sell_List();
-        Debug.Log("存入背包，存放在" + res_x + "," + res_y + "位置");
-        return true;
+        return base.Pick_Up(data,c);
     }
     #region 清空背包
-    // 删除背包存档文件
     public void DeleteBagSaveFile()
     {
         string filePath = Application.persistentDataPath + "/" + path + ".json";
@@ -608,7 +441,7 @@ public class Player_Bag : MonoBehaviour
                     {
                         continue;
                     }
-                    Vector3 drop_pos = new Vector3(gameObject.transform.position.x + Random.Range(0, 5), gameObject.transform.position.y + Random.Range(0, 5), gameObject.transform.position.z + Random.Range(0, 5));
+                    Vector3 drop_pos = new Vector3(gameObject.transform.position.x + UnityEngine.Random.Range(0, 5), gameObject.transform.position.y + UnityEngine.Random.Range(0, 5), gameObject.transform.position.z + UnityEngine.Random.Range(0, 5));
                     ObjectPoolMgr.instance.GetObj(item.Drop, drop_pos, Quaternion.identity);
                     RemoveItem(j, i, item.Width, item.Height);
                 }
@@ -624,7 +457,7 @@ public class Player_Bag : MonoBehaviour
         resort_list.Clear();
     }
     #endregion
-    #region 整理用列表
+    #region 整理
     public void Init_Resort_List()
     {
         resort_list.Clear();
@@ -632,45 +465,92 @@ public class Player_Bag : MonoBehaviour
         {
             for (int j = 0; j < Bag_Col; j++)
             {
-                if (bag[i, j].Have_Item == true && bag[i, j].Start_x != -1 && bag[i, j].Start_y != -1)
+                Bag_SingleSlot slot = bag[i, j];
+                if (slot.Have_Item == true && slot.Start_x == j && slot.Start_y == i)
                 {
-                    Item_Data item = allData_Item.Data_List.Find(t => t.item_id == bag[i, j].item_ID);
-                    resort_list.Add(item);
+                    Item_Data item = allData_Item.Data_List.Find(t => t.item_id == slot.item_ID);
+                    if (!item)
+                    {
+                        continue;
+                    }
+                    for (int cnt = 0; cnt < slot.stackCount; cnt++)
+                    {
+                        resort_list.Add(item);
+                    }
                 }
             }
         }
     }
     public void Resort_By_Value()
     {
-        Init_Resort_List();
-        BackupBag();
-
-        DeleteBagSaveFile();
-        ReClean_Bag_Display();
-        resort_list.Sort((a, b) => a.PriceValue.CompareTo(b.PriceValue));
-        RePlace_AfterSort();
+        SortBagCommon((a, b) => a.PriceValue.CompareTo(b.PriceValue));
     }
+
     public void Resort_By_Size()
     {
+        SortBagCommon((a, b) =>
+        {
+            int sizeA = a.Width * a.Height;
+            int sizeB = b.Width * b.Height;
+            return sizeB.CompareTo(sizeA);
+        });
+    }
+    private void SortBagCommon(Comparison<Item_Data> sortRule)
+    {
         Init_Resort_List();
         BackupBag();
-
-        DeleteBagSaveFile();
-        ReClean_Bag_Display();
-        resort_list.Sort((a, b) => (b.Height * b.Width).CompareTo(a.Height * a.Width));
-        RePlace_AfterSort();
-    }
-    public void RePlace_AfterSort()
-    {
-        bool arrangeSuccess = true;
-        foreach (var resort_item in resort_list)
+        Dictionary<Item_Data, int> itemCountDic = new Dictionary<Item_Data, int>();
+        foreach (var item in resort_list)
         {
-            if (!Pick_Up(resort_item))
+            if (itemCountDic.ContainsKey(item))
+                itemCountDic[item]++;
+            else
+                itemCountDic[item] = 1;
+        }
+        int totalNeedCell = 0;
+        int perCellMax = 99;
+        foreach (var pair in itemCountDic)
+        {
+            Item_Data item = pair.Key;
+            int total = pair.Value;
+            int group = (total + perCellMax - 1) / perCellMax;
+            totalNeedCell += group * item.Width * item.Height;
+        }
+        int emptyCell = 0;
+        for (int y = 0; y < Bag_Row; y++)
+        {
+            for (int x = 0; x < Bag_Col; x++)
+            {
+                if (!bagBackup[y, x].Have_Item)
+                    emptyCell++;
+            }
+        }
+        if (emptyCell < totalNeedCell)
+        {
+            Debug.Log("背包空间不足，整理取消");
+            RestoreBag();
+            return;
+        }
+        ReClean_Bag_Display();
+        for (int y = 0; y < Bag_Row; y++)
+        {
+            for (int x = 0; x < Bag_Col; x++)
+            {
+                bag[y, x] = new Bag_SingleSlot { stackCount = 1 };
+            }
+        }
+        resort_list.Sort(sortRule);
+        bool arrangeSuccess = true;
+        foreach (var item in resort_list)
+        {
+            bool ok = Pick_Up(item, 1);
+            if (!ok)
             {
                 arrangeSuccess = false;
                 break;
             }
         }
+
         if (!arrangeSuccess)
         {
             RestoreBag();
@@ -678,6 +558,9 @@ public class Player_Bag : MonoBehaviour
         }
         else
         {
+            Refresh_Bag_Display();
+            Init_Resort_List();
+            Save_Bag(path);
             Debug.Log("整理成功");
         }
     }
@@ -695,7 +578,10 @@ public class Player_Bag : MonoBehaviour
                     Start_y = bag[y, x].Start_y,
                     Have_Item = bag[y, x].Have_Item,
                     json_x = bag[y, x].json_x,
-                    json_y = bag[y, x].json_y
+                    json_y = bag[y, x].json_y,
+                    real_width = bag[y, x].real_width,
+                    real_height = bag[y, x].real_height,
+                    stackCount = bag[y, x].stackCount
                 };
             }
         }

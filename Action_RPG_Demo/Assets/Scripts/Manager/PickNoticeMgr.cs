@@ -27,6 +27,16 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
     public float CenterAnimDuration;
     public float CenterSlideOffsetx;
     public bool CenterAnimRunning;
+    [Header("字段提示")]
+    public GameObject TextNote;
+    public Transform TextNoteParent;
+    public float FieldEnterTime = 0.4f;
+    public float FieldStayMoveTime = 0.6f;
+    public float FieldExitTime = 0.35f;
+    public float EnterOffsetY = -400f;
+    public float StayMoveY = 120f;
+    public float ExitExtraMoveY = 300f;
+
     protected override void Awake()
     {
         base.Awake();
@@ -76,17 +86,19 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
         Sequence enterSeq = DOTween.Sequence();
         enterSeq.Join(noteTrans.DOLocalMoveX(0, AnimDuration).SetEase(Ease.OutQuad));
         enterSeq.Join(cg.DOFade(1, AnimDuration));
+        enterSeq.SetUpdate(UpdateType.Normal, true);
 
         Notices.Enqueue(n);
         StartCoroutine(WaitExitAnim(n, noteTrans, cg));
     }
     public IEnumerator WaitExitAnim(GameObject obj, Transform trans, CanvasGroup cg)
     {
-        yield return new WaitForSeconds(FadeDuration);
+        yield return new WaitForSecondsRealtime(FadeDuration);
 
         Sequence exitSeq = DOTween.Sequence();
         exitSeq.Join(trans.DOLocalMoveX(-SlideOffsetx, AnimDuration).SetEase(Ease.InQuad));
         exitSeq.Join(cg.DOFade(0, AnimDuration));
+        exitSeq.SetUpdate(UpdateType.Normal, true);
         exitSeq.OnComplete(() => DelNote(obj));
     }
     public void DelNote(GameObject obj)
@@ -128,7 +140,7 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
     }
     private IEnumerator DelayAddToQueue(string text, float delayTime)
     {
-        yield return new WaitForSeconds(delayTime);
+        yield return new WaitForSecondsRealtime(delayTime);
         GameObject obj = CreateCenterTextObj(text);
         CenterAnounce.Enqueue(obj);
         if (!CenterAnimRunning)
@@ -165,22 +177,81 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
             Sequence enterSeq = DOTween.Sequence();
             enterSeq.Join(trans.DOLocalMoveX(0, CenterAnimDuration).SetEase(Ease.OutQuad));
             enterSeq.Join(cg.DOFade(1, CenterAnimDuration));
+            enterSeq.SetUpdate(UpdateType.Normal, true);
             yield return enterSeq.WaitForCompletion();
-            yield return new WaitForSeconds(CenterFadeDuration);
+
+            yield return new WaitForSecondsRealtime(CenterFadeDuration);
+
             Sequence exitSeq = DOTween.Sequence();
             exitSeq.Join(trans.DOLocalMoveX(-CenterSlideOffsetx, CenterAnimDuration).SetEase(Ease.InQuad));
             exitSeq.Join(cg.DOFade(0, CenterAnimDuration));
+            exitSeq.SetUpdate(UpdateType.Normal, true);
             yield return exitSeq.WaitForCompletion();
             RecycleCenterObj(curObj);
         }
         CenterAnimRunning = false;
     }
-
     private void RecycleCenterObj(GameObject obj)
     {
         TextMeshProUGUI mt = obj.GetComponent<TextMeshProUGUI>();
         mt.text = string.Empty;
         ObjectPoolMgr.instance.PushObj(obj);
+    }
+    #endregion
+    # region 字段提示
+    public void ShowFieldTip(string Content)
+    {
+        GameObject TipObj = CreateFieldTipObj(Content);
+        StartCoroutine(PlaySingleFieldTipAnim(TipObj));
+    }
+
+    public GameObject CreateFieldTipObj(string TextContent)
+    {
+        GameObject Obj = ObjectPoolMgr.instance.GetObj(TextNote, TextNoteParent);
+        TextMeshProUGUI Txt = Obj.GetComponent<TextMeshProUGUI>();
+        Txt.text = TextContent;
+
+        CanvasGroup Cg = Obj.GetComponent<CanvasGroup>();
+        if (Cg == null)
+        {
+            Cg = Obj.AddComponent<CanvasGroup>();
+        }
+
+        Cg.alpha = 0;
+        Obj.transform.localPosition = new Vector3(0, EnterOffsetY, 0);
+        return Obj;
+    }
+    private IEnumerator PlaySingleFieldTipAnim(GameObject CurTip)
+    {
+        Transform TipTrans = CurTip.transform;
+        CanvasGroup Cg = CurTip.GetComponent<CanvasGroup>();
+
+        Sequence EnterSeq = DOTween.Sequence();
+        EnterSeq.Join(TipTrans.DOLocalMoveY(0, FieldEnterTime).SetEase(Ease.OutExpo));
+        EnterSeq.Join(Cg.DOFade(1, FieldEnterTime));
+        EnterSeq.SetUpdate(UpdateType.Normal, true);
+        yield return EnterSeq.WaitForCompletion();
+
+        Sequence StaySeq = DOTween.Sequence();
+        StaySeq.Join(TipTrans.DOLocalMoveY(StayMoveY, FieldStayMoveTime).SetEase(Ease.Linear));
+        StaySeq.SetUpdate(UpdateType.Normal, true);
+        yield return StaySeq.WaitForCompletion();
+
+        Sequence ExitSeq = DOTween.Sequence();
+        ExitSeq.Join(TipTrans.DOLocalMoveY(StayMoveY + ExitExtraMoveY, FieldExitTime).SetEase(Ease.InExpo));
+        ExitSeq.Join(Cg.DOFade(0, FieldExitTime));
+        ExitSeq.SetUpdate(UpdateType.Normal, true);
+        yield return ExitSeq.WaitForCompletion();
+
+        RecycleFieldTipObj(CurTip);
+    }
+
+    public void RecycleFieldTipObj(GameObject Obj)
+    {
+        TextMeshProUGUI Txt = Obj.GetComponent<TextMeshProUGUI>();
+        Txt.text = string.Empty;
+        Obj.transform.DOKill();
+        ObjectPoolMgr.instance.PushObj(Obj);
     }
     #endregion
 }

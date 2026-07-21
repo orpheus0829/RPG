@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SuitableTags: []
   BuffName: "\u84C4\u80FD1"
+  BuffIntro: "\u57284\u79D2\u5185\u6BCF\u79D2\u56DE\u590D50\u70B9\u80FD\u91CF"
   BuffIcon: {fileID: 21300000, guid: bc3267bebf8ce71498cf9d7fbfd586ff, type: 3}
   Duration: 4
   ActiveInterval: 1

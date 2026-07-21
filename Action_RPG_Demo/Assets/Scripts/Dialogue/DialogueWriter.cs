@@ -145,6 +145,7 @@ public class DialogueWriter : MonoBehaviour
             Speaker.text = string.Empty;
             Content.text = string.Empty;
             CameraPivot.instance.isPlayingCameraAnim = false;
+            CameraPivot.instance.RestoreDialogueCameraState();
             Story_Mgr.instance.CurActor = null;
             Panel_Mgr.instance.HideAllPanel();
             if (CurDialogue.dialogueMode == DialogueMode.Quest)

@@ -2,6 +2,7 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -212,51 +213,54 @@ public class BuffReceiver : MonoBehaviour
     {
         if (!buff.IsInstant && task != null)
         {
-            Canvas canvas = FindObjectOfType<Canvas>();
-            if (canvas == null || OriginalPrefab == null)
+            if (this.gameObject.CompareTag("Player"))
             {
-                Debug.LogError("缺失Canvas或Buff图标预制体！");
-                return;
-            }
-            GameObject icon = ObjectPoolMgr.instance.GetObj(OriginalPrefab, canvas.transform);
-            task.IconPrefab = icon;
-            RectTransform rect = icon.GetComponent<RectTransform>();
-            rect.DOKill();
-            Image[] images = icon.GetComponentsInChildren<Image>(true);
-            foreach (var i in images)
-            {
-                i.sprite = buff.BuffIcon;
-                if (i.gameObject != icon)
+                GameObject icon = ObjectPoolMgr.instance.GetObj(OriginalPrefab, Panel_Mgr.instance.PlayUiPanel.transform);
+                task.IconPrefab = icon;
+                RectTransform rect = icon.GetComponent<RectTransform>();
+                rect.DOKill();
+
+                Transform allChild = icon.transform;
+                foreach (Transform i in allChild)
                 {
-                    task.Progress = i;
-                }
-            }
-            rect.localScale = Vector3.one * 2f;
-            rect.anchorMin = new Vector2(0.5f, 0.5f);
-            rect.anchorMax = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = Vector2.zero;
-            Vector2 buffBarWorldCenter = IconParent.TransformPoint(IconParent.rect.center);
-            TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.DeltaTime, 0f, 0.5f, () =>
-            {
-                CanvasGroup cg = rect.GetComponent<CanvasGroup>();
-                if (cg == null)
-                {
-                    cg = icon.AddComponent<CanvasGroup>();
-                }
-                cg.alpha = 0;
-                cg.DOFade(1f, 0.3f);
-            }, () =>
-            {
-                Sequence seq = DOTween.Sequence();
-                seq.Join(rect.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack));
-                seq.Join(rect.DOMove(buffBarWorldCenter, 0.3f).SetEase(Ease.OutCubic))
-                    .OnComplete(() =>
+                    if (!i.GetComponentInChildren<TextMeshProUGUI>(true))
                     {
-                        rect.SetParent(IconParent, false);
-                        rect.localScale = Vector3.one;
-                        LayoutRebuilder.ForceRebuildLayoutImmediate(IconParent);
-                    });
-            });
+                        icon.GetComponent<BuffToolTip>().buffData = buff;
+                        icon.GetComponent<Image>().sprite = buff.BuffIcon;
+                        Image im = i.GetComponent<Image>();
+                        im.sprite = buff.BuffIcon;
+                        task.Progress = im;
+                    }
+                }
+
+                rect.localScale = Vector3.one * 2f;
+                rect.anchorMin = new Vector2(0.5f, 0.5f);
+                rect.anchorMax = new Vector2(0.5f, 0.5f);
+                rect.anchoredPosition = Vector2.zero;
+                Vector2 buffBarWorldCenter = IconParent.TransformPoint(IconParent.rect.center);
+                TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.DeltaTime, 0f, 0.5f, () =>
+                {
+                    CanvasGroup cg = rect.GetComponent<CanvasGroup>();
+                    if (cg == null)
+                    {
+                        cg = icon.AddComponent<CanvasGroup>();
+                    }
+                    cg.alpha = 0;
+                    cg.DOFade(1f, 0.3f);
+                }, () =>
+                {
+                    Sequence seq = DOTween.Sequence();
+                    seq.Join(rect.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack));
+                    seq.Join(rect.DOMove(buffBarWorldCenter, 0.3f).SetEase(Ease.OutCubic))
+                        .OnComplete(() =>
+                        {
+                            rect.SetParent(IconParent, false);
+                            rect.localScale = Vector3.one;
+                            LayoutRebuilder.ForceRebuildLayoutImmediate(IconParent);
+                            Transform allChild = icon.transform;
+                        });
+                });
+            }
         }
         if (buff.IsInstant)
         {
