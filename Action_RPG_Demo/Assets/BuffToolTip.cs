@@ -24,7 +24,6 @@ public class BuffToolTip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         if (Tip != null)
         {
             TipContent = Tip.GetComponentInChildren<TextMeshProUGUI>(true);
-            // 强制把Tip面板锚点设为左下角(0,0)
             RectTransform tipRect = Tip.GetComponent<RectTransform>();
             tipRect.anchorMin = Vector2.zero;
             tipRect.anchorMax = Vector2.zero;
@@ -36,18 +35,18 @@ public class BuffToolTip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (!buffData || !Tip || !TipContent) return;
+        if (!buffData || !Tip || !TipContent)
+        {
+            return;
+        }
         TipContent.text = $"{buffData.BuffName}\n\t{buffData.BuffIntro}";
         RectTransform tipRect = Tip.GetComponent<RectTransform>();
-        // 左下角跟随鼠标，向右下偏移15像素防止遮挡
         tipRect.anchoredPosition = (Vector2)Input.mousePosition;
         Tip.SetActive(true);
     }
-
-    // 鼠标持续移动时实时更新位置，必须加Update
     private void Update()
     {
-        if (Tip != null && Tip.activeSelf)
+        if (Tip && Tip.activeSelf)
         {
             RectTransform tipRect = Tip.GetComponent<RectTransform>();
             tipRect.anchoredPosition = (Vector2)Input.mousePosition - new Vector2(270, 75);
@@ -56,7 +55,10 @@ public class BuffToolTip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (Tip == null) return;
+        if (!Tip)
+        {
+            return;
+        }
         Tip.SetActive(false);
     }
 }

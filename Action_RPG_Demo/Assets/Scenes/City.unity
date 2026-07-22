@@ -88384,10 +88384,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1110001613193134020, guid: 122757bad47bceb45ace4dbb90c1b1b7, type: 3}
-      propertyPath: mouseXOffset
-      value: 200
-      objectReference: {fileID: 0}
     - target: {fileID: 1284289285055498863, guid: 122757bad47bceb45ace4dbb90c1b1b7, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -88456,10 +88452,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7406833324140788325, guid: 122757bad47bceb45ace4dbb90c1b1b7, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 80
-      objectReference: {fileID: 0}
     - target: {fileID: 7461465871192796511, guid: 122757bad47bceb45ace4dbb90c1b1b7, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -88508,9 +88500,7 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1240476939}
-    m_RemovedComponents:
-    - {fileID: 5249359523650065323, guid: 122757bad47bceb45ace4dbb90c1b1b7, type: 3}
-    - {fileID: 7889432959721695539, guid: 122757bad47bceb45ace4dbb90c1b1b7, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

@@ -23,5 +23,6 @@ public enum Item_Kind
 {
     Material,
     Consumable,
+    Weapon,
 }
 

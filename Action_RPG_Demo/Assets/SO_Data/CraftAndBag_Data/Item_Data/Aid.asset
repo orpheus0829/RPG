@@ -17,8 +17,8 @@ MonoBehaviour:
   Stackable: 0
   item_name: "\u6025\u6551\u7BB1"
   item_id: 7
-  Height: 2
-  Width: 2
+  Height: 1
+  Width: 1
   PriceValue: 450
   Introduction: "\u4E13\u4E1A\u7684\u6025\u6551\u7BB1\uFF0C\u914D\u5907\u5DE5\u5177\u9F50\u5168\uFF0C\u53EF\u77AC\u95F4\u6062\u590D\u5927\u91CF\u8840\u91CF"
   item_Kind: 1

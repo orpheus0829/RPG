@@ -80,6 +80,7 @@ public abstract class BaseBag : MonoBehaviour
                 slotObj.AddComponent<Image>();
                 Image slotImg = slotObj.GetComponent<Image>();
                 slotImg.sprite = slotSprite;
+                slotImg.color = Color.black;
             }
         }
     }
