@@ -16,6 +16,13 @@ public class SoundMgr : Base_mgr<SoundMgr>
             RefreshAllAudioSource();
         }
     }
+    public void Start()
+    {
+        if (MenuSetting.instance)
+        {
+            SetGlobalVolume(MenuSetting.instance.Vollume);
+        }
+    }
     public void SetGlobalVolume(float value)
     {
         globalVolume = Mathf.Clamp01(value);

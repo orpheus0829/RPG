@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using TMPro;
 using UnityEngine;
 
 public class Panel_Mgr : Base_mgr<Panel_Mgr>
@@ -95,6 +96,7 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
         {
             MapPanel.gameObject.SetActive(true);
         }
+        InteractChatPanel.GetComponentInChildren<TextMeshProUGUI>().text = Game_Event.instance.Current_Chater ? "¶Ô»°" : "½»»¥";
     }
     public void FindAllPanel()
     {
@@ -160,15 +162,15 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
         TimeMgr.instance.UnPauseGame();
         foreach (var panel in PanelList)
         {
-            if (!panel)
+            if (!panel || !panel.HideControl)
             {
                 continue;
             }
-            if (!panel.HideControl)
+            if(panel == BuyPanel || panel == SellPanel)
             {
                 continue;
             }
-            if (panel == InteractTradePanel || panel == InteractChatPanel || panel == BuyPanel || panel == SellPanel || panel==MapPanel)
+            if (panel == InteractTradePanel || panel == InteractChatPanel || panel==MapPanel)
             {
                 panel.HidePanel();
                 continue;

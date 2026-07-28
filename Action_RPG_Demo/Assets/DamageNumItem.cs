@@ -1,41 +1,50 @@
 using UnityEngine;
 using System.Collections;
 using DG.Tweening;
+using TMPro;
 
 public class DamageNumItem : MonoBehaviour
 {
-    public TextMesh TextMesh;
+    public TextMeshProUGUI TextMesh;
     private Coroutine FloatFadeCoroutine;
     private Tween ScaleTween;
 
     public void Awake()
     {
-        TextMesh = GetComponentInChildren<TextMesh>();
+        TextMesh = GetComponentInChildren<TextMeshProUGUI>();
         transform.localScale = Vector3.zero;
     }
 
     public void Initialize(float damage, Vector3 monsterPos)
     {
         DamageNumberMgr mgr = DamageNumberMgr.instance;
-        float randomX = Random.Range(-mgr.RandomXRange, mgr.RandomXRange);
-        float randomZ = Random.Range(-mgr.RandomZRange, mgr.RandomZRange);
-        Vector3 spawnOffset = new Vector3(randomX, mgr.BaseSpawnYOffset, randomZ);
-        transform.position = monsterPos + spawnOffset;
+        Transform camTrans = CameraPivot.instance.transform;
+        Vector3 dirToCamera = camTrans.position - monsterPos;
+        dirToCamera.y = 0;
+        dirToCamera.Normalize();
+        float forwardDistance = 0.22f;
+        Vector3 frontBasePos = monsterPos + dirToCamera * forwardDistance;
+        Vector3 horizontalSide = Vector3.Cross(Vector3.up, dirToCamera);
+        float sideRandom = Random.Range(-mgr.RandomXRange, mgr.RandomXRange);
+        Vector3 finalOffset = horizontalSide * sideRandom;
+        finalOffset.y = mgr.BaseSpawnYOffset;
 
-        float targetCharSize;
+        transform.position = frontBasePos + finalOffset;
+
+        float targetFontSize;
         if (damage >= mgr.HighDamageThreshold)
         {
             TextMesh.text = $"{damage}!";
             TextMesh.color = Color.red;
-            targetCharSize = mgr.CritFontSize;
+            targetFontSize = mgr.CritFontSize;
         }
         else
         {
             TextMesh.text = damage.ToString();
-            TextMesh.color = Color.yellow;
-            targetCharSize = mgr.NormalFontSize;
+            TextMesh.color = damage >= mgr.HighDamageThreshold ? Color.red : Color.yellow;
+            targetFontSize = mgr.NormalFontSize;
         }
-        TextMesh.characterSize = targetCharSize;
+        TextMesh.fontSize = targetFontSize;
 
         Color resetColor = TextMesh.color;
         resetColor.a = 1f;
@@ -67,7 +76,7 @@ public class DamageNumItem : MonoBehaviour
             timer += Time.deltaTime;
             float progress = timer / mgr.FadeTotalTime;
             transform.position += Vector3.up * mgr.RiseSpeed * Time.deltaTime;
-            transform.forward = mainCameraTrans.forward;
+            transform.LookAt(transform.position + mainCameraTrans.forward);
             Color newColor = baseTextColor;
             newColor.a = 1f - progress;
             TextMesh.color = newColor;

@@ -9,6 +9,7 @@ public class Item_Data : ScriptableObject
     public Sprite Display_In_Backpacks;
     public GameObject Drop;
     public bool Stackable;
+    public int StackMax = 1;
     public string item_name;
     public int item_id;
     public int Height;
@@ -18,11 +19,27 @@ public class Item_Data : ScriptableObject
     [Space]
     public Item_Kind item_Kind;
     public BuffSO buff;
+
+    public WeaponKind EquipmentSlot;
+    public float MaxHP;
+    public float Defense;
+    public float MoveSpeed;
+    public float Attack;
+    public float SpecialGain;
+    public float EndGain;
 }
 public enum Item_Kind
 {
     Material,
     Consumable,
     Weapon,
+}
+public enum WeaponKind
+{
+    Head,
+    Chest,
+    Hand,
+    Foot,
+    Armament,
 }
 

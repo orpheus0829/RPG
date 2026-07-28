@@ -1,13 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
+using UnityEngine.Timeline;
 
-public class Trader : MonoBehaviour
+public class Trader : BaseActor
 {
     public Trader_SO SO;
     public Dictionary<Item_Data, int> Supply_Divide = new Dictionary<Item_Data, int>();
     public Dictionary<Item_Data, int> Sold_Divide = new Dictionary<Item_Data, int>();
     public bool already_Init = false;
+
+    [Header("±Ì—›")]
+    public ActionSO CurAC;
+    public PlayableDirector director;
+    public ActionSO Normal;
+    public ActionSO Idle;
+    public ActionSO Nod;
+    public ActionSO UnNod;
     public void Awake()
     {
         foreach(var a in SO.Can_Buy_List)
@@ -20,10 +30,51 @@ public class Trader : MonoBehaviour
         {
             Sold_Divide.Add(b, 0);
         }
+        director = GetComponent<PlayableDirector>();
     }
     public void Start()
     {
-        
+        PlayTraderShow(Normal);
+    }
+    public void PlayTraderShow(ActionSO action)
+    {
+        director.Stop();
+        TimelineAsset timeline = action.timeline;
+        CurAC = action;
+        director.Play(timeline);
+    }
+    public void OnTraderShowEnd()
+    {
+        if (CurAC.nextAction)
+        {
+            PlayTraderShow(CurAC.nextAction);
+        }
+        else
+        {
+            if (Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.BuyPanel) || Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.SellPanel))
+            {
+                PlayTraderShow(Idle);
+            }
+            else
+            {
+                PlayTraderShow(Normal);
+            }
+        }
+    }
+    public void Update()
+    {
+        if (CurAC != Normal)
+        {
+            CameraPivot.instance.isPlayingCameraAnim = true;
+        }
+    }
+    public void CamOn()
+    {
+        CameraPivot.instance.isPlayingCameraAnim = true;
+    }
+    public void CamOff()
+    {
+        CameraPivot.instance.isPlayingCameraAnim = false;
     }
     #region ∑÷≈‰¬Ú
     public void Reset_Supply()
@@ -114,10 +165,6 @@ public class Trader : MonoBehaviour
             return;
         }
         Random_Divide_S();
-        //if (already_Init)
-        //{
-        //    return;
-        //}
         if (isOpen)
         {
             Random_Divide();

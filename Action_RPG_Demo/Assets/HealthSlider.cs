@@ -41,7 +41,7 @@ public class HealthSlider : MonoBehaviour
             HpFillImage.fillMethod = Image.FillMethod.Horizontal;
         }
 
-        t = GameObject.FindGameObjectWithTag("MainCamera").transform;
+        t = CameraPivot.instance.transform;
     }
     public void OnEnable()
     {
@@ -50,12 +50,13 @@ public class HealthSlider : MonoBehaviour
 
     public void Update()
     {
+        MaxHp = DamageReceiver.maxHp;
         PerHp = DamageReceiver.currentHp / MaxHp;
         if (Mathf.Abs(HpFillImage.fillAmount - PerHp) > 0.001f)
         {
             HpFillImage.fillAmount = Mathf.Lerp(HpFillImage.fillAmount, PerHp, LerpFactor * Time.deltaTime);
         }
-        if (En != null)
+        if (En)
         {
             transform.LookAt(t);
             transform.Rotate(0f, 180f, 0f);

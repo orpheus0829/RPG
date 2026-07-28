@@ -75,6 +75,10 @@ public class BuffReceiver : MonoBehaviour
     #region 接收与移除buff
     public void ReceiveBuff(BuffSO buff)
     {
+        TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.RealTimeUnscaled, 0, 1f, null, () =>
+        {
+            PickNoticeMgr.instance.ShowDialogueTip("", "感觉。。。还不错?", 3f);
+        });
         Debug.Log(buff.BuffName);
         if (!buff)
         {
@@ -268,7 +272,7 @@ public class BuffReceiver : MonoBehaviour
             {
                 case TargetStatus.Health:
                     damageReceiver.currentHp += buff.Val;
-                    Mathf.Clamp(damageReceiver.currentHp, 0f, damageReceiver.maxHp);
+                    damageReceiver.currentHp = Mathf.Clamp(damageReceiver.currentHp, 0f, damageReceiver.maxHp);
                     break;
                 case TargetStatus.Damage:
                     DamageFactor = buff.Val;
@@ -277,7 +281,7 @@ public class BuffReceiver : MonoBehaviour
                     if(damageReceiver.gameObject.TryGetComponent(out Player pl1))
                     {
                         pl1.Skill_PowerPool += buff.Val;
-                        Mathf.Clamp(pl1.Skill_PowerPool, 0f, pl1.MaxPower);
+                        pl1.Skill_PowerPool = Mathf.Clamp(pl1.Skill_PowerPool, 0f, pl1.MaxPower);
                     }
                     break;
                 case TargetStatus.MoveSpeed:
@@ -296,7 +300,7 @@ public class BuffReceiver : MonoBehaviour
             {
                 case TargetStatus.Health:
                     damageReceiver.currentHp += buff.Val;
-                    Mathf.Clamp(damageReceiver.currentHp, 0f, damageReceiver.maxHp);
+                    damageReceiver.currentHp = Mathf.Clamp(damageReceiver.currentHp, 0f, damageReceiver.maxHp);
                     break;
                 case TargetStatus.Damage:
                     DamageFactor = buff.Val;
@@ -305,7 +309,7 @@ public class BuffReceiver : MonoBehaviour
                     if (damageReceiver.gameObject.TryGetComponent(out Player pl1))
                     {
                         pl1.Skill_PowerPool += buff.Val;
-                        Mathf.Clamp(pl1.Skill_PowerPool, 0f, pl1.MaxPower);
+                        pl1.Skill_PowerPool = Mathf.Clamp(pl1.Skill_PowerPool, 0f, pl1.MaxPower);
                     }
                     break;
                 case TargetStatus.MoveSpeed:
@@ -325,7 +329,7 @@ public class BuffReceiver : MonoBehaviour
         {
             case TargetStatus.Health:
                 damageReceiver.currentHp += buff.Val;
-                Mathf.Clamp(damageReceiver.currentHp, 0f, damageReceiver.maxHp);
+                damageReceiver.currentHp = Mathf.Clamp(damageReceiver.currentHp, 0f, damageReceiver.maxHp);
                 break;
             case TargetStatus.Damage:
                 DamageFactor = buff.Val;
@@ -334,7 +338,7 @@ public class BuffReceiver : MonoBehaviour
                 if (damageReceiver.gameObject.TryGetComponent(out Player pl1))
                 {
                     pl1.Skill_PowerPool += buff.Val;
-                    Mathf.Clamp(pl1.Skill_PowerPool, 0f, pl1.MaxPower);
+                    pl1.Skill_PowerPool = Mathf.Clamp(pl1.Skill_PowerPool, 0f, pl1.MaxPower);
                 }
                 break;
             case TargetStatus.MoveSpeed:

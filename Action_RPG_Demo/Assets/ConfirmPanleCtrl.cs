@@ -52,6 +52,7 @@ public class ConfirmPanleCtrl : MonoBehaviour
     public void RebuildBtn()
     {
         ClearBtn();
+        Panel_Mgr.instance.IsPanelOpen = true;
         if (Warning)
         {
             GameObject c = ObjectPoolMgr.instance.GetObj(CBtn, BtnParent);
@@ -83,6 +84,7 @@ public class ConfirmPanleCtrl : MonoBehaviour
                 }
                 AboutToDo?.Invoke();
                 Panel_Mgr.instance.ConfirmPanel.HidePanel();
+                
             });
             wb.onClick.AddListener(() =>
             {

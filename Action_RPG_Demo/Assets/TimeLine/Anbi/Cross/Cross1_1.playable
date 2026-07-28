@@ -163,6 +163,7 @@ MonoBehaviour:
   moveMode: 3
   direction: {x: 0, y: 0, z: 1}
   endPos: {x: 0, y: 0, z: 0}
+  endEuler: {x: 0, y: 0, z: 0}
   moveSpeed: 0
   totalDistance: 0
   startSpeed: 0
@@ -171,8 +172,16 @@ MonoBehaviour:
   climbUseVariableSpeed: 1
   climbSpeed: 2
   climbStartSpeed: 5
-  climbEndSpeed: 2
+  climbEndSpeed: 8
   climbAfterExtraDistance: 1
+  circleCenterLocal: {x: 0, y: 0, z: 0}
+  circleRadius: 0
+  circleTotalAngle: 0
+  circleClockwise: 1
+  circleVariableSpeed: 0
+  circleConstantSpeed: 0
+  circleStartAngSpeed: 0
+  circleEndAngSpeed: 0
 --- !u!114 &-1805706660518581612
 MonoBehaviour:
   m_ObjectHideFlags: 1

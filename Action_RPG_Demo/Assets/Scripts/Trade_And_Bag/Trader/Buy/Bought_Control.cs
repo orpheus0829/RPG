@@ -49,7 +49,9 @@ public class Bought_Control : MonoBehaviour
     {
         if (Current_Store <= 0)
         {
-            Panel_Mgr.instance.ShowComfirmPanel("商品缺货中", true, null);
+            Game_Event.instance.Current_Trader.PlayTraderShow(Game_Event.instance.Current_Trader.UnNod);
+            PickNoticeMgr.instance.ShowFieldTip("商品缺货中");
+            PickNoticeMgr.instance.ShowDialogueTip(Game_Event.instance.Current_Trader.name, "嗯。。。暂时没有这件商品", 3f);
             return;
         }
         Debug.Log("查询是否有空间容纳" + Buy_Item.item_name + "中......");
@@ -67,6 +69,8 @@ public class Bought_Control : MonoBehaviour
             money -= Buy_Item.PriceValue;
             PlayerPrefs.SetInt("Money", money);
             Text.text = $"可购入:{Current_Store}/{Max_Store}\t${Buy_Item.PriceValue}";
+            PickNoticeMgr.instance.ShowDialogueTip(Game_Event.instance.Current_Trader.name, "不错的选择!", 3f);
+            Game_Event.instance.Current_Trader.PlayTraderShow(Game_Event.instance.Current_Trader.Nod);
         }
     }
 }

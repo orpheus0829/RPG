@@ -31,7 +31,7 @@ public class Single_Craft_UI : MonoBehaviour
         int product_count = crafting_SO.crafting_Results.Count;
         for(int i = 0; i < material_count; i++)
         {
-            GameObject single_materail = Instantiate(Singale_Display, Left);
+            GameObject single_materail = ObjectPoolMgr.instance.GetObj(Singale_Display, Left);
 
             RectTransform rect_m = single_materail.GetComponent<RectTransform>();
             rect_m.anchoredPosition = new Vector2(Left.anchoredPosition.x + i * Space, Left.anchoredPosition.y);
@@ -42,7 +42,7 @@ public class Single_Craft_UI : MonoBehaviour
         }
         for (int j = 0; j < product_count; j++)
         {
-            GameObject single_product = Instantiate(Singale_Display, Right);
+            GameObject single_product = ObjectPoolMgr.instance.GetObj(Singale_Display, Right);
 
             RectTransform rect_p = single_product.GetComponent<RectTransform>();
             rect_p.anchoredPosition = new Vector2(Right.anchoredPosition.x - j * Space, Right.anchoredPosition.y);

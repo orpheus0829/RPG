@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class QuestRelation : MonoBehaviour
@@ -65,7 +66,7 @@ public class QuestRelation : MonoBehaviour
                 rt.anchorMax = new Vector2(0.5f, 0.5f);
                 rt.pivot = new Vector2(0.5f, 0.5f);
                 rt.sizeDelta = new Vector2(40, 40);
-                rt.localScale = new Vector2(1, 2);
+                rt.localScale = new Vector2(2, 4);
                 img.sprite = item.Display_In_Backpacks;
                 SpawnedItemIds.Add(item.item_id);
             }
@@ -195,8 +196,23 @@ public class QuestRelation : MonoBehaviour
         Debug.Log("µã»÷×·×Ù");
         Vector3 questPos = Story_Mgr.instance.CalculateQuestPos();
         MiniMapMgr.instance.trackingTarget = null;
-        NavPathMgr.instance.SwitchNavTarget(questPos);
+        //NavPathMgr.instance.SwitchNavTarget(questPos);
         NavPathMgr.instance.CloseNavPath();
-        NavPathMgr.instance.OpenNavPath(questPos);
+        if (Story_Mgr.instance.CurQuest is FightQuest_SO fight)
+        {
+            if(SceneManager.GetActiveScene().name != "Battle")
+            {
+                NavPathMgr.instance.OpenNavPath(GameObject.FindObjectOfType<Portal>().transform.position);
+            }
+            else
+            {
+                NavPathMgr.instance.OpenNavPath(Story_Mgr.instance.CurQuestPos);
+            }
+        }
+        else
+        {
+            NavPathMgr.instance.OpenNavPath(Story_Mgr.instance.CurQuestPos);
+        }
+        //NavPathMgr.instance.OpenNavPath(questPos);
     }
 }

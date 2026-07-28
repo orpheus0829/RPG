@@ -12,6 +12,7 @@ TagManager:
   - DeadPlayer
   - DeadEnemy
   - MapCam
+  - Portal
   layers:
   - Default
   - TransparentFX
@@ -22,8 +23,8 @@ TagManager:
   - Player
   - Drop
   - NPC
-  - 
-  - 
+  - EquipStage
+  - CraftUI
   - 
   - 
   - 

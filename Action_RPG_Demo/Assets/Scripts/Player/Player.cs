@@ -1,5 +1,8 @@
+using DG.Tweening.Plugins.Core.PathCore;
+using MMD4MecanimInternal;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
@@ -9,7 +12,15 @@ using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 using UnityEngine.TextCore.Text;
 using UnityEngine.Timeline;
-
+[System.Serializable]
+public class EquipWeaponData
+{
+    public int HeadData;
+    public int ChestData;
+    public int HandData;
+    public int FootData;
+    public int OnHandData;
+}
 [System.Serializable]
 public class RoleList
 {
@@ -19,11 +30,23 @@ public class RoleList
 }
 public class Player : MonoBehaviour
 {
+    public static Player instance { get; private set; }
     public PlayerSO playerSO;
     public PlayerInput playerInput;
     public bool Is_Action_Playing;
     public float AFKTime;
     public float CurAFKCount;
+    public bool HaveBornAnim;
+    [Header("装备配置")]
+    public EquipWeaponData EquipData;
+    private string EquipDataPath = "ArmData";
+    [Header("装备提升属性")]
+    public float SpeedFac;
+    public float DamageFac;
+    public float MaxhpFac;
+    public float DefenseFac;
+    public float SpecialFac;
+    public float EndFac;
     [Header("角色切换")]
     public List<RoleList> allrole;
     public ActionControl CurAC;
@@ -135,6 +158,15 @@ public class Player : MonoBehaviour
     private const string volumeSaveKey = "GameSoundVolume";
     public void Awake()
     {
+        if (!instance)
+        {
+            instance = this as Player;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+        DontDestroyOnLoad(gameObject);
         rb = GetComponent<Rigidbody>();
         am = GetComponentInChildren<Animator>();
         col = GetComponent<CapsuleCollider>();
@@ -168,6 +200,9 @@ public class Player : MonoBehaviour
             rd.materials = MatCopies.GetRange(MatCopies.Count - matCount, matCount).ToArray();
         }
         InitRole();
+        EquipData = LoadWeaponData();
+        Game_Event.instance.BroadcastRefreshAllArmEquip(EquipData, bag.allData_Item);
+        RefrshArmAttribute();
     }
     public void OnEnable()
     {
@@ -179,6 +214,7 @@ public class Player : MonoBehaviour
         Game_Event.instance.DeathSecState += BornAction;
         Game_Event.instance.SetDodgeAlpha += SetDodgeA;
         Game_Event.instance.SetNormalAlpha += ResetA;
+        Game_Event.instance.SendArmToPlayer += GetWeaponData;
         CameraPivot.instance.target = this.gameObject.transform;
     }
     public void OnDisable()
@@ -189,12 +225,19 @@ public class Player : MonoBehaviour
         Game_Event.instance.DeathState -= BornSet;
         Game_Event.instance.DeathSecState -= BornAction;
         Game_Event.instance.SetDodgeAlpha -= SetDodgeA;
-        Game_Event.instance.SetNormalAlpha -= ResetA; ;
+        Game_Event.instance.SetNormalAlpha -= ResetA;
+        Game_Event.instance.SendArmToPlayer -= GetWeaponData;
     }
 
     public void Start()
     {
+
+
         NavPathMgr.instance.OpenNavPath(new Vector3(2, 2, 2));
+        if (MenuSetting.instance)
+        {
+            this.HaveBornAnim = MenuSetting.instance.HaveBornAnim;
+        }
         if (CurAC.timelineDirector != null)
         {
             CurAC.timelineDirector.stopped += (director) =>
@@ -212,6 +255,8 @@ public class Player : MonoBehaviour
 
         GameObject quick = Panel_Mgr.instance.PlayUiPanel.gameObject.GetComponentInChildren<QuickEquip>().transform.parent.gameObject;
         quick.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = GetActionKey("Drop_Item");
+        RefrshArmAttribute();
+        Game_Event.instance.BroadcastRefreshAllArmEquip(EquipData, bag.allData_Item);
     }
     public void InitRole()
     {
@@ -253,6 +298,14 @@ public class Player : MonoBehaviour
     }
     public void Update()
     {
+        LayerMask avoid = LayerMask.NameToLayer("EquipStage");
+        LayerMask normal = LayerMask.NameToLayer("Player");
+        bool OnTrade = Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.TraderPanel);
+        Transform[] allChildren = GetComponentsInChildren<Transform>(true);
+        foreach (var t in allChildren)
+        {
+            t.gameObject.layer = OnTrade ? avoid : normal;
+        }
         //Charge = MaxCharge;
         //Skill_PowerPool = MaxPower;
         rb.AddForce(Vector3.down * 10f, ForceMode.Force);
@@ -313,7 +366,6 @@ public class Player : MonoBehaviour
             }
         }
     }
-
     public void FixedUpdate()
     {
         if (!Panel_Mgr.instance.IsPanelOpen)
@@ -359,7 +411,7 @@ public class Player : MonoBehaviour
                 return;
             }
             float VerticalVelocity = rb.velocity.y;
-            Vector3 HorizontalVelocity = moveDir * Speed * buffReceiver.MoveFactor;
+            Vector3 HorizontalVelocity = moveDir * Speed * buffReceiver.MoveFactor * (1 + 0.01f * SpeedFac);
             rb.velocity = new Vector3(HorizontalVelocity.x, VerticalVelocity, HorizontalVelocity.z);
         }
 
@@ -598,7 +650,7 @@ public class Player : MonoBehaviour
         }
     }
     #endregion
-    #region 制作
+    #region 合成
     public void OnCraft(InputValue value)
     {
         if (value.isPressed && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.TraderPanel) && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.BagPanel))
@@ -607,7 +659,13 @@ public class Player : MonoBehaviour
             {
                 Cursor.lockState = CursorLockMode.None;
                 Panel_Mgr.instance.OpenPanel(Panel_Mgr.instance.CraftPanel);
-                Game_Event.instance.Init_Crafting();
+                Crafting_UI crafting = Panel_Mgr.instance.CraftPanel.GetComponentInChildren<Crafting_UI>();
+                crafting.ResetCraftCam();
+                TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.RealTimeUnscaled, 0f, 0.4f, null, () =>
+                {
+                    PickNoticeMgr.instance.ShowDialogueTip(allrole[CurRoleIndex].RoleID, "来做点小手工吧", 2f);
+                });
+                //Game_Event.instance.Init_Crafting();
             }
             else
             {
@@ -646,23 +704,36 @@ public class Player : MonoBehaviour
             if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.TraderPanel))
             {
                 Cursor.lockState = CursorLockMode.None;
+                //Panel_Mgr.instance.OpenPanel(Panel_Mgr.instance.TraderPanel);
                 Panel_Mgr.instance.OpenTraderBuyPanel();
-
                 Game_Event.instance.Refresh_Buy_List();
                 Game_Event.instance.Refresh_Sell_List();
                 Game_Event.instance.Init_Store_Panel(true);
+                PickNoticeMgr.instance.ShowDialogueTip(Game_Event.instance.Current_Trader.name, "有什么需要的吗?", 3f);
+                //TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.RealTimeUnscaled, 0, 0.5f, null, () =>
+                //{
+                //    Panel_Mgr.instance.OpenTraderBuyPanel();
+                //    Game_Event.instance.Refresh_Buy_List();
+                //    Game_Event.instance.Refresh_Sell_List();
+                //    Game_Event.instance.Init_Store_Panel(true);
+                //});
+                Game_Event.instance.Current_Trader.PlayTraderShow(Game_Event.instance.Current_Trader.Idle);
             }
             else
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 Panel_Mgr.instance.HideAllPanel();
+                Game_Event.instance.Current_Trader.PlayTraderShow(Game_Event.instance.Current_Trader.Normal);
+                PickNoticeMgr.instance.ShowDialogueTip(Game_Event.instance.Current_Trader.name, "欢迎下次再来噢", 3f);
+                OffCameraFrame();
             }
         }
     }
     #endregion
-    #region 交谈
+    #region 对话
     public void OnChat(InputValue value)
     {
+        Game_Event.instance.PortalAc(this.transform);
         if (value.isPressed && Can_Chat && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.BagPanel))
         {
             DialogueWriter dialogueWriter = Panel_Mgr.instance.DialoguePanel.GetComponent<DialogueWriter>();
@@ -1226,7 +1297,8 @@ public class Player : MonoBehaviour
             CurAC.PlayAction(HitDir(dir));
             StartCoroutine(GetFly(dir));
         }
-        damageReceiver.TakeDamage<Player>(damage, dir);
+        float reducerate = DefenseFac / (DefenseFac + 100f);
+        damageReceiver.TakeDamage<Player>(damage * (1 - reducerate), dir);
         if (IsDead)
         {
             TurnDeath();
@@ -1377,7 +1449,7 @@ public class Player : MonoBehaviour
     {
         int randomIndex = Random.Range(0, allrole.Count);
         SwitchRolePure(randomIndex);
-        if (playerSO.EnableBornAnim)
+        if (HaveBornAnim)
         {
             //CameraPivot.instance.PlayRevolveAroundPlayerAnim();
             StopCurrentAction();
@@ -1456,11 +1528,20 @@ public class Player : MonoBehaviour
             {
                 return;
             }
+            if (Game_Event.instance.Current_Trader)
+            {
+                Game_Event.instance.Current_Trader.PlayTraderShow(Game_Event.instance.Current_Trader.Normal);
+            }
+            if (Game_Event.instance.Current_Trader)
+            {
+                PickNoticeMgr.instance.ShowDialogueTip(Game_Event.instance.Current_Trader.name, "欢迎下次再来噢", 3f);
+            }
             Panel_Mgr.instance.HideAllPanel();
             if (Panel_Mgr.instance.CurMapStyle == MapStyle.Max)
             {
                 Panel_Mgr.instance.SwitchMap(false);
             }
+            OffCameraFrame();
         }
     }
     #endregion
@@ -1584,6 +1665,111 @@ public class Player : MonoBehaviour
             return i.ToDisplayString();
         }
         return "未绑定";
+    }
+    #endregion
+    #region 保存和读取装备配备数据
+    public void GetWeaponData(BodyArmEquip bodyArm)
+    {
+        switch (bodyArm.NowKind)
+        {
+            case WeaponKind.Head:
+                EquipData.HeadData = bodyArm.Data ? bodyArm.Data.item_id : -1;
+                break;
+            case WeaponKind.Chest:
+                EquipData.ChestData = bodyArm.Data ? bodyArm.Data.item_id : -1;
+                break;
+            case WeaponKind.Hand:
+                EquipData.HandData = bodyArm.Data ? bodyArm.Data.item_id : -1;
+                break;
+            case WeaponKind.Foot:
+                EquipData.FootData = bodyArm.Data ? bodyArm.Data.item_id : -1;
+                break;
+            case WeaponKind.Armament:
+                EquipData.OnHandData = bodyArm.Data ? bodyArm.Data.item_id : -1;
+                break;
+            default:
+                break;
+        }
+        SaveWeaponData();
+        RefrshArmAttribute();
+    }
+    public void SaveWeaponData()
+    {
+        string fullPath = Application.persistentDataPath + "/" + EquipDataPath + ".json";
+        string json = JsonUtility.ToJson(EquipData);
+        File.WriteAllText(fullPath, json);
+        Debug.Log($"装备存档已保存：{fullPath}");
+    }
+    public EquipWeaponData LoadWeaponData()
+    {
+        string fullPath = Application.persistentDataPath + "/" + EquipDataPath + ".json";
+        if (!File.Exists(fullPath))
+        {
+            Debug.LogWarning("装备存档不存在，返回空白装备数据");
+            return new EquipWeaponData
+            {
+                HeadData = -1,
+                ChestData = -1,
+                HandData = -1,
+                FootData = -1,
+                OnHandData = -1
+            };
+        }
+        string json = File.ReadAllText(fullPath);
+        EquipWeaponData data = JsonUtility.FromJson<EquipWeaponData>(json);
+        return data;
+    }
+    public void ImportWeaponData(EquipWeaponData equip)
+    {
+        EquipData = equip;
+        SaveWeaponData();
+    }
+    public EquipWeaponData ExportWeaponData()
+    {
+        return new EquipWeaponData
+        {
+            HeadData = EquipData.HeadData,
+            ChestData = EquipData.ChestData,
+            HandData = EquipData.HandData,
+            FootData = EquipData.FootData,
+            OnHandData = EquipData.OnHandData
+        };
+    }
+    public void RefrshArmAttribute()
+    {
+        SpeedFac = 0;
+        DamageFac = 0;
+        MaxhpFac = 0;
+        DefenseFac = 0;
+        SpecialFac = 0;
+        EndFac = 0;
+        List<int> equipIdList = new List<int>()
+        {
+            EquipData.HeadData,
+            EquipData.ChestData,
+            EquipData.HandData,
+            EquipData.FootData,
+            EquipData.OnHandData,
+        };
+        foreach (int itemId in equipIdList)
+        {
+            if (itemId <= 0)
+            {
+                continue;
+            }
+            Item_Data equipItem = bag.allData_Item.Data_List.Find(x => x.item_id == itemId);
+            if (equipItem == null)
+            {
+                continue;
+            }
+            MaxhpFac += equipItem.MaxHP;
+            DefenseFac += equipItem.Defense;
+            SpeedFac += equipItem.MoveSpeed;
+            DamageFac += equipItem.Attack;
+            SpecialFac += equipItem.SpecialGain;
+            EndFac += equipItem.EndGain;
+            Debug.Log($"【装备属性】移速:{equipItem.MoveSpeed} 攻击:{equipItem.Attack} 生命:{equipItem.MaxHP} 防御:{equipItem.Defense}specil:{equipItem.SpecialGain}end:{equipItem.EndGain}");
+        }
     }
     #endregion
     //#region 退出

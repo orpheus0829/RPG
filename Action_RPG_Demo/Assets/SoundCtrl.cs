@@ -12,7 +12,10 @@ public class SoundCtrl : MonoBehaviour
     }
     public void OnEnable()
     {
-        soundSlider.value = SoundMgr.instance.globalVolume;
+        if (SoundMgr.instance)
+        {
+            soundSlider.value = SoundMgr.instance.globalVolume;
+        }
     }
     private void OnSliderValueChange(float value)
     {

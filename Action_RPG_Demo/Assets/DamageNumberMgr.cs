@@ -28,16 +28,55 @@ public class DamageNumberMgr : Base_mgr<DamageNumberMgr>
             DontDestroyOnLoad(gameObject);
         }
     }
-    public void ShowDamageNumber(Vector3 monsterWorldPos, float damageValue)
+    public void ShowDamageNumber(GameObject targetObj, float damageValue)
     {
-        GameObject numObj = ObjectPoolMgr.instance.GetObj(DamageNumPrefab, monsterWorldPos);
-        DamageNumItem damageNumItem = numObj.GetComponent<DamageNumItem>();
-
-        if (damageNumItem == null)
+        if (!targetObj)
         {
             return;
         }
+        Vector3 spawnBasePos;
+        if (targetObj.CompareTag("Enemy"))
+        {
+            HealthSlider slider = FindHealthSliderDFS(targetObj.transform);
+            if (slider)
+            {
+                spawnBasePos = slider.transform.parent.position;
+            }
+            else
+            {
+                spawnBasePos = targetObj.transform.position;
+            }
+        }
+        else
+        {
+            spawnBasePos = targetObj.transform.position;
+        }
 
-        damageNumItem.Initialize(damageValue, monsterWorldPos);
+        GameObject numObj = ObjectPoolMgr.instance.GetObj(DamageNumPrefab, spawnBasePos);
+        DamageNumItem damageNumItem = numObj.GetComponent<DamageNumItem>();
+
+        if (!damageNumItem)
+        {
+            return;
+        }
+        damageNumItem.Initialize(damageValue, spawnBasePos);
+    }
+    private HealthSlider FindHealthSliderDFS(Transform root)
+    {
+        HealthSlider slider = root.GetComponent<HealthSlider>();
+        if (slider)
+        {
+            return slider;
+        }
+
+        foreach (Transform child in root)
+        {
+            HealthSlider result = FindHealthSliderDFS(child);
+            if (result)
+            {
+                return result;
+            }
+        }
+        return null;
     }
 }

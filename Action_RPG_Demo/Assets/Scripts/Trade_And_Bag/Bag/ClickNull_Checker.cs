@@ -8,7 +8,7 @@ public class ClickNull_Checker : MonoBehaviour, IPointerClickHandler, IPointerEn
 {
     public void OnPointerClick(PointerEventData eventData)
     {
-        Introduction_Mrg.instance.StopTrack();
+        
     }
     public void OnPointerEnter(PointerEventData eventData)
     {

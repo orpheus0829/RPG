@@ -411,6 +411,7 @@ MonoBehaviour:
   renderer: {fileID: 0}
   flashRenderer: {fileID: 0}
   buffReceiver: {fileID: 0}
+  DeadAndBorn: {fileID: 2930374520652304124, guid: 91544527dbb4ce0409ed6598189a2f0b, type: 3}
   NearestPl: {fileID: 0}
   RotateSmooth: 0
   CurType: 0
@@ -1016,6 +1017,7 @@ MonoBehaviour:
   PerHp: 0
   MaxHp: 0
   DamageReceiver: {fileID: 0}
+  t: {fileID: 0}
 --- !u!1 &1737642915967644802
 GameObject:
   m_ObjectHideFlags: 0

@@ -24,6 +24,7 @@ public class TransformBehaviour : PlayableBehaviour
     private Rigidbody _rb;
     private CapsuleCollider _selfCol;
     private Player _player;
+    private bool _rbOriginalKinematic;
 
     public override void OnBehaviourPlay(Playable playable, FrameData info)
     {
@@ -37,18 +38,25 @@ public class TransformBehaviour : PlayableBehaviour
         _moveDir = Vector3.zero;
         _hasTeleported = false;
         _circleRotatedAngle = 0f;
+        _rbOriginalKinematic = false;
     }
 
     public override void OnBehaviourPause(Playable playable, FrameData info)
     {
-        if (clip.moveMode == MoveMode.ClimbOver && _player != null)
+
+        if (clip.moveMode == MoveMode.ClimbOver && _rb != null)
         {
-            _player.transform.position = _climbFinalPosition;
-            if (_rb != null)
+            _rb.isKinematic = _rbOriginalKinematic;
+            _rb.velocity = Vector3.zero;
+            _rb.angularVelocity = Vector3.zero;
+
+            if (_player != null)
             {
+                _player.transform.position = _climbFinalPosition;
                 _rb.position = _climbFinalPosition;
             }
         }
+
         if (clip.moveMode == MoveMode.CircleRotate)
         {
             if (_rb != null)
@@ -60,7 +68,7 @@ public class TransformBehaviour : PlayableBehaviour
 
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {
-        if (_isBlocked && !(clip.moveMode == MoveMode.ClimbOver && clip.climbStage == ClimbStage.AfterClimb))
+        if (_isBlocked && clip.moveMode != MoveMode.ClimbOver)
         {
             return;
         }
@@ -75,7 +83,7 @@ public class TransformBehaviour : PlayableBehaviour
         }
         if (_player && _player.CurAC.currentAction.actionType == ActionType.Attack && _player.AtkTo)
         {
-            if(Vector3.Distance(trans.position, _player.AtkTo.transform.position) <= _player.AttackStopDistance)
+            if (Vector3.Distance(trans.position, _player.AtkTo.transform.position) <= _player.AttackStopDistance)
             {
                 trans.rotation = Rot;
                 return;
@@ -101,6 +109,12 @@ public class TransformBehaviour : PlayableBehaviour
             Rot = trans.rotation;
             _startPos = trans.position;
             _curPos = _startPos;
+            if (clip.moveMode == MoveMode.ClimbOver && _rb != null)
+            {
+                _rbOriginalKinematic = _rb.isKinematic;
+                _rb.isKinematic = true;
+            }
+
             if (clip.moveMode != MoveMode.ClimbOver && clip.moveMode != MoveMode.CircleRotate)
             {
                 ReadParams(out _, out Vector3 localDir, out _, out _);
@@ -193,7 +207,7 @@ public class TransformBehaviour : PlayableBehaviour
             float frameSpeed = GetCurrentFrameSpeed(curTime, duration);
             Vector3 frameDelta = _moveDir * frameSpeed * deltaTime;
             Vector3 targetNextPos = _curPos + frameDelta;
-            bool shouldCheckCollision = clip.moveMode != MoveMode.ClimbOver || clip.climbStage == ClimbStage.AfterClimb;
+            bool shouldCheckCollision = clip.moveMode != MoveMode.ClimbOver;
             if (shouldCheckCollision && _selfCol != null)
             {
                 float castR = _selfCol.radius;
@@ -206,12 +220,17 @@ public class TransformBehaviour : PlayableBehaviour
                     _isBlocked = true;
                 }
             }
+
             if (clip.moveMode == MoveMode.ClimbOver)
             {
                 _climbFinalPosition = targetNextPos;
             }
             _curPos = targetNextPos;
-            if (_rb != null)
+            if (clip.moveMode == MoveMode.ClimbOver)
+            {
+                trans.position = _curPos;
+            }
+            else if (_rb != null)
             {
                 _rb.MovePosition(_curPos);
             }

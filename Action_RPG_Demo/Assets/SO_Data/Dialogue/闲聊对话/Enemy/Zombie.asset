@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e2654a27fe2b984ab4d9e99554f94f6, type: 3}
   m_Name: Zombie
   m_EditorClassIdentifier: 
+  enemyType: 0
   Damage: 50
   MaxHP: 1
   WalkSpeed: 0.5
   RunSpeed: 2
   ChaseRadius: 6
+  DisappearTime: 4
   HitDetectLengeh: 4
   HitLength: 0.58
   HitRadius: 1.07
@@ -26,4 +28,10 @@ MonoBehaviour:
   WalkPer: 70
   RunFromWalk: 80
   ChangeInterval: 5
-  DisappearTime: 4
+  MinHesitantWalk: 0
+  HesitantDistance: 0
+  HesitantInterval: 0
+  AtkProbablity: 0
+  DodgeProbablity: 0
+  DangerDistance: 0
+  DangerBackProbablity: 0

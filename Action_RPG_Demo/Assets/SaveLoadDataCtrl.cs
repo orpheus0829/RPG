@@ -14,7 +14,9 @@ public class DataSum
     public bool HaveData;
     public string datatip;
     public MainStoryData storyData;
-    public Bag_Save_Data bagData;
+    public string bagJson;
+    public string weaponJson;
+    public string equipJson;
     public int money;
 }
 public class SaveLoadDataCtrl : MonoBehaviour, IPointerClickHandler
@@ -85,8 +87,17 @@ public class SaveLoadDataCtrl : MonoBehaviour, IPointerClickHandler
             //¸²¸Ç´æµµ
             Action SaveCurrentProgress = () =>
             {
-                Player_Bag bag = FindObjectOfType<Player_Bag>();
-                CurData.bagData = bag.ExportBagData();
+                Player player = FindObjectOfType<Player>();
+                Player_Bag bag = player.bag;
+
+                Bag_Save_Data mainBag = bag.ExportBagData();
+                Bag_Save_Data weaponBag = bag.ExportWeaponBagData();
+                CurData.bagJson = JsonUtility.ToJson(mainBag);
+                CurData.weaponJson = JsonUtility.ToJson(weaponBag);
+
+                EquipWeaponData equipSave = player.ExportWeaponData();
+                CurData.equipJson = JsonUtility.ToJson(equipSave);
+
                 CurData.money = PlayerPrefs.GetInt("Money", 0);
                 string questTitle = "ÎÞÈÎÎñ";
                 if (Story_Mgr.instance.CurQuest != null)
@@ -161,13 +172,37 @@ public class SaveLoadDataCtrl : MonoBehaviour, IPointerClickHandler
         Story_Mgr.instance.CurActor = null;
         PlayerPrefs.SetInt("Money", CurData.money);
         PlayerPrefs.Save();
-        if (GameObject.FindGameObjectWithTag("Player").TryGetComponent(out Player_Bag bag))
+        if (GameObject.FindGameObjectWithTag("Player").TryGetComponent(out Player pl))
         {
-            bag.ImportBagData(CurData.bagData);
+            Player_Bag bag = pl.bag;
+            Bag_Save_Data mainData = JsonUtility.FromJson<Bag_Save_Data>(CurData.bagJson);
+            Bag_Save_Data weaponData = JsonUtility.FromJson<Bag_Save_Data>(CurData.weaponJson);
+            bag.CurrentViewBagType = ViewBagType.MainItemBag;
+            bag.ImportBagData(mainData);
+            bag.ImportWeaponBagData(weaponData);
+
+            yield return null;
+
+            bag.ReClean_Bag_Display();
+            bag.GenerateCurrentBagSlots();
+            bag.Refresh_Bag_Display();
+            bag.Init_AllResortList();
+
+            EquipWeaponData loadEquip = JsonUtility.FromJson<EquipWeaponData>(CurData.equipJson);
+            pl.ImportWeaponData(loadEquip);
+            pl.SaveWeaponData();
+            Game_Event.instance.BroadcastRefreshAllArmEquip(pl.EquipData, bag.allData_Item);
         }
         yield return null;
-        SceneManager.LoadScene(0);
-        yield return new WaitForEndOfFrame();
-        CameraPivot.instance.target = GameObject.FindGameObjectWithTag("Player").transform;
+        TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.RealTimeUnscaled, 0, 1f, null, () =>
+        {
+            LoadingMgr.instance.StartTransition("City", true);
+        });
+        yield return new WaitForSecondsRealtime(0.15f);
+        if (GameObject.FindGameObjectWithTag("Player").TryGetComponent(out Player p))
+        {
+            CameraPivot.instance.target = p.transform;
+            Game_Event.instance.BroadcastRefreshAllArmEquip(p.EquipData, p.bag.allData_Item);
+        }
     }
 }

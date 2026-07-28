@@ -50,7 +50,9 @@ public class Sold_Control : MonoBehaviour
     {
         if (Current_Sold <= 0 || Max_Sold <= 0)
         {
-            Panel_Mgr.instance.ShowComfirmPanel("未拥有相应货物，无法出售", true, null);
+            Game_Event.instance.Current_Trader.PlayTraderShow(Game_Event.instance.Current_Trader.UnNod);
+            PickNoticeMgr.instance.ShowFieldTip("未拥有相应货物，无法出售");
+            PickNoticeMgr.instance.ShowDialogueTip(Game_Event.instance.Current_Trader.name, "你还没有这件物品噢", 3f);
             Debug.Log("无法出售");
             return;
         }
@@ -70,7 +72,9 @@ public class Sold_Control : MonoBehaviour
             money += Sell_Item.PriceValue;
             PlayerPrefs.SetInt("Money", money);
             Text.text = $"可出售:{Current_Sold}/{Max_Sold}\t${Sell_Item.PriceValue}";
-            Panel_Mgr.instance.ShowComfirmPanel($"已卖出{Sell_Item.item_name}", true, null);
+            PickNoticeMgr.instance.ShowFieldTip($"已卖出{Sell_Item.item_name}");
+            PickNoticeMgr.instance.ShowDialogueTip(Game_Event.instance.Current_Trader.name, "感谢惠顾!", 3f);
+            Game_Event.instance.Current_Trader.PlayTraderShow(Game_Event.instance.Current_Trader.Nod);
         }
         Debug.Log("能卖吗" + Is_Really);
     }
