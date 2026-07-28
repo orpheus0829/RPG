@@ -27,11 +27,11 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     }
     public void OnEnable()
     {
-        Introduction_Mrg.instance.ClickOnItem += Display_Intro;
+        //Introduction_Mrg.instance.ClickOnItem += Display_Intro;
     }
     public void OnDisable()
     {
-        Introduction_Mrg.instance.ClickOnItem -= Display_Intro;
+        
     }
     public void SetStackCount(int count)
     {
@@ -50,6 +50,13 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
             Count.text = CNum.ToString();
         }
     }
+    public void Update()
+    {
+        if (data.item_Kind == Item_Kind.Weapon)
+        {
+            SetStackCount(1);
+        }
+    }
     #region 扔东西
     public void Throw_Item()
     {
@@ -58,14 +65,13 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         {
             return;
         }
-
         int sx = Player_Bag.currentDraggingItem.startPos.x;
         int sy = Player_Bag.currentDraggingItem.startPos.y;
         int sw = Player_Bag.currentDraggingItem.data.Width;
         int sh = Player_Bag.currentDraggingItem.data.Height;
+        int stackCount = item.CNum;
         Player_Bag.RemoveItem(sx, sy, sw, sh);
         List<Vector3> vaildpoint = FindVaildGround(Player_Bag.gameObject.transform.position, Player_Bag.DropRadius);
-        Debug.Log("位置有" + vaildpoint.Count);
         Vector3 drop_pos;
         if (vaildpoint.Count <= 0)
         {
@@ -79,7 +85,10 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         {
             drop_pos = vaildpoint[UnityEngine.Random.Range(0, vaildpoint.Count)];
         }
-        ObjectPoolMgr.instance.GetObj(data.Drop, drop_pos, Quaternion.identity);
+        for (int i = 0; i < stackCount; i++)
+        {
+            ObjectPoolMgr.instance.GetObj(data.Drop, drop_pos, Quaternion.identity);
+        }
 
         Player_Bag.currentDraggingItem = null;
         Player_Bag.IsDragging = false;
@@ -93,14 +102,13 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         {
             return;
         }
-
         int sx = Player_Bag.currentDraggingItem.startPos.x;
         int sy = Player_Bag.currentDraggingItem.startPos.y;
         int sw = Player_Bag.currentDraggingItem.data.Width;
         int sh = Player_Bag.currentDraggingItem.data.Height;
+        int stackCount = item.CNum;
         Player_Bag.RemoveItem(sx, sy, sw, sh);
         List<Vector3> vaildpoint = FindVaildGround(Player_Bag.gameObject.transform.position, Player_Bag.DropRadius);
-        Debug.Log("位置有" + vaildpoint.Count);
         Vector3 drop_pos;
         if (vaildpoint.Count <= 0)
         {
@@ -114,8 +122,10 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         {
             drop_pos = vaildpoint[UnityEngine.Random.Range(0, vaildpoint.Count)];
         }
-        ObjectPoolMgr.instance.GetObj(dropitem.Drop, drop_pos, Quaternion.identity);
-
+        for (int i = 0; i < stackCount; i++)
+        {
+            ObjectPoolMgr.instance.GetObj(dropitem.Drop, drop_pos, Quaternion.identity);
+        }
         Player_Bag.currentDraggingItem = null;
         Player_Bag.IsDragging = false;
     }
@@ -149,24 +159,23 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     }
     #endregion
     #region 点击
-    public void Display_Intro(Item_Data _Data)
-    {
-        Introduction_Mrg.instance.Intro_Name.text = $"{_Data.item_name}";
-        Introduction_Mrg.instance.Intro_Image.sprite = _Data.Display_In_Backpacks;
-        if (_Data.item_Kind == Item_Kind.Material)
-        {
-            string a = $"类型:制造材料";
-            string content = $"价值:{_Data.PriceValue}\n{a}";
-            Introduction_Mrg.instance.Intro_Value.text = $"{content}";
-        }
-        else if (_Data.item_Kind == Item_Kind.Consumable)
-        {
-            string a = $"类型:消耗品";
-            string content = $"价值:{_Data.PriceValue}\n{a}";
-            Introduction_Mrg.instance.Intro_Value.text = $"{content}";
-        }
-        Introduction_Mrg.instance.Intro_Introduce.text = $"物品介绍:\n{_Data.Introduction}";
-    }
+    //public void Display_Intro(Item_Data _Data)
+    //{
+    //    if (_Data.item_Kind == Item_Kind.Material)
+    //    {
+    //        string a = $"类型:制造材料";
+    //        string content = $"价值:{_Data.PriceValue}\n{a}";
+    //        Introduction_Mrg.instance.Intro_Name.text = $"{_Data.item_name}\n\n\n{content}";
+    //    }
+    //    else if (_Data.item_Kind == Item_Kind.Consumable)
+    //    {
+    //        string a = $"类型:消耗品";
+    //        string content = $"价值:{_Data.PriceValue}\n{a}";
+    //        Introduction_Mrg.instance.Intro_Name.text = $"{_Data.item_name}\n\n\n{content}";
+    //    }
+    //    Introduction_Mrg.instance.Intro_Image.sprite = _Data.Display_In_Backpacks;
+    //    Introduction_Mrg.instance.Intro_Introduce.text = $"物品介绍:\n{_Data.Introduction}";
+    //}
     public void OnPointerClick(PointerEventData eventData)
     {
         //左键点击
@@ -174,29 +183,53 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         {
 
         }
-        //右键点击
+        //中键点击
         else if (eventData.button == PointerEventData.InputButton.Middle)
         {
-            Debug.Log("右键点击");
+            Introduction_Mrg.instance.StopTrack();
             //后面写使用
-            if (data.item_Kind != Item_Kind.Consumable)
+            if (data.item_Kind == Item_Kind.Material)
             {
-                Panel_Mgr.instance.ShowComfirmPanel("该物品无法放进快捷装备栏", true, null);
+                PickNoticeMgr.instance.ShowFieldTip($"无法将原材料装备至道具栏");
                 return;
             }
-            bool HaveArmed = Game_Event.instance.SameEquip(this);
-            Panel_Mgr.instance.ShowComfirmPanel($"确定将{data.item_name}{(HaveArmed ? "从装备栏卸下" : "装备至装备栏")}?", false, () =>
+            else if (data.item_Kind == Item_Kind.Consumable)
             {
-                Debug.Log(HaveArmed);
-                Game_Event.instance.EquipInQuick(HaveArmed ? null : this);
-                Player_Bag.RefrshArms();
-            });
+                bool HaveArmed = Game_Event.instance.SameEquip(this);
+                Panel_Mgr.instance.ShowComfirmPanel($"确定将{data.item_name}{(HaveArmed ? "从道具栏卸下" : "装备至道具栏")}?", false, () =>
+                {
+                    Debug.Log(HaveArmed);
+                    PickNoticeMgr.instance.ShowFieldTip($"已将{data.item_name}{(HaveArmed ? "从道具栏卸下" : "装备至道具栏")}");
+                    Game_Event.instance.EquipInQuick(HaveArmed ? null : this);
+                    Player_Bag.RefrshArms();
+                });
+                return;
+            }
+            else if (data.item_Kind == Item_Kind.Weapon)
+            {
+                Panel_Mgr.instance.ShowComfirmPanel($"确定将{data.item_name}装备至装备栏",false, () =>
+                {
+                    Game_Event.instance.ShowArms();
+
+                    PickNoticeMgr.instance.ShowFieldTip($"已将{data.item_name}装备至装备栏");
+                    Game_Event.instance.EquipW(data);
+                    RemoveSelfItem();
+                });
+                return;
+            }
         }
+        else if (eventData.button == PointerEventData.InputButton.Right)
+        {
+
+        }
+    }
+    public Item_Data GetData(Item_Data data)
+    {
+        return data;
     }
     #endregion
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Introduction_Mrg.instance.CanShow = false;
         Player_Bag.IsDragging = true;
         originalPos = rect.anchoredPosition;
         Player_Bag.currentDraggingItem = this;
@@ -207,7 +240,6 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     public void OnDrag(PointerEventData eventData)
     {
         Player_Bag.IsDragging = true;
-        Introduction_Mrg.instance.CanShow = false;
 
         Vector2 localMousePos;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(Player_Bag.Images, eventData.position, eventData.pressEventCamera, out localMousePos);
@@ -223,7 +255,6 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     }
     public void OnEndDrag(PointerEventData eventData)
     {
-        Introduction_Mrg.instance.CanShow = true;
         Vector2 localPoint;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(Player_Bag.Images, eventData.position, eventData.pressEventCamera, out localPoint);
 
@@ -244,20 +275,34 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     }
     public void Try_New_Place(int targetX, int targetY)
     {
-        int selfStackCount = Player_Bag.bag[startPos.y, startPos.x].stackCount;
+        Bag_SingleSlot[,] currentBag = Player_Bag.CurrentViewBag;
+        int selfStackCount = currentBag[startPos.y, startPos.x].stackCount;
+
         int selfMainX = startPos.x;
         int selfMainY = startPos.y;
         Item_Data selfItem = data;
         int selfW = data.Width;
         int selfH = data.Height;
+
         if (GetSlotItemInfo(targetX, targetY, out Item_Data targetItem, out int tMainX, out int tMainY, out int tW, out int tH, out int tStack))
         {
-            if (selfItem.item_id == targetItem.item_id && selfItem.Stackable)
+            if (selfItem.item_id == targetItem.item_id && selfItem.Stackable && selfItem.item_Kind != Item_Kind.Weapon)
             {
+                if (tStack >= selfItem.StackMax)
+                {
+                    Back_To_OriginPlace();
+                    return;
+                }
+                if (tStack + selfStackCount > selfItem.StackMax)
+                {
+                    Back_To_OriginPlace();
+                    return;
+                }
+
                 Player_Bag.RemoveItem(selfMainX, selfMainY, selfW, selfH);
-                int newTotal = Player_Bag.bag[tMainY, tMainX].stackCount + selfStackCount;
-                newTotal = Mathf.Min(newTotal, 99);
-                Player_Bag.bag[tMainY, tMainX].stackCount = newTotal;
+                int newTotal = currentBag[tMainY, tMainX].stackCount + selfStackCount;
+                newTotal = Mathf.Min(newTotal, selfItem.StackMax);
+                currentBag[tMainY, tMainX].stackCount = newTotal;
 
                 Destroy(gameObject);
                 Player_Bag.Init_Resort_List();
@@ -277,11 +322,11 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
             bool bCanPutAtA = Player_Bag.Empty_Check(selfMainX, selfMainY, tH, tW);
             if (aCanPutAtB && bCanPutAtA)
             {
-                Player_Bag.bag[tMainY, tMainX].stackCount = selfStackCount;
+                currentBag[tMainY, tMainX].stackCount = selfStackCount;
                 Player_Bag.PlaceItem(selfItem, tMainX, tMainY);
-                Player_Bag.bag[selfMainY, selfMainX].stackCount = tStack;
+                currentBag[selfMainY, selfMainX].stackCount = tStack;
                 Player_Bag.PlaceItem(targetItem, selfMainX, selfMainY);
-                Player_Bag.Save_Bag(Player_Bag.path);
+
                 Destroy(gameObject);
                 Player_Bag.Init_Resort_List();
                 Player_Bag.ReClean_Bag_Display();
@@ -299,17 +344,18 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
             }
         }
         Player_Bag.RemoveItem(selfMainX, selfMainY, selfW, selfH);
-        bool canPlace = !(targetX < 0 || targetY < 0 || targetX + selfW > Player_Bag.Bag_Col || targetY + selfH > Player_Bag.Bag_Row || !Player_Bag.Empty_Check(targetX, targetY, selfH, selfW));
+        var bagSize = Player_Bag.GetCurrentBagSize();
+        bool canPlace = !(targetX < 0 || targetY < 0 || targetX + selfW > bagSize.Col || targetY + selfH > bagSize.Row || !Player_Bag.Empty_Check(targetX, targetY, selfH, selfW));
         if (!canPlace)
         {
             Back_To_OriginPlace();
-            Player_Bag.bag[selfMainY, selfMainX].stackCount = selfStackCount;
+            currentBag[selfMainY, selfMainX].stackCount = selfStackCount;
             Player_Bag.PlaceItem(selfItem, selfMainX, selfMainY);
             Player_Bag.ReClean_Bag_Display();
             Player_Bag.Refresh_Bag_Display();
             return;
         }
-        Player_Bag.bag[targetY, targetX].stackCount = selfStackCount;
+        currentBag[targetY, targetX].stackCount = selfStackCount;
         Player_Bag.PlaceItem(selfItem, targetX, targetY);
         Player_Bag.Init_Resort_List();
         Player_Bag.ReClean_Bag_Display();
@@ -323,12 +369,12 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         w = 0;
         h = 0;
         stackNum = 0;
-        if (x < 0 || y < 0 || x >= Player_Bag.Bag_Col || y >= Player_Bag.Bag_Row)
+        var bagSize = Player_Bag.GetCurrentBagSize();
+        if (x < 0 || y < 0 || x >= bagSize.Col || y >= bagSize.Row)
         {
             return false;
         }
-
-        Bag_SingleSlot slot = Player_Bag.bag[y, x];
+        Bag_SingleSlot slot = Player_Bag.CurrentViewBag[y, x];
         if (!slot.Have_Item)
         {
             return false;
@@ -385,14 +431,19 @@ public class Item_Dragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Introduction_Mrg.instance.gameObject.SetActive(true);
-        Introduction_Mrg.instance.OnItem(data);
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-        Player_Bag.Images,
-        eventData.position,
-        eventData.pressEventCamera,
-        out Vector2 localMousePos
-    );
+        Introduction_Mrg.instance.SetContent(data);
         Introduction_Mrg.instance.StartTrack();
+    }
+    public void RemoveSelfItem()
+    {
+        Bag_SingleSlot[,] curBag = Player_Bag.CurrentViewBag;
+        int sx = startPos.x;
+        int sy = startPos.y;
+        int w = data.Width;
+        int h = data.Height;
+        Player_Bag.RemoveItem(sx, sy, w, h);
+        Player_Bag.Init_AllResortList();
+        Player_Bag.ReClean_Bag_Display();
+        Player_Bag.Refresh_Bag_Display();
     }
 }

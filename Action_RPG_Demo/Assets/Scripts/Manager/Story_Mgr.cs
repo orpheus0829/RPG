@@ -106,6 +106,17 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
     {
         Game_Event.instance.ModifyEnemyDamage += ModifyD;
         Game_Event.instance.ModifyEnemyMaxHP += ModifyH;
+        //    TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.RealTimeUnscaled, 0, 1f, null, () =>
+        //    {
+        //        if ((CurQuest.InBattleZone && SceneManager.GetActiveScene().name == "City") || (!CurQuest.InBattleZone && SceneManager.GetActiveScene().name == "Battle"))
+        //        {
+        //            NavPathMgr.instance.OpenNavPath(GameObject.FindObjectOfType<Portal>().transform.position);
+        //        }
+        //        else
+        //        {
+        //            NavPathMgr.instance.OpenNavPath(CurQuestPos);
+        //        }
+        //    });
     }
     public void OnDisable()
     {
@@ -130,7 +141,18 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
             Init = false;
         }
         CurQuestPos = CalculateQuestPos();
-        //NavPathMgr.instance.targetPoint = CurQuestPos;
+        if (!MissionTitle)
+        {
+            MissionTitle = GameObject.FindObjectOfType<BaseStoryUI>().GetComponent<TextMeshProUGUI>();
+            MissionContent = MissionTitle.gameObject.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
+            Refresh_StoryUI(CurQuest);
+        }
+        NavPathMgr.instance.targetPoint = CurQuestPos;
+        if (MissionTitle || MissionContent)
+        {
+            MissionTitle.GetComponent<RectTransform>().anchoredPosition = new Vector2(-1150, 100);
+            MissionContent.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -65);
+        }
     }
     #region 设置数据
     public void Init_Story()
@@ -223,7 +245,22 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
         Refresh_StoryProgress();
         Refresh_StoryUI(CurQuest);
         CurQuestPos = CalculateQuestPos();
-        NavPathMgr.instance.OpenNavPath(CurQuestPos);
+        Refresh_StoryUI(CurQuest);
+        if (CurQuest is FightQuest_SO fight)
+        {
+            if (SceneManager.GetActiveScene().name != "Battle")
+            {
+                NavPathMgr.instance.OpenNavPath(FindObjectOfType<Portal>().transform.position);
+            }
+            else
+            {
+                NavPathMgr.instance.OpenNavPath(CurQuestPos);
+            }
+        }
+        else
+        {
+            NavPathMgr.instance.OpenNavPath(CurQuestPos);
+        }
     }
     public QuestBase_SO GetCurrentQuest()
     {
@@ -276,6 +313,10 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
         }
         if (curQuest is Dialogue_SO curDialogueQuest)
         {
+            if (SceneManager.GetActiveScene().name == "Battle")
+            {
+                return;
+            }
             Dialogue_Set targetActor = GetDialogueActorByDialogueSO(curDialogueQuest);
             if (targetActor != null)
             {
@@ -292,10 +333,16 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
         }
         else if (curQuest is FightQuest_SO curFightQuest)
         {
+            if (SceneManager.GetActiveScene().name != "Battle"){
+                //去大城市开打
+                return;
+            }
             foreach (var i in curFightQuest.Quest_Enemys)
             {
+                Vector3 p = BattleSave.instance.transform.position;
+                Vector3 spawnpos = new Vector3(Random.Range(p.x - 10, p.x + 10), p.y, Random.Range(p.z - 10, p.z + 10));
                 //GameObject e = Instantiate(i.Enemy, i.Location, Quaternion.identity);
-                GameObject e = ObjectPoolMgr.instance.GetObj(i.Enemy, i.Location);
+                GameObject e = ObjectPoolMgr.instance.GetObj(i.Enemy, spawnpos);
                 Debug.Log($"生成{e.name}");
                 if (e.TryGetComponent(out BaseEnemy enemyprefab))
                 {
@@ -308,6 +355,10 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
         }
         else if (curQuest is CollectQuest_SO curCollectQuest)
         {
+            if (SceneManager.GetActiveScene().name == "Battle")
+            {
+                return;
+            }
             foreach (var i in curCollectQuest.single_QuestItems)
             {
                 GameObject d = ObjectPoolMgr.instance.GetObj(i.QuestItem, i.Loaction);
@@ -459,7 +510,10 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
     {
         if (!MissionTitle|| !MissionContent)
         {
-            return;
+            MissionTitle = GameObject.FindObjectOfType<BaseStoryUI>().GetComponent<TextMeshProUGUI>();
+            MissionTitle.GetComponent<RectTransform>().anchoredPosition = new Vector2(-1150, 100);
+            MissionContent = MissionTitle.gameObject.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
+            MissionContent.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -65);
         }
         HashSet<string> nameSet = new HashSet<string>();
         string itemText = string.Empty;

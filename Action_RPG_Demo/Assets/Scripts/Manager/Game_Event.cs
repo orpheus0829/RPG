@@ -52,6 +52,14 @@ public class Game_Event : Base_mgr<Game_Event>
     //快捷栏
     public event Action<Item_Dragger> Equip;
     public event Func<Item_Dragger, bool> AlreadyEquip;
+    //装备栏
+    public event Action<Item_Data> EquipWeapon;
+    public event Action<Item_Data> ReturnOldEquipToBag;
+    public event Action<BodyArmEquip> SendArmToPlayer;
+    public event Action<EquipWeaponData, AllData_Item> RefreshAllArmEquip;
+    public event Action ShowArmSlots;
+    //传送
+    public event Action<Transform> PortalActive;
     protected override void Awake()
     {
         base.Awake();
@@ -59,6 +67,10 @@ public class Game_Event : Base_mgr<Game_Event>
         {
             DontDestroyOnLoad(this.gameObject);
         }
+    }
+    public void PlayTraderNod()
+    {
+        Current_Trader.PlayTraderShow(Current_Trader.Nod);
     }
     public int Get_InitStore_ListenerCount()
     {
@@ -196,6 +208,34 @@ public class Game_Event : Base_mgr<Game_Event>
     public bool SameEquip(Item_Dragger dragger)
     {
         return AlreadyEquip.Invoke(dragger);
+    }
+    #endregion
+    #region 装备栏
+    public void EquipW(Item_Data data)
+    {
+        EquipWeapon?.Invoke(data);
+    }
+    public void SendReturnOldEquip(Item_Data oldItem)
+    {
+        ReturnOldEquipToBag?.Invoke(oldItem);
+    }
+    public void SendBackArmData(BodyArmEquip equip)
+    {
+        SendArmToPlayer?.Invoke(equip);
+    }
+    public void BroadcastRefreshAllArmEquip(EquipWeaponData equipData,AllData_Item allData)
+    {
+        RefreshAllArmEquip?.Invoke(equipData, allData);
+    }
+    public void ShowArms()
+    {
+        ShowArmSlots?.Invoke();
+    }
+    #endregion
+    #region 传送
+    public void PortalAc(Transform pl)
+    {
+        PortalActive?.Invoke(pl);
     }
     #endregion
 }

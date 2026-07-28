@@ -21,13 +21,13 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
     [Header("任务提示")]
     public GameObject CenterText;
     public Transform CenterParent;
-    private string MissionUpdate;
+    private string _missionUpdate;
     public string MissionSuccess;
     public float CenterFadeDuration;
     public float CenterAnimDuration;
     public float CenterSlideOffsetx;
     public bool CenterAnimRunning;
-    [Header("字段提示")]
+    [Header("字段提示/对话Tip")]
     public GameObject TextNote;
     public Transform TextNoteParent;
     public float FieldEnterTime = 0.4f;
@@ -36,6 +36,22 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
     public float EnterOffsetY = -400f;
     public float StayMoveY = 120f;
     public float ExitExtraMoveY = 300f;
+
+    [Header("对话配置")]
+    public float DialogueItemSpacing = 60f;
+    public float DialogueLayoutAnimTime = 0.5f;
+    public float DialogueFadeOutTime = 0.25f;
+    [System.Serializable]
+    public class ActiveDialogueItem
+    {
+        public string speaker;
+        public GameObject obj;
+        public Transform trans;
+        public CanvasGroup cg;
+        public TextMeshProUGUI txt;
+        public TimeMgr.TimerTask timerTask;
+    }
+    public List<ActiveDialogueItem> ActiveDialogueList = new List<ActiveDialogueItem>();
 
     protected override void Awake()
     {
@@ -51,7 +67,7 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
     }
     public void Update()
     {
-
+        // 完全移除UpdateActiveDialogues，不再手动倒计时
     }
     #region 拾取
     public void AddNote(Item_Data data)
@@ -89,21 +105,20 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
         enterSeq.SetUpdate(UpdateType.Normal, true);
 
         Notices.Enqueue(n);
-        StartCoroutine(WaitExitAnim(n, noteTrans, cg));
+        // 替换协程，改用TimeMgr真实时间计时器
+        TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.RealTimeUnscaled, 0, FadeDuration, null, () =>
+        {
+            Sequence exitSeq = DOTween.Sequence();
+            exitSeq.Join(noteTrans.DOLocalMoveX(-SlideOffsetx, AnimDuration).SetEase(Ease.InQuad));
+            exitSeq.Join(cg.DOFade(0, AnimDuration));
+            exitSeq.SetUpdate(UpdateType.Normal, true);
+            exitSeq.OnComplete(() => DelNote(n));
+        });
     }
-    public IEnumerator WaitExitAnim(GameObject obj, Transform trans, CanvasGroup cg)
-    {
-        yield return new WaitForSecondsRealtime(FadeDuration);
 
-        Sequence exitSeq = DOTween.Sequence();
-        exitSeq.Join(trans.DOLocalMoveX(-SlideOffsetx, AnimDuration).SetEase(Ease.InQuad));
-        exitSeq.Join(cg.DOFade(0, AnimDuration));
-        exitSeq.SetUpdate(UpdateType.Normal, true);
-        exitSeq.OnComplete(() => DelNote(obj));
-    }
     public void DelNote(GameObject obj)
     {
-        if (Notices.Peek() == obj)
+        if (Notices.Count > 0 && Notices.Peek() == obj)
         {
             Notices.Dequeue();
         }
@@ -130,23 +145,22 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
     public void MissionNext()
     {
         Debug.Log("进入下一个任务");
-        MissionUpdate = $"下一幕:{Story_Mgr.instance.CurQuest.Quest_Title}";
+        _missionUpdate = $"下一幕:{Story_Mgr.instance.CurQuest.Quest_Title}";
         float delay = CenterAnimRunning ? (CenterAnimDuration * 2 + CenterFadeDuration) : 0f;
-        EnqueueCenterText(MissionUpdate, delay);
+        EnqueueCenterText(_missionUpdate, delay);
     }
     private void EnqueueCenterText(string sourceText, float delay = 0f)
     {
-        StartCoroutine(DelayAddToQueue(sourceText, delay));
-    }
-    private IEnumerator DelayAddToQueue(string text, float delayTime)
-    {
-        yield return new WaitForSecondsRealtime(delayTime);
-        GameObject obj = CreateCenterTextObj(text);
-        CenterAnounce.Enqueue(obj);
-        if (!CenterAnimRunning)
+        // 替换协程延时，使用TimeMgr真实时间
+        TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.RealTimeUnscaled, 0, delay, null, () =>
         {
-            StartCoroutine(ProcessCenterQueue());
-        }
+            GameObject obj = CreateCenterTextObj(sourceText);
+            CenterAnounce.Enqueue(obj);
+            if (!CenterAnimRunning)
+            {
+                ProcessCenterQueue();
+            }
+        });
     }
 
     private GameObject CreateCenterTextObj(string t)
@@ -164,32 +178,38 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
         return obj;
     }
 
-    private IEnumerator ProcessCenterQueue()
+    private void ProcessCenterQueue()
     {
-        CenterAnimRunning = true;
-        while (CenterAnounce.Count > 0)
+        if (CenterAnounce.Count <= 0)
         {
-            GameObject curObj = CenterAnounce.Dequeue();
-            Transform trans = curObj.transform;
-            CanvasGroup cg = curObj.GetComponent<CanvasGroup>();
-            cg.alpha = 0;
-            trans.localPosition = new Vector3(CenterSlideOffsetx, 0, 0);
-            Sequence enterSeq = DOTween.Sequence();
-            enterSeq.Join(trans.DOLocalMoveX(0, CenterAnimDuration).SetEase(Ease.OutQuad));
-            enterSeq.Join(cg.DOFade(1, CenterAnimDuration));
-            enterSeq.SetUpdate(UpdateType.Normal, true);
-            yield return enterSeq.WaitForCompletion();
-
-            yield return new WaitForSecondsRealtime(CenterFadeDuration);
-
-            Sequence exitSeq = DOTween.Sequence();
-            exitSeq.Join(trans.DOLocalMoveX(-CenterSlideOffsetx, CenterAnimDuration).SetEase(Ease.InQuad));
-            exitSeq.Join(cg.DOFade(0, CenterAnimDuration));
-            exitSeq.SetUpdate(UpdateType.Normal, true);
-            yield return exitSeq.WaitForCompletion();
-            RecycleCenterObj(curObj);
+            CenterAnimRunning = false;
+            return;
         }
-        CenterAnimRunning = false;
+        CenterAnimRunning = true;
+        GameObject curObj = CenterAnounce.Dequeue();
+        Transform trans = curObj.transform;
+        CanvasGroup cg = curObj.GetComponent<CanvasGroup>();
+        cg.alpha = 0;
+        trans.localPosition = new Vector3(CenterSlideOffsetx, 0, 0);
+        Sequence enterSeq = DOTween.Sequence();
+        enterSeq.Join(trans.DOLocalMoveX(0, CenterAnimDuration).SetEase(Ease.OutQuad));
+        enterSeq.Join(cg.DOFade(1, CenterAnimDuration));
+        enterSeq.SetUpdate(UpdateType.Normal, true);
+        enterSeq.OnComplete(() =>
+        {
+            TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.RealTimeUnscaled, 0, CenterFadeDuration, null, () =>
+            {
+                Sequence exitSeq = DOTween.Sequence();
+                exitSeq.Join(trans.DOLocalMoveX(-CenterSlideOffsetx, CenterAnimDuration).SetEase(Ease.InQuad));
+                exitSeq.Join(cg.DOFade(0, CenterAnimDuration));
+                exitSeq.SetUpdate(UpdateType.Normal, true);
+                exitSeq.OnComplete(() =>
+                {
+                    RecycleCenterObj(curObj);
+                    ProcessCenterQueue();
+                });
+            });
+        });
     }
     private void RecycleCenterObj(GameObject obj)
     {
@@ -198,16 +218,16 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
         ObjectPoolMgr.instance.PushObj(obj);
     }
     #endregion
-    # region 字段提示
+    #region 字段提示
     public void ShowFieldTip(string Content)
     {
         GameObject TipObj = CreateFieldTipObj(Content);
-        StartCoroutine(PlaySingleFieldTipAnim(TipObj));
+        PlaySingleFieldTipAnim(TipObj);
     }
-
     public GameObject CreateFieldTipObj(string TextContent)
     {
         GameObject Obj = ObjectPoolMgr.instance.GetObj(TextNote, TextNoteParent);
+        Obj.name = "FieldTip";
         TextMeshProUGUI Txt = Obj.GetComponent<TextMeshProUGUI>();
         Txt.text = TextContent;
 
@@ -221,7 +241,7 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
         Obj.transform.localPosition = new Vector3(0, EnterOffsetY, 0);
         return Obj;
     }
-    private IEnumerator PlaySingleFieldTipAnim(GameObject CurTip)
+    private void PlaySingleFieldTipAnim(GameObject CurTip)
     {
         Transform TipTrans = CurTip.transform;
         CanvasGroup Cg = CurTip.GetComponent<CanvasGroup>();
@@ -230,20 +250,23 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
         EnterSeq.Join(TipTrans.DOLocalMoveY(0, FieldEnterTime).SetEase(Ease.OutExpo));
         EnterSeq.Join(Cg.DOFade(1, FieldEnterTime));
         EnterSeq.SetUpdate(UpdateType.Normal, true);
-        yield return EnterSeq.WaitForCompletion();
-
-        Sequence StaySeq = DOTween.Sequence();
-        StaySeq.Join(TipTrans.DOLocalMoveY(StayMoveY, FieldStayMoveTime).SetEase(Ease.Linear));
-        StaySeq.SetUpdate(UpdateType.Normal, true);
-        yield return StaySeq.WaitForCompletion();
-
-        Sequence ExitSeq = DOTween.Sequence();
-        ExitSeq.Join(TipTrans.DOLocalMoveY(StayMoveY + ExitExtraMoveY, FieldExitTime).SetEase(Ease.InExpo));
-        ExitSeq.Join(Cg.DOFade(0, FieldExitTime));
-        ExitSeq.SetUpdate(UpdateType.Normal, true);
-        yield return ExitSeq.WaitForCompletion();
-
-        RecycleFieldTipObj(CurTip);
+        EnterSeq.OnComplete(() =>
+        {
+            Sequence StaySeq = DOTween.Sequence();
+            StaySeq.Join(TipTrans.DOLocalMoveY(StayMoveY, FieldStayMoveTime).SetEase(Ease.Linear));
+            StaySeq.SetUpdate(UpdateType.Normal, true);
+            StaySeq.OnComplete(() =>
+            {
+                Sequence ExitSeq = DOTween.Sequence();
+                ExitSeq.Join(TipTrans.DOLocalMoveY(StayMoveY + ExitExtraMoveY, FieldExitTime).SetEase(Ease.InExpo));
+                ExitSeq.Join(Cg.DOFade(0, FieldExitTime));
+                ExitSeq.SetUpdate(UpdateType.Normal, true);
+                ExitSeq.OnComplete(() =>
+                {
+                    RecycleFieldTipObj(CurTip);
+                });
+            });
+        });
     }
 
     public void RecycleFieldTipObj(GameObject Obj)
@@ -252,6 +275,107 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
         Txt.text = string.Empty;
         Obj.transform.DOKill();
         ObjectPoolMgr.instance.PushObj(Obj);
+    }
+    #endregion
+    #region 台词显示
+    public void ShowDialogueTip(string speakerName, string dialogueContent, float displayTime)
+    {
+        ActiveDialogueItem existItem = null;
+        foreach (var item in ActiveDialogueList)
+        {
+            if (item.speaker == speakerName)
+            {
+                existItem = item;
+                break;
+            }
+        }
+        if (existItem != null)
+        {
+            string prefix = string.IsNullOrEmpty(speakerName) ? "" : $"{speakerName}:";
+            existItem.txt.text = $"{prefix}{dialogueContent}";
+            if (existItem.timerTask != null)
+            {
+                TimeMgr.instance.StopTimer(existItem.timerTask);
+            }
+            CreateDialogueTimer(existItem, displayTime);
+            return;
+        }
+        GameObject tipObj = ObjectPoolMgr.instance.GetObj(TextNote, TextNoteParent);
+        tipObj.name = "DialogueTip";
+        TextMeshProUGUI txt = tipObj.GetComponent<TextMeshProUGUI>();
+        string n = string.IsNullOrEmpty(speakerName) ? "" : $"{speakerName}:";
+        txt.text = $"{n}{dialogueContent}";
+
+        CanvasGroup cg = tipObj.GetComponent<CanvasGroup>();
+        if (!cg)
+        {
+            cg = tipObj.AddComponent<CanvasGroup>();
+        }
+        cg.alpha = 0;
+        Transform trans = tipObj.transform;
+        trans.localPosition = new Vector3(0, -200, 0);
+
+        ActiveDialogueItem newItem = new ActiveDialogueItem()
+        {
+            speaker = speakerName,
+            obj = tipObj,
+            trans = trans,
+            cg = cg,
+            txt = txt,
+            timerTask = null
+        };
+        ActiveDialogueList.Add(newItem);
+        CreateDialogueTimer(newItem, displayTime);
+
+        Sequence enterSeq = DOTween.Sequence();
+        enterSeq.Join(trans.DOLocalMoveY(0, DialogueLayoutAnimTime).SetEase(Ease.OutQuad));
+        enterSeq.Join(cg.DOFade(1, DialogueLayoutAnimTime));
+        enterSeq.SetUpdate(true);
+        enterSeq.OnComplete(() => RefreshDialogueLayout());
+        RefreshDialogueLayout();
+    }
+
+    private void CreateDialogueTimer(ActiveDialogueItem item, float duration)
+    {
+        item.timerTask = TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.RealTimeUnscaled, 0, duration, null, () =>
+        {
+            if (!ActiveDialogueList.Contains(item)) return;
+            Sequence exitSeq = DOTween.Sequence();
+            exitSeq.Join(item.cg.DOFade(0, DialogueFadeOutTime));
+            exitSeq.SetUpdate(true);
+            exitSeq.OnComplete(() =>
+            {
+                RecycleFieldTipObj(item.obj);
+                ActiveDialogueList.Remove(item);
+                RefreshDialogueLayout();
+            });
+        });
+    }
+
+    private void RefreshDialogueLayout()
+    {
+        float startY = 0;
+        for (int i = 0; i < ActiveDialogueList.Count; i++)
+        {
+            var item = ActiveDialogueList[i];
+            float targetY = startY - i * DialogueItemSpacing;
+            item.trans.DOLocalMoveY(targetY, DialogueLayoutAnimTime).SetEase(Ease.OutQuad).SetUpdate(true);
+        }
+    }
+
+    // 清理全部对话（场景切换调用）
+    public void ClearAllDialogue()
+    {
+        foreach (var item in ActiveDialogueList)
+        {
+            if (item.timerTask != null)
+            {
+                TimeMgr.instance.StopTimer(item.timerTask);
+            }
+            item.obj.transform.DOKill();
+            RecycleFieldTipObj(item.obj);
+        }
+        ActiveDialogueList.Clear();
     }
     #endregion
 }

@@ -39,6 +39,8 @@ public class Drop_gameObject : MonoBehaviour
     }
     public void OnEnable()
     {
+        transform.localScale = Vector3.zero;
+        transform.DOScale(1f, 0.15f);
         col.enabled = true;
         transform.DOScale(1f, 0.2f);
     }

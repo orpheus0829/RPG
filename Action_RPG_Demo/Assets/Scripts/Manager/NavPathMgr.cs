@@ -66,7 +66,10 @@ public class NavPathMgr : Base_mgr<NavPathMgr>
         if (Time.time - lastRefreshTime > refreshInterval)
         {
             lastRefreshTime = Time.time;
-            RefreshPath();
+            if (targetPoint != null)
+            {
+                RefreshPath();
+            }
         }
     }
     public void OpenNavPath(Vector3 target)
@@ -90,7 +93,7 @@ public class NavPathMgr : Base_mgr<NavPathMgr>
     }
     private void RefreshPath()
     {
-        if (!player || targetPoint == null || navPath == null)
+        if (!player || targetPoint == Vector3.zero || navPath == null)
         {
             return;
         }

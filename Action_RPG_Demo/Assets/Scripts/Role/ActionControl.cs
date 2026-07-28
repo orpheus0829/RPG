@@ -301,15 +301,16 @@ public class ActionControl : BaseActor, INotificationReceiver
             {
                 continue;
             }
-            target.TakeDamage<BaseEnemy>(CurrentHitDamage * player.buffReceiver.DamageFactor, transform.forward);
+            float realdamage = CurrentHitDamage * player.buffReceiver.DamageFactor * (1 + 0.01f * player.DamageFac);
+            target.TakeDamage<BaseEnemy>(realdamage, transform.forward);
             CameraPivot.instance.StartCameraShake(player.HitShakePower, player.HitShakeDuration, player.HitShakeFade);
-            DamageNumberMgr.instance.ShowDamageNumber(c.transform.position, CurrentHitDamage * player.buffReceiver.DamageFactor);
+            DamageNumberMgr.instance.ShowDamageNumber(c.gameObject, (int)realdamage);
             if (currentAction.actionType == ActionType.Attack)
             {
-                player.Skill_PowerPool += CurrentHitDamage * player.PowerFactor;
+                player.Skill_PowerPool += CurrentHitDamage * player.PowerFactor * (1 + 0.01f * player.SpecialFac);
                 player.Skill_PowerPool = Mathf.Clamp(player.Skill_PowerPool, 0, player.playerSO.MaxPower);
             }
-            player.Charge += CurrentHitDamage * player.ChargeFactor;
+            player.Charge += CurrentHitDamage * player.ChargeFactor * (1 + 0.01f * player.EndFac);
             player.Charge = Mathf.Clamp(player.Charge, 0, player.playerSO.MaxCharge);
             //Debug.Log($"‘Ï≥…{CurrentHitDamage}…À∫¶");
             if (Hit_Force != 0 && c.TryGetComponent(out DamageReceiver rec))

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63f08684b98d78448b711cb70203875e, type: 3}
+  m_Name: EllenWeapon
+  m_EditorClassIdentifier: 
+  Display_In_Backpacks: {fileID: 21300000, guid: 8160e1cfd74d908468bd3138c182489a, type: 3}
+  Drop: {fileID: 4036299250517763226, guid: 65a780d7429dc8846af666a747487cab, type: 3}
+  Stackable: 0
+  StackMax: 1
+  item_name: "\u6DF1\u6D77\u8BBF\u5BA2"
+  item_id: 14
+  Height: 3
+  Width: 3
+  PriceValue: 500
+  Introduction: "\"\u6211\u60F3\u628A\u5B83\u5E26\u53BB\u5B66\u6821\u7528\u3002\u5C24\u5176\u662F\u590F\u5929\u3002\u4F46\u662F\u83B1\u5361\u6069\u548C\u4E3D\u5A1C\u4E0D\u5141\u8BB8\u2026\u771F\u9EBB\u70E6\u3002\"\u2014\u2014\u827E\u83B2\u4E00\u8FB9\u5403\u51B0\u4E00\u8FB9\u6447\u5934\u8BF4"
+  item_Kind: 2
+  buff: {fileID: 0}
+  EquipmentSlot: 4
+  MaxHP: 0
+  Defense: 0
+  MoveSpeed: 0
+  Attack: 30
+  SpecialGain: 10
+  EndGain: 2

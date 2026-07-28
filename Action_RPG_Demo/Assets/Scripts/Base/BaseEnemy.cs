@@ -25,6 +25,7 @@ public class BaseEnemy : MonoBehaviour
     public SkinnedMeshRenderer renderer;
     public HurtFlashRenderer flashRenderer;
     public BuffReceiver buffReceiver;
+    public GameObject DeadAndBorn;
     public virtual void Awake()
     {
         buffReceiver = GetComponent<BuffReceiver>();
@@ -35,11 +36,13 @@ public class BaseEnemy : MonoBehaviour
     }
     public virtual void OnEnable()
     {
+        ObjectPoolMgr.instance.GetObj(DeadAndBorn, transform.position, Quaternion.identity);
         IsDead = false;
         gameObject.tag = "Enemy";
     }
     public virtual void OnDisable()
     {
+        ObjectPoolMgr.instance.GetObj(DeadAndBorn, transform.position, Quaternion.identity);
         QuestBase_SO questBase = Story_Mgr.instance.GetCurrentQuest();
         if (IsQuest && questBase is FightQuest_SO fight && Story_Mgr.instance.CurEnemys.Contains(this.gameObject))
         {
@@ -79,7 +82,7 @@ public class BaseEnemy : MonoBehaviour
     }
     public virtual void TurnToPlayer(float time , float rotatesmmoth)
     {
-        if (!PlayerList[0])
+        if (PlayerList.Count<0)
         {
             return;
         }

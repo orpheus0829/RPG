@@ -15,7 +15,7 @@ MonoBehaviour:
   Quest_Title: "\u52A9\u4EBA\u4E3A\u4E50"
   Quest_Description: "\u5E2E\u52A9\u6536\u96C6\u5931\u6563\u7684\u8D27\u7269"
   single_QuestItems:
-  - Loaction: {x: -5.932609, y: -0.9905935, z: 10.33721}
+  - Loaction: {x: 48, y: 2, z: -110}
     QuestItem: {fileID: 4036299250517763226, guid: 64d161106ea870748a69c5f73fb87a63, type: 3}
     ItemGets:
     - CountGet: 1

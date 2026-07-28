@@ -55,7 +55,6 @@ public class CameraPivot : Base_mgr<CameraPivot>
     public float cacheNormalRotX;
     public float cacheNormalRotY;
     public float cacheNormalDistance;
-    // 缓存原始常态高度
     public float cacheNormalHeight;
     public Coroutine currentCameraAnimCoroutine;
 
@@ -80,9 +79,6 @@ public class CameraPivot : Base_mgr<CameraPivot>
         {
             DontDestroyOnLoad(this.gameObject);
         }
-        GameObject pl = GameObject.FindGameObjectWithTag("Player");
-        target = pl.GetComponent<Transform>();
-        camTrans = GetComponentInChildren<Camera>().transform;
         if (camTrans != null)
         {
             _originLocalPos = camTrans.localPosition;
@@ -109,7 +105,31 @@ public class CameraPivot : Base_mgr<CameraPivot>
     {
         TargetDistance -= scrollDelta * ZoomSpeed;
     }
-
+    public void Update()
+    {
+        if (!target)
+        {
+            GameObject pl = GameObject.FindGameObjectWithTag("Player");
+            if (pl)
+            {
+                target = pl.transform;
+            }
+        }
+        if (!camTrans)
+        {
+            for (int i = transform.childCount - 1; i >= 0; i--)
+            {
+                Destroy(transform.GetChild(i).gameObject);
+            }
+            camTrans = GameObject.FindGameObjectWithTag("MainCamera").transform;
+            camTrans.SetParent(this.transform);
+            camTrans.localPosition = Vector3.zero;
+            camTrans.localRotation = Quaternion.identity;
+            Camera c = camTrans.GetComponent<Camera>();
+            c.fieldOfView = 30;
+            c.cullingMask &= ~(1 << LayerMask.NameToLayer("EquipStage"));
+        }
+    }
     public void LateUpdate()
     {
         if (!isPlayingCameraAnim)
@@ -126,7 +146,7 @@ public class CameraPivot : Base_mgr<CameraPivot>
         }
         Quaternion cameraRotation = transform.rotation;
         Vector3 cameraDir = cameraRotation * Vector3.back;
-        if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.DialoguePanel))
+        if (Panel_Mgr.instance && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.DialoguePanel) && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.ConfirmPanel))
         {
             float mX = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
             float mY = Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;

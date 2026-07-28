@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63f08684b98d78448b711cb70203875e, type: 3}
+  m_Name: Bandage
+  m_EditorClassIdentifier: 
+  Display_In_Backpacks: {fileID: 21300000, guid: 57aea0d1ba5f15c43936be025d2257a6, type: 3}
+  Drop: {fileID: 1966965987177435940, guid: dd9b869b2d44cff41b4fcb81390bad8d, type: 3}
+  Stackable: 1
+  StackMax: 16
+  item_name: "\u7EF7\u5E26"
+  item_id: 5
+  Height: 1
+  Width: 1
+  PriceValue: 200
+  Introduction: "\u6682\u4E14\u53EF\u7528\u4E8E\u6B62\u8840\u7684\u7B80\u6613\u7EF7\u5E26\uFF0C\u53EF\u77AC\u95F4\u6062\u590D\u4E00\u5B9A\u8840\u91CF"
+  item_Kind: 1
+  buff: {fileID: 11400000, guid: 9c561331b36994641badc9fb2c65a74c, type: 2}

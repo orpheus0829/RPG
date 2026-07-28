@@ -162,42 +162,45 @@ public abstract class BaseBag : MonoBehaviour
     }
     public virtual bool Pick_Up(Item_Data data, int pickNum = 1)
     {
-        if (pickNum <= 0)
+        if (pickNum <= 0 || data == null)
         {
             return false;
         }
+        int remaining = pickNum;
         if (IsStackableBag && data.Stackable)
         {
-            for (int y = 0; y < Bag_Row; y++)
+            for (int y = 0; y < Bag_Row && remaining > 0; y++)
             {
-                for (int x = 0; x < Bag_Col; x++)
+                for (int x = 0; x < Bag_Col && remaining > 0; x++)
                 {
                     Bag_SingleSlot slot = bag[y, x];
-                    if (slot.Have_Item && slot.item_ID == data.item_id)
+                    if (slot.Have_Item && slot.item_ID == data.item_id && slot.stackCount < data.StackMax)
                     {
-                        int newTotal = slot.stackCount + pickNum;
-                        if (newTotal > 99) newTotal = 99;
-                        slot.stackCount = newTotal;
-
-                        ReClean_Bag_Display();
-                        Refresh_Bag_Display();
-                        Save_Bag(path);
-                        return true;
+                        int canAdd = data.StackMax - slot.stackCount;
+                        int addCount = Mathf.Min(canAdd, remaining);
+                        bag[y, x].stackCount += addCount;
+                        remaining -= addCount;
                     }
                 }
             }
         }
-        Find_Empty_Location(data.Height, data.Width, out int res_x, out int res_y);
-        if (res_x == -1)
+        while (remaining > 0)
         {
-            return false;
+            Find_Empty_Location(data.Height, data.Width, out int res_x, out int res_y);
+            if (res_x == -1 || res_y == -1)
+            {
+                Refresh_Bag_Display();
+                Save_Bag(path);
+                return pickNum - remaining > 0;
+            }
+            int placeCount = Mathf.Min(remaining, data.StackMax);
+            bag[res_y, res_x].stackCount = placeCount;
+            PlaceItem(data, res_x, res_y);
+            remaining -= placeCount;
         }
-
-        bag[res_y, res_x].stackCount = pickNum;
-        PlaceItem(data, res_x, res_y);
-        Save_Bag(path);
         ReClean_Bag_Display();
         Refresh_Bag_Display();
+        Save_Bag(path);
         return true;
     }
     public virtual void Find_Empty_Location(int h, int w, out int x, out int y)

@@ -45,7 +45,10 @@ public class BasePanel : MonoBehaviour
     public void Start()
     {
         BindTag = gameObject.name;
-        Panel_Mgr.instance.AutoBindAllPanel();
+        if (Panel_Mgr.instance)
+        {
+            Panel_Mgr.instance.AutoBindAllPanel();
+        }
         HidePanel();
         if (ConstantShow)
         {
@@ -55,6 +58,7 @@ public class BasePanel : MonoBehaviour
 
     public void PlayShowAnim()
     {
+        DOTween.Kill(transform);
         if (SkipSlideAnim || _directChildList.Count == 0)
         {
             ShowPanel();
@@ -80,6 +84,8 @@ public class BasePanel : MonoBehaviour
 
     public void PlayHideAnim(TweenCallback completeCall)
     {
+        DOTween.Kill(transform);
+        Debug.Log(this.gameObject.name);
         if (SkipSlideAnim || _directChildList.Count == 0)
         {
             HidePanel();

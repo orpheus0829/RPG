@@ -94,6 +94,11 @@ public class DamageReceiver : MonoBehaviour, IDamageable
                 isStiff = false;
             }
         }
+        if (pl)
+        {
+            maxHp = pl.playerSO.PlayerMaxHP * (1 + 0.01f * pl.MaxhpFac);
+        }
+        currentHp = currentHp > maxHp ? maxHp : currentHp;
     }
     public void TakeDamage<T>(float damage, Vector3 attackDir) where T : MonoBehaviour
     {
