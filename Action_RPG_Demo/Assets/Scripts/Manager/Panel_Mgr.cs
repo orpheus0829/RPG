@@ -20,6 +20,7 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
     public BasePanel MissionPanel;
     public BasePanel EscPanel;
     public BasePanel PlayUiPanel;
+    public BasePanel OnlinePanel;
 
     public BasePanel BuyPanel;
     public BasePanel SellPanel;
