@@ -35,6 +35,7 @@ public class SingleBindItem : MonoBehaviour
     {"Esc","设置/回到主页"},
     {"EndSkill","终结技"},
     {"SwitchRole","切换角色"},
+    {"OnLineChat","好友"},
     };
     public void Init(InputAction action, int bindIdx, ControlBinding panel)
     {

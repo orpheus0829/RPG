@@ -699,8 +699,27 @@ public class Player : MonoBehaviour
     #region 交易
     public void OnTrade(InputValue value)
     {
-        if (value.isPressed && Can_Trade && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.BagPanel))
+        if (value.isPressed && !Panel_Mgr.instance.IsPanelOpen && !IsDead)
         {
+            if (!Game_Event.instance.Current_Trader && !Can_Trade)
+            {
+                if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.OnlinePanel))
+                {
+                    Cursor.lockState = CursorLockMode.None;
+                    Panel_Mgr.instance.OpenPanel(Panel_Mgr.instance.OnlinePanel);
+                    TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.RealTimeUnscaled, 0f, 0.4f, null, () =>
+                    {
+                        PickNoticeMgr.instance.ShowDialogueTip(allrole[CurRoleIndex].RoleID, "有谁在线呢", 2f);
+                    });
+                }
+                else
+                {
+                    Debug.Log("聊天4");
+                    Cursor.lockState = CursorLockMode.Locked;
+                    Panel_Mgr.instance.HideAllPanel();
+                }
+                return;
+            }
             if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.TraderPanel))
             {
                 Cursor.lockState = CursorLockMode.None;
@@ -1769,6 +1788,36 @@ public class Player : MonoBehaviour
             SpecialFac += equipItem.SpecialGain;
             EndFac += equipItem.EndGain;
             Debug.Log($"【装备属性】移速:{equipItem.MoveSpeed} 攻击:{equipItem.Attack} 生命:{equipItem.MaxHP} 防御:{equipItem.Defense}specil:{equipItem.SpecialGain}end:{equipItem.EndGain}");
+        }
+    }
+    #endregion
+    #region 好友聊天
+    public void OnLineChat(InputValue value)
+    {
+        if (!Game_Event.instance.Current_Trader)
+        {
+            Debug.Log("聊天1");
+            if (Panel_Mgr.instance.IsPanelOpen || IsDead)
+            {
+                return;
+            }
+            Debug.Log("聊天2");
+            if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.OnlinePanel))
+            {
+                Debug.Log("聊天3");
+                Cursor.lockState = CursorLockMode.None;
+                Panel_Mgr.instance.OpenPanel(Panel_Mgr.instance.OnlinePanel);
+                TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.RealTimeUnscaled, 0f, 0.4f, null, () =>
+                {
+                    PickNoticeMgr.instance.ShowDialogueTip(allrole[CurRoleIndex].RoleID, "有谁在线呢", 2f);
+                });
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Panel_Mgr.instance.HideAllPanel();
+            }
+            return;
         }
     }
     #endregion
