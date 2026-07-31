@@ -60,6 +60,13 @@ public class Game_Event : Base_mgr<Game_Event>
     public event Action ShowArmSlots;
     //´«ËÍ
     public event Action<Transform> PortalActive;
+    //playfab
+    public event Action RefrshInvitationList;
+    public event Action<string, string> SwitchNowChat;
+    public event Action<string, string, string, long> SendMes;
+    public event Action<string> ShowMood;
+    public event Action DownContent;
+    public event Action ShutEmoji;
     protected override void Awake()
     {
         base.Awake();
@@ -236,6 +243,35 @@ public class Game_Event : Base_mgr<Game_Event>
     public void PortalAc(Transform pl)
     {
         PortalActive?.Invoke(pl);
+    }
+    #endregion
+    #region playfabÏà¹Ø
+    public void RefrshInvitations()
+    {
+        TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.RealTimeUnscaled, 0, 3f, null, () =>
+        {
+            RefrshInvitationList?.Invoke();
+        }, null, 0);
+    }
+    public void SwitchPeer(string otheruid,string name)
+    {
+        SwitchNowChat?.Invoke(otheruid, name);
+    }
+    public void SendMessageToPeer(string content,string myuid,string name, long timestamp)
+    {
+        SendMes?.Invoke(content, myuid, name, timestamp);
+    }
+    public void ShowEmoji(string emojiname)
+    {
+        ShowMood?.Invoke(emojiname);
+    }
+    public void DownScroll()
+    {
+        DownContent?.Invoke();
+    }
+    public void CloseEmojiPanel()
+    {
+        ShutEmoji?.Invoke();
     }
     #endregion
 }

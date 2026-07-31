@@ -1,5 +1,8 @@
+using PlayFab;
+using PlayFab.ClientModels;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -32,7 +35,10 @@ public class LoadingMgr : Base_mgr<LoadingMgr>
             DontDestroyOnLoad(this.gameObject);
         }
     }
-
+    public void Start()
+    {
+        CheckAutoAddFriend();
+    }
     public void StartTransition(string TargetSceneName, bool IsLoadNewScene)
     {
         if (_IsTransitionRunning)
@@ -121,7 +127,6 @@ public class LoadingMgr : Base_mgr<LoadingMgr>
             CameraPivot.instance.distance = 3;
         }
     }
-
     public IEnumerator CheckSceneLoadProgress()
     {
         while (_AsyncLoadOperation.progress < 0.9f)
@@ -203,6 +208,38 @@ public class LoadingMgr : Base_mgr<LoadingMgr>
         ToLoad.localScale = Vector3.one;
         ToLoad.gameObject.SetActive(false);
         _IsTransitionRunning = false;
+    }
+    #endregion
+    #region 刷新好友
+    public void CheckAutoAddFriend()
+    {
+        PlayFabClientAPI.GetUserData(new GetUserDataRequest(), result =>
+        {
+            if (result.Data != null && result.Data.ContainsKey("NeedAddFriendBack"))
+            {
+                string friendId = result.Data["NeedAddFriendBack"].Value;
+
+                PlayFabClientAPI.AddFriend(new AddFriendRequest { FriendPlayFabId = friendId },
+                addSuccess =>
+                {
+                    Debug.Log("自动完成双向好友：" + friendId);
+                    PlayFabClientAPI.UpdateUserData(new UpdateUserDataRequest
+                    {
+                        KeysToRemove = new List<string> { "NeedAddFriendBack" }
+                    },
+                    updateSuccess => { },
+                    updateErr => { Debug.LogError(updateErr.ErrorMessage); });
+                },
+                addErr =>
+                {
+                    Debug.LogError("自动添加好友失败：" + addErr.ErrorMessage);
+                });
+            }
+        },
+        err =>
+        {
+            Debug.LogError("读取用户数据失败：" + err.ErrorMessage);
+        });
     }
     #endregion
 }

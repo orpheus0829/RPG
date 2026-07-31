@@ -25,6 +25,7 @@ public class PlayFabMgr : MonoBehaviour
     {
         LoginBtn.onClick.RemoveAllListeners();
     }
+
     public void ShowNotice(string msg)
     {
         StopAllCoroutines();
@@ -38,6 +39,24 @@ public class PlayFabMgr : MonoBehaviour
         Notice.text = string.Empty;
     }
 
+    private bool CheckCustomIdValid(string customId)
+    {
+        if (customId.Length < 3 || customId.Length > 25)
+        {
+            ShowNotice("账号必须3-25个字符");
+            return false;
+        }
+        foreach (char c in customId)
+        {
+            if (!char.IsLetterOrDigit(c) && c != '_')
+            {
+                ShowNotice("账号仅允许字母,数字,下划线，不能中文和特殊符号");
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void Login()
     {
         string customId = Id.text.Trim();
@@ -48,7 +67,10 @@ public class PlayFabMgr : MonoBehaviour
             ShowNotice("账号或密码不能为空");
             return;
         }
-
+        if (!CheckCustomIdValid(customId))
+        {
+            return;
+        }
         if (inputPwd.Length < 6)
         {
             ShowNotice("密码长度至少6位");
@@ -66,17 +88,13 @@ public class PlayFabMgr : MonoBehaviour
             PlayFabClientAPI.GetUserData(new GetUserDataRequest(), (dataRes) =>
             {
                 Dictionary<string, UserDataRecord> userData = dataRes.Data;
-
                 bool hasPassword = false;
                 string savedPwd = "";
 
-                if (userData != null)
+                if (userData != null && userData.ContainsKey("Password"))
                 {
-                    if (userData.ContainsKey("Password"))
-                    {
-                        hasPassword = true;
-                        savedPwd = userData["Password"].Value;
-                    }
+                    hasPassword = true;
+                    savedPwd = userData["Password"].Value;
                 }
 
                 if (!hasPassword)
@@ -84,18 +102,18 @@ public class PlayFabMgr : MonoBehaviour
                     var saveReq = new UpdateUserDataRequest();
                     saveReq.Data = new Dictionary<string, string>();
                     saveReq.Data["Password"] = inputPwd;
+
                     PlayFabClientAPI.UpdateUserData(saveReq, _ =>
                     {
-                        ShowNotice($"账号 {customId} 不存在，已创建并登录");
-                        OnEnterGame();
+                        ForceSetDisplayName(customId);
                     }, OnError);
                 }
                 else
                 {
                     if (savedPwd == inputPwd)
                     {
-                        ShowNotice($"账号密码匹配，登录成功 {customId}");
-                        OnEnterGame();
+                        ShowNotice($"账号密码匹配,登录成功 {customId}");
+                        ForceSetDisplayName(customId);
                     }
                     else
                     {
@@ -105,11 +123,27 @@ public class PlayFabMgr : MonoBehaviour
                     }
                 }
             }, OnError);
-
         }, OnError);
     }
+    public void ForceSetDisplayName(string customId)
+    {
+        var setNameReq = new UpdateUserTitleDisplayNameRequest
+        {
+            DisplayName = customId
+        };
+        PlayFabClientAPI.UpdateUserTitleDisplayName(setNameReq,
+        _ =>
+        {
+            OnEnterGame();
+        },
+        nameErr =>
+        {
+            Debug.LogWarning("设置DisplayName失败:" + nameErr.ErrorMessage);
+            OnEnterGame();
+        });
+    }
 
-    void OnEnterGame()
+    public void OnEnterGame()
     {
         SceneManager.LoadSceneAsync("Start");
     }
