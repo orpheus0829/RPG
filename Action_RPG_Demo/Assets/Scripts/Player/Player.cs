@@ -653,7 +653,7 @@ public class Player : MonoBehaviour
     #region ºÏ³É
     public void OnCraft(InputValue value)
     {
-        if (value.isPressed && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.TraderPanel) && !Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.BagPanel))
+        if (value.isPressed && !Panel_Mgr.instance.IsPanelOpen && !IsDead)
         {
             if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.CraftPanel))
             {
