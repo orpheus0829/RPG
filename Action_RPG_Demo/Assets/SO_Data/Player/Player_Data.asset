@@ -24,7 +24,7 @@ MonoBehaviour:
   VaultHeight: 0.96
   HighClimbHeight: 1.92
   EnableBornAnim: 0
-  SpawnPoint: {x: 35, y: 0.617, z: -128.53}
-  SpwanRotation: {x: 0, y: 0.38268346, z: 0, w: 0.9238795}
+  SpawnPoint: {x: 41, y: 0.3, z: 564}
+  SpwanRotation: {x: 0, y: 0.73383063, z: 0, w: 0.6793325}
   MaxPower: 500
   MaxCharge: 100

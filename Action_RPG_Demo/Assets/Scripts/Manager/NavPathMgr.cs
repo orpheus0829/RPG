@@ -97,6 +97,10 @@ public class NavPathMgr : Base_mgr<NavPathMgr>
         {
             return;
         }
+        if (float.IsNaN(targetPoint.x) || float.IsNaN(targetPoint.y) || float.IsNaN(targetPoint.z))
+        {
+            return;
+        }
         bool findPath = NavMesh.CalculatePath(player.position, targetPoint, NavMesh.AllAreas, navPath);
         if (!findPath || navPath.corners.Length < 2)
         {

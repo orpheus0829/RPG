@@ -42,6 +42,7 @@ public class Dialogue_Editor : Editor
                 EditorGUILayout.HelpBox("对话结束，无后续内容", MessageType.Info);
                 break;
         }
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("QuestStarts"));
         serializedObject.ApplyModifiedProperties();
     }
 }

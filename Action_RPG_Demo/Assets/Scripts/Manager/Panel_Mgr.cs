@@ -200,6 +200,7 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
     }
     public void OpenPanel(BasePanel panel)
     {
+        Debug.Log("´ò¿ª");
         HideAllPanel();
         panel.PlayShowAnim();
         IsPanelOpen = true;

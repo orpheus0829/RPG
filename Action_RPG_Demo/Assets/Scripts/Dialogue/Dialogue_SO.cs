@@ -39,13 +39,13 @@ public class Dialogue_SO : QuestBase_SO
     [Header("如何进入下一句对话")]
     public WayToNextDialogue ContinueWay;
 
-    [Header("方式1:直接下一句")]
+    [Header("直接下一句")]
     public Dialogue_SO nextDialogue;
 
-    [Header("方式2:分支选项")]
+    [Header("分支选项")]
     public List<SingleChoice> choiceDialogues;
 
-    [Header("方法3:结束")]
+    [Header("结束")]
     [HideInInspector] public bool HasNext;
     private void OnEnable()
     {

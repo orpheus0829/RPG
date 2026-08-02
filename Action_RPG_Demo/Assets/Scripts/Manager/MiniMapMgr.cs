@@ -61,7 +61,7 @@ public class MiniMapMgr : Base_mgr<MiniMapMgr>
         player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
-    private void Update()
+    public void Update()
     {
         if (!miniMapCam)
         {
@@ -102,9 +102,9 @@ public class MiniMapMgr : Base_mgr<MiniMapMgr>
         }
     }
 
-    void FollowPlayerCamera()
+    public void FollowPlayerCamera()
     {
-        if (player == null)
+        if (!player)
         {
             return;
         }
@@ -113,7 +113,7 @@ public class MiniMapMgr : Base_mgr<MiniMapMgr>
         miniMapCam.transform.position = Vector3.Lerp(miniMapCam.transform.position, targetPos, Time.deltaTime * 8f);
     }
 
-    void SyncPlayerIcon()
+    public void SyncPlayerIcon()
     {
         if (player == null || miniMapCam == null)
         {
