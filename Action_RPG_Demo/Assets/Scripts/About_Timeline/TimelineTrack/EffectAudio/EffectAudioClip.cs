@@ -2,10 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
-
-/// <summary>
-/// 音效特效参数片段
-/// </summary>
 public class EffectAudioClip : PlayableAsset
 {
     [Header("特效音效盒参数")]

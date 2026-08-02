@@ -1,10 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
-
-/// <summary>
-/// 音效特效触发逻辑，兼容ActionControl/EnemyActionCtrl，统一调用各自PlaySound
-/// </summary>
 public class EffectAudioBehaviour : PlayableBehaviour
 {
     public EffectAudioClip clip;

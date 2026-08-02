@@ -21,13 +21,13 @@ public class IdCollectWindow : EditorWindow
         targetRegistry = EditorGUILayout.ObjectField("目标ID注册表", targetRegistry, typeof(IdRegistrySO), false) as IdRegistrySO;
         EditorGUILayout.Space();
 
-        if (GUILayout.Button("扫描当前场景所有Character的ID，写入注册表", GUILayout.Height(30)) && targetRegistry != null)
+        if (GUILayout.Button("扫描当前场景所有Character的ID写入注册表", GUILayout.Height(30)) && targetRegistry != null)
         {
             CollectSceneAllIds();
             EditorUtility.SetDirty(targetRegistry);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log("ID收集完成，注册表已更新！");
+            Debug.Log("收集完成");
         }
     }
 

@@ -92563,7 +92563,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 55839ea96dff66447a61366a3c1d4f5d, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -3.317971e-14
+      value: -3.3546333e-14
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 55839ea96dff66447a61366a3c1d4f5d, type: 3}
       propertyPath: m_LocalRotation.y
@@ -92571,7 +92571,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 55839ea96dff66447a61366a3c1d4f5d, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -3.9049076e-14
+      value: -3.9480555e-14
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 55839ea96dff66447a61366a3c1d4f5d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -94779,7 +94779,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6296909282464378206, guid: 55839ea96dff66447a61366a3c1d4f5d, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: -1.6940659e-21
       objectReference: {fileID: 0}
     - target: {fileID: 6360119491439899898, guid: 55839ea96dff66447a61366a3c1d4f5d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -177837,7 +177837,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2074751627
 Transform:
   m_ObjectHideFlags: 0
@@ -182780,6 +182780,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerRoot
       objectReference: {fileID: 0}
+    - target: {fileID: 6630737416486105790, guid: af10b3cfcf485b944a85538d8e8abe70, type: 3}
+      propertyPath: m_SceneBindings.Array.size
+      value: 204
+      objectReference: {fileID: 0}
+    - target: {fileID: 6630737416486105790, guid: af10b3cfcf485b944a85538d8e8abe70, type: 3}
+      propertyPath: m_SceneBindings.Array.data[204].key
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6630737416486105790, guid: af10b3cfcf485b944a85538d8e8abe70, type: 3}
+      propertyPath: m_SceneBindings.Array.data[204].value
+      value: 
+      objectReference: {fileID: 727624417}
     - target: {fileID: 7002352487335119135, guid: af10b3cfcf485b944a85538d8e8abe70, type: 3}
       propertyPath: mainCamera
       value: 

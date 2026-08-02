@@ -6,9 +6,8 @@ public enum CamMoveMode
 {
     SmoothLerp,
     Teleport,
-    ResetOrigin // 新增：归位模式，目标=片段开播相机初始位置
+    ResetOrigin
 }
-// 归位内部子运动
 public enum ResetCamSubMode
 {
     Teleport,

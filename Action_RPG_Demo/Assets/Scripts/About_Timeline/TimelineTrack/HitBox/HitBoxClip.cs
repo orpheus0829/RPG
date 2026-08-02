@@ -2,10 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
-
-/// <summary>
-/// ¹¥»÷ÅÐ¶¨²ÎÊý´æ´¢Æ¬¶Î
-/// </summary>
 public class HitBoxClip : PlayableAsset
 {
     [Header("¹¥»÷ºÐ²ÎÊý")]
