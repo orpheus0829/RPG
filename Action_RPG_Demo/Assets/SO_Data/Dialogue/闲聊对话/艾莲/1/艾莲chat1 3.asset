@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d3a3c6cfdc745f4a94702d36c410017, type: 3}
+  m_Name: "\u827E\u83B2chat1 3"
+  m_EditorClassIdentifier: 
+  Quest_Title: "\u521D\u6765\u4E4D\u5230"
+  Quest_Description: "\u521A\u6765\u5230\u524D\u7EBF\u3002\u3002\u5148\u627E\u719F\u4EBA\u719F\u6089\u4E00\u4E0B\u60C5\u51B5\u5427"
+  QuestStarts: []
+  dialogueMode: 0
+  SpeakerName: "\u827E\u83B2"
+  SpeakerId: "\u827E\u83B2"
+  Single_Dialogue: "\u90A3\u5C31,\u770B\u4F60\u7684\u54AF\uFF1F"
+  Cut_Show: {fileID: 0}
+  ContinueWay: 2
+  nextDialogue: {fileID: 0}
+  choiceDialogues: []
+  HasNext: 0

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Quest_Title: "\u4E09\u8A00\u4E24\u8BED1"
   Quest_Description: "\u548C\u827E\u83B2\u804A\u804A"
+  QuestStarts: []
   dialogueMode: 0
   SpeakerName: "\u827E\u83B2"
   SpeakerId: "\u827E\u83B2"

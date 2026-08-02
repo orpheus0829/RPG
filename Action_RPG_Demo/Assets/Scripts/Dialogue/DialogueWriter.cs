@@ -116,12 +116,13 @@ public class DialogueWriter : MonoBehaviour
     }
     public void ClearAllChoice()
     {
+        Debug.Log(new System.Diagnostics.StackTrace().GetFrame(1).GetMethod().Name + "Çå³ý");
         Transform parent = ChoiceParent.transform;
         for (int i = parent.childCount - 1; i >= 0; i--)
         {
             Destroy(parent.GetChild(i).gameObject);
         }
-        Cursor.visible = false;
+        Cursor.visible = true;
     }
     public void DirectNext()
     {

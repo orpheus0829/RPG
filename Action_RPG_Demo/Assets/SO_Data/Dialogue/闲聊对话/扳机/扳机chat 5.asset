@@ -10,15 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d3a3c6cfdc745f4a94702d36c410017, type: 3}
-  m_Name: "\u827E\u83B2chat4"
+  m_Name: "\u6273\u673Achat 5"
   m_EditorClassIdentifier: 
-  Quest_Title: 
-  dialogueMode: 1
-  SpeakerName: "\u827E\u83B2"
-  SpeakerId: "\u827E\u83B2"
-  Single_Dialogue: "\u884C\u5427\uFF0C\u90A3\u6211\u5C31\u4E0D\u70E6\u4F60\u4E86"
+  Quest_Title: "\u8FDB\u4E00\u6B65\u4E86\u89E3"
+  Quest_Description: "\u5411\u6273\u673A\u4E86\u89E3\u5F53\u5730\u7684\u60C5\u51B5"
+  QuestStarts: []
+  dialogueMode: 0
+  SpeakerName: "\u6273\u673A"
+  SpeakerId: "\u6273\u673A"
+  Single_Dialogue: "\u597D\u7684\uFF0C\u90A3\u6211\u5C31\u4E0D\u6253\u6270\u4F60\u81EA\u7531\u63A2\u7D22\u4E86"
   Cut_Show: {fileID: 0}
   ContinueWay: 2
-  nextDialogue: {fileID: 0}
+  nextDialogue: {fileID: 11400000, guid: 41999b7aac787994d96ab24cc5c8cc75, type: 2}
   choiceDialogues: []
   HasNext: 0

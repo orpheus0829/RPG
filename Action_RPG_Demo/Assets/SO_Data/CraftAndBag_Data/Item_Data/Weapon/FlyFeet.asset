@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63f08684b98d78448b711cb70203875e, type: 3}
+  m_Name: FlyFeet
+  m_EditorClassIdentifier: 
+  Display_In_Backpacks: {fileID: 21300000, guid: bf6b08cf449241e45abfcc60d49f28ab, type: 3}
+  Drop: {fileID: 4036299250517763226, guid: 07e947b7f2ece2942b90f4aa44e4556e, type: 3}
+  Stackable: 0
+  StackMax: 1
+  item_name: "\u884C\u7A7A\u62A4\u80EB"
+  item_id: 22
+  Height: 2
+  Width: 2
+  PriceValue: 350
+  Introduction: "\u517C\u5177\u7834\u574F\u529B\u548C\u901F\u5EA6\u7684\u673A\u52A8\u62A4\u80EB"
+  item_Kind: 2
+  buff: {fileID: 0}
+  EquipmentSlot: 3
+  MaxHP: 20
+  Defense: 80
+  MoveSpeed: 20
+  Attack: 5
+  SpecialGain: 10
+  EndGain: 10

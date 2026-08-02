@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 public class LoadingMgr : Base_mgr<LoadingMgr>
@@ -39,17 +40,17 @@ public class LoadingMgr : Base_mgr<LoadingMgr>
     {
         CheckAutoAddFriend();
     }
-    public void StartTransition(string TargetSceneName, bool IsLoadNewScene)
+    public void StartTransition(string TargetSceneName, bool IsLoadNewScene, Action OnComplete = null)
     {
         if (_IsTransitionRunning)
         {
             Debug.Log("正在执行过渡动画");
             return;
         }
-        StartCoroutine(TransitionProcess(TargetSceneName, IsLoadNewScene));
+        StartCoroutine(TransitionProcess(TargetSceneName, IsLoadNewScene, OnComplete));
     }
 
-    public IEnumerator TransitionProcess(string TargetSceneName, bool IsLoadNewScene)
+    public IEnumerator TransitionProcess(string TargetSceneName, bool IsLoadNewScene, Action OnComplete = null)
     {
         _IsTransitionRunning = true;
         _LoadFinished = false;
@@ -114,7 +115,48 @@ public class LoadingMgr : Base_mgr<LoadingMgr>
             yield return null;
         }
         Transform p = GameObject.FindObjectOfType<Player>().transform;
-        p.position = GameObject.FindObjectOfType<Portal>().gameObject.transform.position;
+        Portal portal = GameObject.FindObjectOfType<Portal>();
+        if (portal)
+        {
+            Vector3 center = portal.transform.position;
+            float angle = UnityEngine.Random.Range(0, Mathf.PI * 2);
+            float radius = UnityEngine.Random.Range(1f, 3f);
+            Vector3 randomRingPoint = new Vector3(
+                center.x + Mathf.Cos(angle) * radius,
+                center.y,
+                center.z + Mathf.Sin(angle) * radius
+            );
+            Vector3 finalSpawnPos = randomRingPoint;
+            if (NavMesh.SamplePosition(randomRingPoint, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+            {
+                finalSpawnPos = hit.position;
+            }
+            else
+            {
+                bool findSuccess = false;
+                for (int i = 0; i < 8; i++)
+                {
+                    angle = UnityEngine.Random.Range(0, Mathf.PI * 2);
+                    radius = UnityEngine.Random.Range(1f, 3f);
+                    randomRingPoint = new Vector3(
+                        center.x + Mathf.Cos(angle) * radius,
+                        center.y,
+                        center.z + Mathf.Sin(angle) * radius
+                    );
+                    if (NavMesh.SamplePosition(randomRingPoint, out hit, 2f, NavMesh.AllAreas))
+                    {
+                        finalSpawnPos = hit.position;
+                        findSuccess = true;
+                        break;
+                    }
+                }
+                if (!findSuccess)
+                {
+                    finalSpawnPos = randomRingPoint;
+                }
+            }
+            p.position = finalSpawnPos;
+        }
         Story_Mgr.instance.Refresh_StoryProgress();
         Story_Mgr.instance.Refresh_StoryUI(Story_Mgr.instance.CurQuest);
         ToLoad.localScale = Vector3.one;
@@ -126,6 +168,7 @@ public class LoadingMgr : Base_mgr<LoadingMgr>
             CameraPivot.instance.camTrans = null;
             CameraPivot.instance.distance = 3;
         }
+        OnComplete?.Invoke();
     }
     public IEnumerator CheckSceneLoadProgress()
     {
@@ -232,7 +275,7 @@ public class LoadingMgr : Base_mgr<LoadingMgr>
                 },
                 addErr =>
                 {
-                    Debug.LogError("自动添加好友失败：" + addErr.ErrorMessage);
+                    Debug.Log("自动添加好友失败：" + addErr.ErrorMessage);
                 });
             }
         },

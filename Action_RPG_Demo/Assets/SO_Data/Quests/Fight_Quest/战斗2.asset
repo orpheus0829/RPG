@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4672599399a026043bae2ccb37464d0b, type: 3}
+  m_Name: "\u6218\u65972"
+  m_EditorClassIdentifier: 
+  Quest_Title: "\u6E05\u626B\u884C\u52A8\u5176\u4E8C"
+  Quest_Description: "\u7ECF\u8FC7\u91CD\u6574\uFF0C\u73B0\u5728\u53BB\u518D\u6B21\u8BA8\u4F10\u90A3\u4E2A\u532A\u5F92"
+  QuestStarts: []
+  Quest_Enemys:
+  - Location: {x: 44, y: 0, z: -115}
+    Enemy: {fileID: 1498075138871015213, guid: a00934cd27ec276409c20dfaf4fbb3c0, type: 3}
+    MaxHp: 1000
+    Damage: 500
+  - Location: {x: 44, y: 0, z: -115}
+    Enemy: {fileID: 1498075138871015213, guid: a00934cd27ec276409c20dfaf4fbb3c0, type: 3}
+    MaxHp: 1000
+    Damage: 500
+  - Location: {x: 44, y: 0, z: -115}
+    Enemy: {fileID: 1498075138871015213, guid: a00934cd27ec276409c20dfaf4fbb3c0, type: 3}
+    MaxHp: 1000
+    Damage: 500
+  - Location: {x: 44, y: 0, z: -115}
+    Enemy: {fileID: 1498075138871015213, guid: a00934cd27ec276409c20dfaf4fbb3c0, type: 3}
+    MaxHp: 1000
+    Damage: 500
+  - Location: {x: 44, y: 0, z: -115}
+    Enemy: {fileID: 1498075138871015213, guid: a00934cd27ec276409c20dfaf4fbb3c0, type: 3}
+    MaxHp: 1000
+    Damage: 500
+  Rewards:
+  - Count: 1
+    Reward: {fileID: 4036299250517763226, guid: 65a780d7429dc8846af666a747487cab, type: 3}

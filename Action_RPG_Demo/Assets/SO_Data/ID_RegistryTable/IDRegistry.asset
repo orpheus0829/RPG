@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: IDRegistry
   m_EditorClassIdentifier: 
   AllID:
-  - "\u6273\u673A"
   - "\u827E\u83B2"
+  - "\u6273\u673A"
+  - "\u732B\u53C8"

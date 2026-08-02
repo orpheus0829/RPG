@@ -33,10 +33,9 @@ public class Dialogue_Set : BaseActor
         {
             return;
         }
-        Panel_Mgr.instance.HideAllPanel();
         Cur_Dialogue = Story_Dialogue ? Story_Dialogue : Chat_Dialogue;
         DialogueWriter writer = Panel_Mgr.instance.DialoguePanel.GetComponent<DialogueWriter>();
-        writer.ClearAllChoice();
+        //writer.ClearAllChoice();
     }
     public void PlayNpcAction(ActionSO action)
     {

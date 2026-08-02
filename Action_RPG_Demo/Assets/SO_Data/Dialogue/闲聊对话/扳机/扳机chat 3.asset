@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3a3c6cfdc745f4a94702d36c410017, type: 3}
   m_Name: "\u6273\u673Achat 3"
   m_EditorClassIdentifier: 
-  Quest_Title: 
-  dialogueMode: 1
+  Quest_Title: "\u8FDB\u4E00\u6B65\u4E86\u89E3"
+  Quest_Description: "\u5411\u6273\u673A\u4E86\u89E3\u5F53\u5730\u7684\u60C5\u51B5"
+  QuestStarts: []
+  dialogueMode: 0
   SpeakerName: "\u6273\u673A"
   SpeakerId: "\u6273\u673A"
-  Single_Dialogue: "\u6682\u65F6\u8FD8\u6CA1\u6709\u4EBA\u627E\u5230\u51FA\u53BB\u7684\u65B9\u6CD5\u54E6\uFF0C\u4F60\u5148\u5728\u9644\u8FD1\u770B\u770B\u5427"
+  Single_Dialogue: "\u6682\u65F6\u8FD8\u6CA1\u6709\u76F8\u5173\u4FE1\u606F\u5662\uFF0C\u5148\u7740\u624B\u773C\u4E0B\u5427"
   Cut_Show: {fileID: 0}
   ContinueWay: 0
-  nextDialogue: {fileID: 11400000, guid: c043e90df87715f46b990b8904a72a93, type: 2}
+  nextDialogue: {fileID: 11400000, guid: 43e62ec7f0dc9a74b98ed335de7f0580, type: 2}
   choiceDialogues: []
   HasNext: 0

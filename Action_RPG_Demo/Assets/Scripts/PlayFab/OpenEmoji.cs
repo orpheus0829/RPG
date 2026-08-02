@@ -10,7 +10,7 @@ public class OpenEmoji : MonoBehaviour
     public void Awake()
     {
         Btn = GetComponent<Button>();
-        OpenObj.SetActive(false);
+        //OpenObj.SetActive(false);
     }
     public void OnEnable()
     {

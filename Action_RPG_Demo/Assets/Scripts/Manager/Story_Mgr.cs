@@ -261,6 +261,12 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
         {
             NavPathMgr.instance.OpenNavPath(CurQuestPos);
         }
+        int index = 0;
+        TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.RealTimeUnscaled, 0, CurQuest.QuestStarts.Count * 3, null, null, () =>
+        {
+            PickNoticeMgr.instance.ShowDialogueTip(CurQuest.QuestStarts[index].Speaker, CurQuest.QuestStarts[index].Content, 3f);
+            index++;
+        }, 3f);
     }
     public QuestBase_SO GetCurrentQuest()
     {
@@ -504,6 +510,7 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
         {
             return;
         }
+        e.damageReceiver.maxHp = property;
         e.damageReceiver.currentHp = property;
     }
     public void Refresh_StoryUI(QuestBase_SO quest)
