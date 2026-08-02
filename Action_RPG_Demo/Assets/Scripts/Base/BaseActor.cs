@@ -6,7 +6,7 @@ public class BaseActor : MonoBehaviour
 {
     public virtual void PlaySound(AudioClip clip)
     {
-        if (clip == null)
+        if (!clip)
         {
             return;
         }
@@ -14,7 +14,7 @@ public class BaseActor : MonoBehaviour
     }
     public virtual GameObject SpawnEffect(GameObject prefab, Vector3 pos, Quaternion rot)
     {
-        if (prefab == null)
+        if (!prefab)
         {
             return null;
         }

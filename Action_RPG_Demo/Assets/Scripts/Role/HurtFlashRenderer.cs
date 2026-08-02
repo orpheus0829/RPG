@@ -3,7 +3,6 @@ using UnityEngine;
 public class HurtFlashRenderer : MonoBehaviour
 {
     [Header("受伤泛红")]
-    [Tooltip("单位毫秒")]
     public int FlashMs = 250;
     [Tooltip("泛红强度")]
     public float EmissionPower = 3f;

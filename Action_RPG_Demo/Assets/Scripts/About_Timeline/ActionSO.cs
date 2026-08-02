@@ -2,12 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Timeline;
-
-/// <summary>
-/// 动作配置数据表
-/// 存储单套动作所有可调参数，资源复用
-/// </summary>
-/// 
 public enum HitBoxShape
 {
     Sphere,
@@ -22,7 +16,7 @@ public class ActionSO : ScriptableObject
     public TimelineAsset timeline;
     public ActionType actionType;
 
-    [Header("无突发时 → 自动跳转")]
+    [Header("无突发时 - 自动跳转")]
     public ActionSO nextAction;
 
     public bool Related;
