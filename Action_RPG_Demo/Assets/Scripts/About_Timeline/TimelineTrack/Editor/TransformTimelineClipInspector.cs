@@ -65,20 +65,20 @@ public class TransformTimelineClipInspector : Editor
         switch (mode)
         {
             case MoveMode.FixedEndPos:
-                EditorGUILayout.LabelField("固定终点模式.拖拽Scene终点手柄修改坐标", EditorStyles.helpBox);
+                EditorGUILayout.LabelField("固定终点模式", EditorStyles.helpBox);
                 EditorGUILayout.PropertyField(endPos, new GUIContent("终点本地坐标"));
                 EditorGUILayout.PropertyField(endEuler, new GUIContent("终点本地欧拉旋转"));
                 break;
 
             case MoveMode.SpeedAndDistance:
-                EditorGUILayout.LabelField("匀速直线.拖拽终点修改方向与总长度", EditorStyles.helpBox);
+                EditorGUILayout.LabelField("匀速直线", EditorStyles.helpBox);
                 EditorGUILayout.PropertyField(direction, new GUIContent("位移本地方向"));
                 EditorGUILayout.PropertyField(totalDistance, new GUIContent("总距离"));
                 EditorGUILayout.PropertyField(moveSpeed, new GUIContent("匀速移动速度"));
                 break;
 
             case MoveMode.VariableSpeed:
-                EditorGUILayout.LabelField("变速直线.拖拽终点修改方向与总长度", EditorStyles.helpBox);
+                EditorGUILayout.LabelField("变速直线", EditorStyles.helpBox);
                 EditorGUILayout.PropertyField(direction, new GUIContent("位移本地方向"));
                 EditorGUILayout.PropertyField(totalDistance, new GUIContent("总距离"));
                 EditorGUILayout.PropertyField(startSpeed, new GUIContent("起始速度"));
@@ -86,7 +86,7 @@ public class TransformTimelineClipInspector : Editor
                 break;
 
             case MoveMode.ClimbOver:
-                EditorGUILayout.LabelField("翻越位移.点位由跳跃扇形检测自动生成，不可拖拽编辑", EditorStyles.helpBox);
+                EditorGUILayout.LabelField("翻越位移", EditorStyles.helpBox);
                 EditorGUILayout.PropertyField(climbStage, new GUIContent("翻越阶段"));
                 EditorGUILayout.PropertyField(climbUseVariableSpeed, new GUIContent("变速翻越"));
                 if (climbUseVariableSpeed.boolValue)
@@ -101,10 +101,10 @@ public class TransformTimelineClipInspector : Editor
                 EditorGUILayout.PropertyField(climbAfterExtraDistance, new GUIContent("翻越后额外前进距离"));
                 break;
             case MoveMode.CircleRotate:
-                EditorGUILayout.LabelField("绕圈模式，蓝色球体为旋转中心，支持顺/逆时针切换", EditorStyles.helpBox);
+                EditorGUILayout.LabelField("绕圈模式", EditorStyles.helpBox);
                 EditorGUILayout.PropertyField(circleCenterLocal, new GUIContent("旋转中心点(本地偏移)"));
                 EditorGUILayout.PropertyField(circleRadius, new GUIContent("转圈半径"));
-                EditorGUILayout.PropertyField(circleTotalAngle, new GUIContent("总旋转角度(360=完整一圈)"));
+                EditorGUILayout.PropertyField(circleTotalAngle, new GUIContent("总旋转角度"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("circleClockwise"), new GUIContent("顺时针旋转"));
                 EditorGUILayout.PropertyField(circleVariableSpeed, new GUIContent("变速旋转"));
                 if (circleVariableSpeed.boolValue)

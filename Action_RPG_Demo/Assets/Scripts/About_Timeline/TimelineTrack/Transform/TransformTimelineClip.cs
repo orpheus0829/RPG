@@ -22,19 +22,19 @@ public class TransformTimelineClip : PlayableAsset, ITimelineClipAsset
     [Header("通用参数")]
     public Vector3 direction = Vector3.forward;
 
-    [Header("模式1;固定终点")]
+    [Header("固定终点")]
     public Vector3 endPos;
     public Vector3 endEuler;
 
-    [Header("模式2;速度+距离(匀速)")]
+    [Header("速度+距离(匀速)")]
     public float moveSpeed;
     public float totalDistance;
 
-    [Header("模式3;变速移动")]
+    [Header("变速移动")]
     public float startSpeed;
     public float endSpeed;
 
-    [Header("模式4;翻越模式")]
+    [Header("翻越模式")]
     public ClimbStage climbStage;
     public bool climbUseVariableSpeed;
     public float climbSpeed;
@@ -42,7 +42,7 @@ public class TransformTimelineClip : PlayableAsset, ITimelineClipAsset
     public float climbEndSpeed;
     public float climbAfterExtraDistance;
 
-    [Header("模式5;绕圈旋转")]
+    [Header("绕圈旋转")]
     public Vector3 circleCenterLocal;
     public float circleRadius;
     public float circleTotalAngle;

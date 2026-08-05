@@ -49,7 +49,7 @@ public class Interact_Trigger : MonoBehaviour
         //    //Panel_Mgr.instance.IsPanelOpen = false;
         //}
     }
-    private void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         bool HasDialogue = other.TryGetComponent<Dialogue_Set>(out Dialogue_Set dialogue_Set1);
         bool HasTrade = other.TryGetComponent<Trader>(out Trader istrader1);
@@ -84,7 +84,7 @@ public class Interact_Trigger : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    public void OnTriggerExit(Collider other)
     {
         bool HasDialogue = other.TryGetComponent<Dialogue_Set>(out Dialogue_Set dialogue_Set2);
         bool HasTrade = other.TryGetComponent<Trader>(out Trader istrader2);
@@ -120,7 +120,7 @@ public class Interact_Trigger : MonoBehaviour
         }
     }
 
-    private void SortList_By_Distance<T>(List<T> lst)where T:MonoBehaviour
+    public void SortList_By_Distance<T>(List<T> lst)where T:MonoBehaviour
     {
         lst.Sort((a, b) =>
         {

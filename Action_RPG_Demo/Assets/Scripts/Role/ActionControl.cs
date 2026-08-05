@@ -55,12 +55,12 @@ public class ActionControl : BaseActor, INotificationReceiver
     //[Header("死亡动作")]
     //public ActionSO DeathAction;
 
-    [Header("动作窗口信号")]
+    [Header("动作窗口")]
     public int AttackLevel;
     public bool canCombo;
     public bool canInterrupt;
 
-    [Header("攻击范围盒调试用")]
+    [Header("攻击范围盒调试")]
     public float Hit_Force = 0;
     public Vector3 debugBoxOffset;
     public float debugBoxRadius;

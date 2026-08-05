@@ -46,7 +46,7 @@ public class CallList : MonoBehaviour
                 return;
             }
             string json = res.Data["FriendApply"].Value;
-            Debug.Log("原始申请数据::" + json);
+            Debug.Log("原始申请数据:" + json);
             FriendApplyWrapper data = null;
             try
             {

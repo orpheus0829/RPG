@@ -67,7 +67,7 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
     }
     public void Update()
     {
-        // 完全移除UpdateActiveDialogues，不再手动倒计时
+
     }
     #region 拾取
     public void AddNote(Item_Data data)
@@ -105,7 +105,6 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
         enterSeq.SetUpdate(UpdateType.Normal, true);
 
         Notices.Enqueue(n);
-        // 替换协程，改用TimeMgr真实时间计时器
         TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.RealTimeUnscaled, 0, FadeDuration, null, () =>
         {
             Sequence exitSeq = DOTween.Sequence();
@@ -151,7 +150,6 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
     }
     private void EnqueueCenterText(string sourceText, float delay = 0f)
     {
-        // 替换协程延时，使用TimeMgr真实时间
         TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.RealTimeUnscaled, 0, delay, null, () =>
         {
             GameObject obj = CreateCenterTextObj(sourceText);
@@ -362,8 +360,6 @@ public class PickNoticeMgr : Base_mgr<PickNoticeMgr>
             item.trans.DOLocalMoveY(targetY, DialogueLayoutAnimTime).SetEase(Ease.OutQuad).SetUpdate(true);
         }
     }
-
-    // 清理全部对话（场景切换调用）
     public void ClearAllDialogue()
     {
         foreach (var item in ActiveDialogueList)

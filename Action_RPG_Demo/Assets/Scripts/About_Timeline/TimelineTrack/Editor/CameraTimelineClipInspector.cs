@@ -66,7 +66,7 @@ public class CameraTimelineClipInspector : Editor
         if (mode == CamMoveMode.ResetOrigin)
         {
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("归位模式.自动以片段开播相机位置为目标", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("以片段开播相机位置为目标", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(resetSubMode, new GUIContent("归位运动方式"));
             ResetCamSubMode sub = (ResetCamSubMode)resetSubMode.enumValueIndex;
 
@@ -82,7 +82,6 @@ public class CameraTimelineClipInspector : Editor
             }
 
             EditorGUILayout.PropertyField(lockLookAtPlayer, new GUIContent("片段内持续看向角色"));
-            EditorGUILayout.HelpBox("归位模式忽略「目标机位」参数，无需拖拽坐标", MessageType.Info);
             serializedObject.ApplyModifiedProperties();
             return;
         }

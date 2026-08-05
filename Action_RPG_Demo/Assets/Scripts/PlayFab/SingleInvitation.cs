@@ -53,7 +53,7 @@ public class SingleInvitation : MonoBehaviour
 
         PlayFabClientAPI.ExecuteCloudScript(req, (suc) =>
         {
-            Debug.Log("云脚本执行成功,申请已删除：" + JsonUtility.ToJson(suc));
+            Debug.Log("云脚本执行成功,申请已删除:" + JsonUtility.ToJson(suc));
             PickNoticeMgr.instance?.ShowFieldTip("已同意好友");
             Game_Event.instance?.RefrshInvitations();
             PlayFabClientAPI.AddFriend(new AddFriendRequest { FriendPlayFabId = _applicantPlayFabId },
@@ -78,7 +78,7 @@ public class SingleInvitation : MonoBehaviour
         },
         (err) =>
         {
-            Debug.LogError("失败：" + err.ErrorMessage);
+            Debug.Log("失败：" + err.ErrorMessage);
             PickNoticeMgr.instance?.ShowFieldTip("同意失败");
             Destroy(gameObject);
         });
