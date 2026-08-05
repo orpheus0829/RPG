@@ -287,7 +287,7 @@ public class CameraPivot : Base_mgr<CameraPivot>
         currentCameraAnimCoroutine = null;
     }
     #endregion
-    private void UpdateCameraShake()
+    public void UpdateCameraShake()
     {
         if (camTrans == null) return;
         if (_shakeTime <= 0)
@@ -330,7 +330,7 @@ public class CameraPivot : Base_mgr<CameraPivot>
         }
         _quickShakeCor = StartCoroutine(QuickShakeCoroutine(shakePower));
     }
-    private IEnumerator QuickShakeCoroutine(float power)
+    public IEnumerator QuickShakeCoroutine(float power)
     {
         float totalRealTime = 0.22f;
         float dampFactor = 1.6f;

@@ -210,7 +210,7 @@ public class SelfLookRotateCtrl : MonoBehaviour, IBeginDragHandler, IDragHandler
         IsPlayingAfk = false;
     }
 
-    private void DfsModifyLayer(GameObject go, int layer)
+    public void DfsModifyLayer(GameObject go, int layer)
     {
         go.layer = layer;
         foreach (Transform child in go.transform)
@@ -218,7 +218,7 @@ public class SelfLookRotateCtrl : MonoBehaviour, IBeginDragHandler, IDragHandler
             DfsModifyLayer(child.gameObject, layer);
         }
     }
-    private void OnPlayableFinished(PlayableDirector pd)
+    public void OnPlayableFinished(PlayableDirector pd)
     {
         if (IsPlayingAfk)
         {

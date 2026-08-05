@@ -32,8 +32,7 @@ public class EffectAudioClipInspector : Editor
         EditorGUILayout.PropertyField(useRepeatSpawn, new GUIContent("间隔重复生成"));
         if (useRepeatSpawn.boolValue)
         {
-            EditorGUILayout.PropertyField(spawnInterval, new GUIContent("生成间隔(秒)"));
-            EditorGUILayout.HelpBox("开启后片段全程每间隔生成一次特效+播放音效；关闭仅进入片段瞬间触发一次", MessageType.Info);
+            EditorGUILayout.PropertyField(spawnInterval, new GUIContent("生成间隔"));
         }
         EditorGUILayout.Space();
 

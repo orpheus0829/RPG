@@ -23,7 +23,7 @@ public class MiniMapMgr : Base_mgr<MiniMapMgr>
     public Vector3 MaxPos;
     public float MaxScale;
 
-    [Header("图标素材/预制体")]
+    [Header("图标素材与预制体")]
     public Image MarkPrefab;
     public Sprite NPCSprite;
     public Sprite MonsterSprite;

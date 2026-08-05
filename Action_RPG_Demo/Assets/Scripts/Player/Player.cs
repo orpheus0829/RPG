@@ -1796,15 +1796,12 @@ public class Player : MonoBehaviour
     {
         if (!Game_Event.instance.Current_Trader)
         {
-            Debug.Log("ÁÄÌì1");
             if (Panel_Mgr.instance.IsPanelOpen || IsDead)
             {
                 return;
             }
-            Debug.Log("ÁÄÌì2");
             if (!Panel_Mgr.instance.IsPanelVisible(Panel_Mgr.instance.OnlinePanel))
             {
-                Debug.Log("ÁÄÌì3");
                 Cursor.lockState = CursorLockMode.None;
                 Panel_Mgr.instance.OpenPanel(Panel_Mgr.instance.OnlinePanel);
                 TimeMgr.instance.CreateTimer(TimeMgr.TimerMode.RealTimeUnscaled, 0f, 0.4f, null, () =>

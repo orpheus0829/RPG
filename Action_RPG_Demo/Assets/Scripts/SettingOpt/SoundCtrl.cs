@@ -17,7 +17,7 @@ public class SoundCtrl : MonoBehaviour
             soundSlider.value = SoundMgr.instance.globalVolume;
         }
     }
-    private void OnSliderValueChange(float value)
+    public void OnSliderValueChange(float value)
     {
         SoundMgr.instance.SetGlobalVolume(value);
     }

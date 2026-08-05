@@ -72,7 +72,7 @@ public class SingleBindItem : MonoBehaviour
         rebindBtn.onClick.AddListener(StartRebindProcess);
     }
 
-    private void OnEnable()
+    public void OnEnable()
     {
         if (targetAction != null)
         {
@@ -115,7 +115,7 @@ public class SingleBindItem : MonoBehaviour
         tmpBindKey.text = readableKey;
     }
 
-    private void StartRebindProcess()
+    public void StartRebindProcess()
     {
         //if (rebindingOperation != null)
         //{
@@ -147,7 +147,7 @@ public class SingleBindItem : MonoBehaviour
         rebindingOperation.Start();
     }
 
-    private void RebindCompleteCallback(RebindingOperation op)
+    public void RebindCompleteCallback(RebindingOperation op)
     {
         op.Dispose();
         rebindingOperation = null;
@@ -166,7 +166,7 @@ public class SingleBindItem : MonoBehaviour
         bindPanel.RefreshAllBindingText();
     }
 
-    private void RebindCancelCallback(RebindingOperation op)
+    public void RebindCancelCallback(RebindingOperation op)
     {
         op.Dispose();
         rebindingOperation = null;
@@ -184,7 +184,7 @@ public class SingleBindItem : MonoBehaviour
         }
     }
 
-    private void OnDisable()
+    public void OnDisable()
     {
         if (rebindingOperation != null)
         {
@@ -204,7 +204,7 @@ public class SingleBindItem : MonoBehaviour
             }
         }
     }
-    private void OnDestroy()
+    public void OnDestroy()
     {
         if (rebindingOperation != null)
         {

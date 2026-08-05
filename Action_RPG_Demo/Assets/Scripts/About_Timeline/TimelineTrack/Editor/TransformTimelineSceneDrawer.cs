@@ -128,8 +128,6 @@ public static class TransformTimelineSceneDrawer
             }
 
             Handles.SphereHandleCap(0, worldEnd, Quaternion.identity, 0.15f, EventType.Repaint);
-            string tip = curMode == MoveMode.SpeedAndDistance ? "匀速终点｜拖拽自动反推moveSpeed" : "变速终点｜锁定初速，自动反推末速度";
-            Handles.Label(worldEnd + Vector3.up * 0.3f, tip);
         }
         else if (curMode == MoveMode.ClimbOver)
         {
@@ -183,7 +181,7 @@ public static class TransformTimelineSceneDrawer
                 prevPoint = p;
             }
             Handles.color = Color.white;
-            Handles.Label(WorldStart + Vector3.up * 1.2f, $"绕圈｜半径:{transClip.circleRadius:F2} 总角度:{transClip.circleTotalAngle}°");
+            Handles.Label(WorldStart + Vector3.up * 1.2f, $"绕圈半径:{transClip.circleRadius:F2} 总角度:{transClip.circleTotalAngle}°");
             if (centerChanged || radiusChanged)
             {
                 sceneView.Repaint();

@@ -43,7 +43,7 @@ public class PlayGame : MonoBehaviour
         DelayCoroutine = StartCoroutine(DelayStartLoad());
     }
 
-    private IEnumerator DelayStartLoad()
+    public IEnumerator DelayStartLoad()
     {
         if (IsNewGame)
         {

@@ -134,7 +134,7 @@ public class BuffReceiver : MonoBehaviour
     #endregion
 
     #region ¼ÆÊ±
-    private BuffTask CreateBuffTask(BuffSO buff)
+    public BuffTask CreateBuffTask(BuffSO buff)
     {
         BuffTask newTask = new BuffTask();
         newTask.Mode = TimeMgr.TimerMode.DeltaTime;
@@ -157,7 +157,7 @@ public class BuffReceiver : MonoBehaviour
         return newTask;
     }
 
-    private void StopSingleBuffTask(BuffTask task)
+    public void StopSingleBuffTask(BuffTask task)
     {
         if (task == null || task.IsFinished)
         {
@@ -172,7 +172,7 @@ public class BuffReceiver : MonoBehaviour
         task.OnBuffEnd?.Invoke();
         ActiveBuffTasks.Remove(task);
     }
-    private IEnumerator BuffTaskCoroutine(BuffTask task)
+    public IEnumerator BuffTaskCoroutine(BuffTask task)
     {
         while (!task.IsFinished)
         {
@@ -213,7 +213,7 @@ public class BuffReceiver : MonoBehaviour
     }
     #endregion
     #region ½×¶ÎbuffÂß¼­
-    private void OnBuffStartEffect(BuffSO buff,BuffTask task)
+    public void OnBuffStartEffect(BuffSO buff,BuffTask task)
     {
         if (!buff.IsInstant && task != null)
         {
@@ -323,7 +323,7 @@ public class BuffReceiver : MonoBehaviour
             }
         }
     }
-    private void OnBuffTickEffect(BuffSO buff,BuffTask task)
+    public void OnBuffTickEffect(BuffSO buff,BuffTask task)
     {
         switch (buff.TargetValue)
         {
@@ -351,7 +351,7 @@ public class BuffReceiver : MonoBehaviour
                 break;
         }
     }
-    private void OnBuffEndEffect(BuffSO buff,BuffTask task)
+    public void OnBuffEndEffect(BuffSO buff,BuffTask task)
     {
         if (task != null && task.IconPrefab)
         {
@@ -380,7 +380,7 @@ public class BuffReceiver : MonoBehaviour
     }
     #endregion
 
-    private void OnDestroy()
+    public void OnDestroy()
     {
         ClearAllBuff();
     }

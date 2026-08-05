@@ -34,7 +34,7 @@ public class OptionBtn : MonoBehaviour
         Btn.onClick.RemoveAllListeners();
         ClearDetailContent();
     }
-    private void ClearDetailContent()
+    public void ClearDetailContent()
     {
         Transform c = DetailContent.transform;
         for (int i = c.childCount - 1; i >= 0; i--)

@@ -10,7 +10,7 @@ public class ControlBinding : MonoBehaviour
     public GameObject singleBinding;
     public PlayerInput playerInput;
 
-    private InputActionAsset inputAsset;
+    public InputActionAsset inputAsset;
 
     public void Awake()
     {
@@ -28,7 +28,7 @@ public class ControlBinding : MonoBehaviour
     {
         transform.localScale = transform.localScale == Vector3.one ? transform.localScale : Vector3.one;
     }
-    private void RefreshInputAsset()
+    public void RefreshInputAsset()
     {
         if (playerInput != null)
         {
@@ -62,7 +62,7 @@ public class ControlBinding : MonoBehaviour
         }
     }
 
-    private void GenerateAllBindingItems()
+    public void GenerateAllBindingItems()
     {
         if (inputAsset == null)
         {

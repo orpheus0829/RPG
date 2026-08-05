@@ -44,7 +44,7 @@ public class BuffToolTip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         tipRect.anchoredPosition = (Vector2)Input.mousePosition;
         Tip.SetActive(true);
     }
-    private void Update()
+    public void Update()
     {
         if (Tip && Tip.activeSelf)
         {

@@ -28,17 +28,13 @@ public class CameraTimelineClip : PlayableAsset
     public float resetStartSpeed = 1f;
     public float resetEndSpeed = 3f;
 
-    [Header("=== 环绕圆弧运镜 ===")]
-    [Tooltip("开启后以固定半径绕角色旋转，高度全程不变")]
+    [Header("环绕圆弧运镜")]
     public bool useSurroundMode = false;
-    [Tooltip("固定环绕水平半径，只能面板修改，拖拽终点不改变圆弧大小")]
     public float surroundRadius = 3.2f;
-    [Tooltip("总环绕旋转角度，180=右半圈，-180左半圈")]
     public float surroundTotalAngle = 180f;
-    [Tooltip("环绕全程固定高度偏移（不升降）")]
     public float surroundFixedHeight = 1.2f;
 
-    [Header("目标机位参数（直线/环绕模式生效；归位模式自动忽略此字段）")]
+    [Header("目标机位参数")]
     public Vector3 cameraTargetLocalPos;
     public Vector3 cameraTargetEuler;
 

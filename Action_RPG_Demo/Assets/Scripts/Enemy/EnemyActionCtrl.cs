@@ -10,7 +10,7 @@ public class EnemyActionCtrl : BaseActor, INotificationReceiver
     [Header("敌人招式配置")]
     public EnemyRoleSO Character;
     public ActionSO CurAction;
-    [Header("动作窗口（由 Timeline 信号控制）")]
+    [Header("动作窗口")]
     public bool canInterrupt;
     public bool CanHesMove;
 

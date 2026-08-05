@@ -54,7 +54,6 @@ public class FriendSearchItem : MonoBehaviour
         {
             try
             {
-                Debug.Log($"Raw Success:{JsonUtility.ToJson(success)}");
                 string tip = "∫√”—…Í«Î“—∑¢ÀÕ";
                 if (PickNoticeMgr.instance != null)
                 {
@@ -67,7 +66,7 @@ public class FriendSearchItem : MonoBehaviour
             }
         }, (error) =>
         {
-            Debug.LogError($"Cloud Err:{error.ErrorMessage}");
+            Debug.Log($"‘∆∂À±®¥Ì:{error.ErrorMessage}");
             if (PickNoticeMgr.instance != null)
             {
                 PickNoticeMgr.instance.ShowFieldTip($"∑¢ÀÕ…Í«Î ß∞‹£∫{error.ErrorMessage}");

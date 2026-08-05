@@ -39,7 +39,7 @@ public class SaveLoadDataCtrl : MonoBehaviour, IPointerClickHandler
         LoadAllData();
         RefreshSlotText();
     }
-    private void RefreshSlotText()
+    public void RefreshSlotText()
     {
         if (!CurData.HaveData)
         {

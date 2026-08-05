@@ -63,7 +63,7 @@ public class DamageNumItem : MonoBehaviour
         FloatFadeCoroutine = StartCoroutine(FloatAndFadeCoroutine());
     }
 
-    private IEnumerator FloatAndFadeCoroutine()
+    public IEnumerator FloatAndFadeCoroutine()
     {
         DamageNumberMgr mgr = DamageNumberMgr.instance;
         float timer = 0f;
