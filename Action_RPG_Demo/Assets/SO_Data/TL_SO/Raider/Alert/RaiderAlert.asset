@@ -1,20 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f07cd29b8943cab4ca89a155dd596839, type: 3}
-  m_Name: RaiderAlert
-  m_EditorClassIdentifier: 
-  actionID: 1
-  actionName: RaiderAlert
-  timeline: {fileID: 11400000, guid: 7488308373559d944b38f4e091cf1205, type: 2}
-  actionType: 0
-  nextAction: {fileID: 0}
-  Related: 0
+version https://git-lfs.github.com/spec/v1
+oid sha256:42966372dbb6630ff7c60d7f7913ce0483b7a681d7ffbff16f54b58c3603327e
+size 575

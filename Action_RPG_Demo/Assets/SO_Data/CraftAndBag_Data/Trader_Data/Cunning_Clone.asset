@@ -1,31 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d23a2f60b49323429404c7f1ca06cb2, type: 3}
-  m_Name: Cunning_Clone
-  m_EditorClassIdentifier: 
-  CanBuy_Count: 20
-  Can_Buy_List:
-  - {fileID: 11400000, guid: 6b66a201705b3c94880429d6c2cc3d04, type: 2}
-  - {fileID: 11400000, guid: 1866ddd97aad4214283311c32320a376, type: 2}
-  - {fileID: 11400000, guid: 8f3595e80e984594694a39b14017b3db, type: 2}
-  - {fileID: 11400000, guid: a821bbd2061849d42bdd78f655396f81, type: 2}
-  - {fileID: 11400000, guid: 19192936ba1b75a44b778d24af343b7e, type: 2}
-  - {fileID: 11400000, guid: 4f2722ff196b22943bf92a0066942337, type: 2}
-  CanSell_Count: 20
-  Can_Sell_List:
-  - {fileID: 11400000, guid: 6b66a201705b3c94880429d6c2cc3d04, type: 2}
-  - {fileID: 11400000, guid: 1866ddd97aad4214283311c32320a376, type: 2}
-  - {fileID: 11400000, guid: 8f3595e80e984594694a39b14017b3db, type: 2}
-  - {fileID: 11400000, guid: 19192936ba1b75a44b778d24af343b7e, type: 2}
-  - {fileID: 11400000, guid: a821bbd2061849d42bdd78f655396f81, type: 2}
-  - {fileID: 11400000, guid: 4f2722ff196b22943bf92a0066942337, type: 2}
-  Rrstore_Time: 10
+version https://git-lfs.github.com/spec/v1
+oid sha256:9c4726d1ed056702cb26c1edff4a59202a76cf3a3c35a0e5426aad048a22b3ea
+size 1357

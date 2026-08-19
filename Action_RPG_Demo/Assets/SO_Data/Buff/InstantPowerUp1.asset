@@ -1,23 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84a21208345c59144a271dea08749a16, type: 3}
-  m_Name: InstantPowerUp1
-  m_EditorClassIdentifier: 
-  SuitableTags: []
-  BuffName: "\u84C4\u80FD1"
-  BuffIntro: "\u57284\u79D2\u5185\u6BCF\u79D2\u56DE\u590D50\u70B9\u80FD\u91CF"
-  BuffIcon: {fileID: 21300000, guid: bc3267bebf8ce71498cf9d7fbfd586ff, type: 3}
-  Duration: 4
-  ActiveInterval: 1
-  IsInstant: 0
-  TargetValue: 2
-  Val: 50
+version https://git-lfs.github.com/spec/v1
+oid sha256:c34a7c0a0cd3e2813e9b1db74d4aadae74a37ee6168f471b28a9842c648cdbe7
+size 686

@@ -1,33 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63f08684b98d78448b711cb70203875e, type: 3}
-  m_Name: FlyHand
-  m_EditorClassIdentifier: 
-  Display_In_Backpacks: {fileID: 21300000, guid: 4128132dd6bec7c4eaeda75ca53cdadb, type: 3}
-  Drop: {fileID: 4036299250517763226, guid: 12a33312f25f38044bfdec0933625bb1, type: 3}
-  Stackable: 0
-  StackMax: 1
-  item_name: "\u6467\u575A\u94C1\u8155"
-  item_id: 21
-  Height: 2
-  Width: 2
-  PriceValue: 300
-  Introduction: "\u5C16\u9510\u800C\u8F7B\u76C8\uFF0C\u575A\u786C\u53C8\u7A33\u56FA"
-  item_Kind: 2
-  buff: {fileID: 0}
-  EquipmentSlot: 2
-  MaxHP: 10
-  Defense: 10
-  MoveSpeed: 10
-  Attack: 50
-  SpecialGain: 30
-  EndGain: 30
+version https://git-lfs.github.com/spec/v1
+oid sha256:fc77e803067c2240518fb9ae0e0e98a0a9d4156f06ed12d1a51098bdb6976afb
+size 925

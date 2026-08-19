@@ -1,20 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f07cd29b8943cab4ca89a155dd596839, type: 3}
-  m_Name: EndSkill
-  m_EditorClassIdentifier: 
-  actionID: 29
-  actionName: EndSkill
-  timeline: {fileID: 11400000, guid: 19edc6041847303468cd5d17ab342e6b, type: 2}
-  actionType: 0
-  nextAction: {fileID: 11400000, guid: 81e8fad9bf1509a4f9b2b25eb2f24ea8, type: 2}
-  Related: 0
+version https://git-lfs.github.com/spec/v1
+oid sha256:48353b00420809d3b9f172910a1e5b293f09d4dfe9c54d49ec1a4f89ce6f4256
+size 626

@@ -1,25 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4672599399a026043bae2ccb37464d0b, type: 3}
-  m_Name: "\u6218\u65971"
-  m_EditorClassIdentifier: 
-  Quest_Title: "\u6E05\u626B\u884C\u52A8"
-  Quest_Description: "\u6E05\u9664\u5F53\u5730\u76D8\u8E1E\u5DF2\u4E45\u7684\u532A\u5F92"
-  QuestStarts: []
-  Quest_Enemys:
-  - Location: {x: 44, y: 0, z: -115}
-    Enemy: {fileID: 1498075138871015213, guid: a00934cd27ec276409c20dfaf4fbb3c0, type: 3}
-    MaxHp: 1000
-    Damage: 500
-  Rewards:
-  - Count: 1
-    Reward: {fileID: 4845220524345806940, guid: 39bc66e9da046c14b8d0bd4c1b584923, type: 3}
+version https://git-lfs.github.com/spec/v1
+oid sha256:9348033223ede262b0b1dd2a0cf540f11b3984dc3ed28e61e827d7f01fbe39be
+size 844

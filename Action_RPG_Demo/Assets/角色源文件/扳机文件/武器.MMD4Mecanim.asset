@@ -1,17 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1581226164, guid: 1eb6477d79ea83b4d81fd3ef090262dd, type: 3}
-  m_Name: "\u6B66\u5668.MMD4Mecanim"
-  m_EditorClassIdentifier: 
-  fbxAsset: {fileID: 0}
-  fbxAssetPath: 
-  editorViewPage: 0
+version https://git-lfs.github.com/spec/v1
+oid sha256:f0897b71d9f065856fb1c182574d1ffb68c3b2644757c99798391bb374f015af
+size 478

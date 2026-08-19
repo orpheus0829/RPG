@@ -1,33 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63f08684b98d78448b711cb70203875e, type: 3}
-  m_Name: CowHat
-  m_EditorClassIdentifier: 
-  Display_In_Backpacks: {fileID: 21300000, guid: 6212bf7a340902a4b98bf0ee2e3b935f, type: 3}
-  Drop: {fileID: 4036299250517763226, guid: 568066efc7b09d64c8d781ca105634b5, type: 3}
-  Stackable: 0
-  StackMax: 1
-  item_name: "\u5FEB\u67AA\u624B"
-  item_id: 12
-  Height: 2
-  Width: 2
-  PriceValue: 800
-  Introduction: "\u4E00\u9876\u7ED1\u7740\u91CE\u751F\u9EA6\u7A57\u7684\u725B\u4ED4\u6BE1\u5E3D"
-  item_Kind: 2
-  buff: {fileID: 0}
-  EquipmentSlot: 0
-  MaxHP: 5
-  Defense: 3
-  MoveSpeed: 1
-  Attack: 3
-  SpecialGain: 20
-  EndGain: 20
+version https://git-lfs.github.com/spec/v1
+oid sha256:2edc01f30f520c2646df59887dc1f9b3fdbcf67ced1aa3f9449e2c737fedd086
+size 926

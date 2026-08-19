@@ -1,35 +1,3 @@
-// Outputs luminance (grayscale) of the input image _MainTex
-
-Shader "Hidden/Contrast Stretch Luminance" {
-	
-Properties {
-	_MainTex ("Base (RGB)", 2D) = "white" {}
-}
-
-Category {
-	SubShader {
-		Pass {
-			ZTest Always Cull Off ZWrite Off
-				
-CGPROGRAM
-#pragma vertex vert_img
-#pragma fragment frag
-#include "UnityCG.cginc"
-
-uniform sampler2D _MainTex;
-
-float4 frag (v2f_img i) : SV_Target
-{
-	float4 col = tex2D(_MainTex, i.uv);
-	col.rgb = Luminance(col.rgb) * (1+col.a*2);
-	return col;
-}
-ENDCG
-
-		}
-	}
-}
-
-Fallback off
-
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:6c14fe1a692b045ed3807a2b6382f0bd43bb33220d0ab005abb14d11174884c1
+size 520

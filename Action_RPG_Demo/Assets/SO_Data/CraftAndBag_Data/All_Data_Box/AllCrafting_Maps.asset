@@ -1,20 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56f64ac293d58c74eaa42b439478127d, type: 3}
-  m_Name: AllCrafting_Maps
-  m_EditorClassIdentifier: 
-  Crafting_Maps:
-  - {fileID: 11400000, guid: 9570f6de0ebcaf849814b0aa6f8214df, type: 2}
-  - {fileID: 11400000, guid: cbb01a1b868196a41abb563c727489b9, type: 2}
-  - {fileID: 11400000, guid: 1b42b47fb34bd814aa37d48f2e207faf, type: 2}
-  - {fileID: 11400000, guid: 3036dfdd8b6230b4f9f857ed9504e8cf, type: 2}
-  Allmap_FolderPath: Assets/SO_Data/CraftAndBag_Data/Crafting_Map
+version https://git-lfs.github.com/spec/v1
+oid sha256:1e5f96da03151eeb0dd27b262da5a7aafd37f933309677ae0c76acd9e3875c85
+size 776

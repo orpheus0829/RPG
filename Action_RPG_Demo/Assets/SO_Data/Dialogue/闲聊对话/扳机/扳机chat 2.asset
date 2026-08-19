@@ -1,26 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d3a3c6cfdc745f4a94702d36c410017, type: 3}
-  m_Name: "\u6273\u673Achat 2"
-  m_EditorClassIdentifier: 
-  Quest_Title: "\u8FDB\u4E00\u6B65\u4E86\u89E3"
-  Quest_Description: "\u5411\u6273\u673A\u4E86\u89E3\u5F53\u5730\u7684\u60C5\u51B5"
-  QuestStarts: []
-  dialogueMode: 0
-  SpeakerName: "\u6273\u673A"
-  SpeakerId: "\u6273\u673A"
-  Single_Dialogue: "\u5982\u4F60\u6240\u89C1\uFF0C\u8FD9\u91CC\u7684\u602A\u7269\u5DF2\u7ECF\u6E05\u7406\u7684\u5DEE\u4E0D\u591A\u4E86\uFF0C\u4E3A\u6570\u4E0D\u591A\u7684\u602A\u7269\u8FD8\u6F5C\u4F0F\u5728\u67D0\u4E9B\u5730\u65B9\uFF0C\u66F4\u591A\u7684\u602A\u7269\u5219\u662F\u5360\u9886\u4E86\u4E0D\u8FDC\u5904\u7684\u4E00\u5EA7\u5927\u90FD\u5E02\uFF0C\u4F60\u4ECE\u8FD9\u91CC\u9A71\u8F66\u524D\u5F80\u4F30\u8BA1\u4E5F\u8981\u665A\u4E0A\u4E86"
-  Cut_Show: {fileID: 0}
-  ContinueWay: 0
-  nextDialogue: {fileID: 11400000, guid: 43e62ec7f0dc9a74b98ed335de7f0580, type: 2}
-  choiceDialogues: []
-  HasNext: 1
+version https://git-lfs.github.com/spec/v1
+oid sha256:50dac0fa5824401c517f3897c2cf24eb3daf72c81129f59376d0f30b7ecff169
+size 1243

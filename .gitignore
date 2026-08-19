@@ -77,20 +77,16 @@ crashlytics-build.properties
 /Action_RPG/Assets/MMD4Mecanim.meta
 *.a
 Action_RPG_Demo/Assets/MMD4Mecanim.meta
-/Action_RPG_Demo/Assets/艾莲文件/
 /Action_RPG_Demo/Assets/角色源文件/
-/Action_RPG_Demo/Assets/安比文件/
 /Action_RPG_Demo/Assets/Anims/
 /Action_RPG_Demo/Assets/Postapo Cartoon/
 /Action_RPG_Demo/Assets/VFX_Klaus/
 /Action_RPG_Demo/Assets/Fantasy Sounds Bundle/
 /Action_RPG_Demo/Assets/RPG Fight SFX 1/
 /Action_RPG_Demo/Assets/Monster_FBX/
-/Action_RPG_Demo/Assets/Font/
 /Action_RPG_Demo/Assets/Image_Resource/
-/Action_RPG_Demo/Assets/SFX_Resource/
-/Action_RPG_Demo/Assets/VFX_Resource/
 /Action_RPG_Demo/Assets/Motion Titles Pack/
-/Action_RPG_Demo/Assets/Hovl Studio/
+/Action_RPG_Demo/Assets/MapSource/
 /Action_RPG_Demo/Assets/PlayFabEditorExtensions/
 /Action_RPG_Demo/Assets/PlayFabSDK/
+/Action_RPG_Demo/Assets/A_Using_Source/
