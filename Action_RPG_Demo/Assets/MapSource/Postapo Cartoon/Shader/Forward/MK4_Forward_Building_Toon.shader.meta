@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 1256152f905391b4292030c0cbea4f82
+timeCreated: 1459327667
+licenseType: Store
+ShaderImporter:
+  defaultTextures:
+  - _MainTex: {fileID: 2800000, guid: 77c59a802e320d748a9328e1c5ef8983, type: 3}
+  - _BumpMap: {fileID: 2800000, guid: 4252432c6a0855145bf623d0a25e1be0, type: 3}
+  - _Concrete: {fileID: 2800000, guid: 72380edd3740a1b4bac224e4a05e97c1, type: 3}
+  - _Metal: {fileID: 2800000, guid: ca236cb8ef5c47c41b5001aaa2bf3d08, type: 3}
+  - _Glass: {fileID: 2800000, guid: 9a0cb2125d1439c44ba05cee81a72be4, type: 3}
+  - _MasksRGBAOA: {fileID: 2800000, guid: 2134479896e63de43910e374238f4a8b, type: 3}
+  - _MetalNormal: {fileID: 2800000, guid: ada0a9ee091443048ae94cc85c44ff9c, type: 3}
+  - _ConcreteNormal: {fileID: 2800000, guid: 6b837782c7a1a03498ba7359755bebf2, type: 3}
+  - _GlassNormal: {fileID: 2800000, guid: 58fc0dc7d99127248a48c7d77687361e, type: 3}
+  - _Dirt: {fileID: 2800000, guid: 5a9229c780de65e45adc621f388094c7, type: 3}
+  - _Leaks: {fileID: 2800000, guid: 76163e355df5e8b47878ecb2511ecd98, type: 3}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
