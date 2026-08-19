@@ -1,20 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f07cd29b8943cab4ca89a155dd596839, type: 3}
-  m_Name: RaiderBack
-  m_EditorClassIdentifier: 
-  actionID: 6
-  actionName: RaiderBack
-  timeline: {fileID: 11400000, guid: e194fc0fa845f1d4ab04d91daef79c0a, type: 2}
-  actionType: 0
-  nextAction: {fileID: 0}
-  Related: 0
+version https://git-lfs.github.com/spec/v1
+oid sha256:6c1e57a92e9a5b23e16de07fc01a899220adec59be41baa849e2089d0f9fbccd
+size 573

@@ -1,23 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84a21208345c59144a271dea08749a16, type: 3}
-  m_Name: Poisoned1
-  m_EditorClassIdentifier: 
-  SuitableTags: []
-  BuffName: "\u53CD\u80C31"
-  BuffIntro: "\u572810\u79D2\u5185\u6BCF\u79D2\u6263\u96645\u70B9\u8840\u91CF"
-  BuffIcon: {fileID: 21300000, guid: 8026b3916b2f95d44941a215e9de9901, type: 3}
-  Duration: 10
-  ActiveInterval: 1
-  IsInstant: 0
-  TargetValue: 0
-  Val: 5
+version https://git-lfs.github.com/spec/v1
+oid sha256:9bde4c5043f760d1f241b44bca8e96754b8570c11e8b9108af49412c6360071b
+size 680

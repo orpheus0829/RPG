@@ -1,15 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d97da93a9d5d3114b818ee5ae4b748e9, type: 3}
-  m_Name: No_Combo
-  m_EditorClassIdentifier: 
-  allowCombo: 0
+version https://git-lfs.github.com/spec/v1
+oid sha256:0da1048e6d7f91320d5d74403f379b95bc6100160f8e4e06c0848af8d1bf8762
+size 413

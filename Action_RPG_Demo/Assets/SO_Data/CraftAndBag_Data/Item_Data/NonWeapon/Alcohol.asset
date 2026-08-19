@@ -1,26 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63f08684b98d78448b711cb70203875e, type: 3}
-  m_Name: Alcohol
-  m_EditorClassIdentifier: 
-  Display_In_Backpacks: {fileID: 21300000, guid: 835d03cbf20b3ca468c0e8745f106ded, type: 3}
-  Drop: {fileID: 69093387330780800, guid: 3f57a2e980279f840b40af7944c67c21, type: 3}
-  Stackable: 1
-  StackMax: 16
-  item_name: "\u9152\u7CBE"
-  item_id: 8
-  Height: 1
-  Width: 1
-  PriceValue: 10
-  Introduction: "\u533B\u7528\u9152\u7CBE\uFF0C\u53EF\u7528\u4E8E\u5E94\u6025\u5236\u9020"
-  item_Kind: 0
-  buff: {fileID: 0}
+version https://git-lfs.github.com/spec/v1
+oid sha256:d9f6d746b57637a7f38f6da226069f414040bdf39731219c9b525449d9527a86
+size 810

@@ -1,20 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f07cd29b8943cab4ca89a155dd596839, type: 3}
-  m_Name: "Ellen_A\u540E\u4E0D\u6EE1E"
-  m_EditorClassIdentifier: 
-  actionID: 17
-  actionName: "\u666E\u653B\u540E\u4E0D\u6EE1\u7279\u6B8A\u6280"
-  timeline: {fileID: 11400000, guid: a5e91027a08d4a54e93536347938e812, type: 2}
-  actionType: 1
-  nextAction: {fileID: 11400000, guid: 201b5edae52e4cc438780a53fd9911a1, type: 2}
-  Related: 0
+version https://git-lfs.github.com/spec/v1
+oid sha256:460d9f770b4baef4975229441fde9f25ab8f76ac3d38d00ad59bebf9d79c6f0f
+size 688

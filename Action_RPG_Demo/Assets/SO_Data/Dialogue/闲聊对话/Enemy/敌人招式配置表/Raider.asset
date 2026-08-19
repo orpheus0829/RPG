@@ -1,27 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 688239722c9b55245941ce056a7ee265, type: 3}
-  m_Name: Raider
-  m_EditorClassIdentifier: 
-  Idle: {fileID: 11400000, guid: 2793e7071de2c5848948c464a9fa2e0e, type: 2}
-  Alert: {fileID: 11400000, guid: d11f42bb34992fa4caecc84f9275cabe, type: 2}
-  HesitantIdle: {fileID: 11400000, guid: a5525659b649a264da4e089bd79ec67b, type: 2}
-  HesitantL: {fileID: 11400000, guid: 4523227be99b7614dbab2869f686564f, type: 2}
-  HesitantR: {fileID: 11400000, guid: 76e8288cb34b5344885b7029300fcd0c, type: 2}
-  BackDodge: {fileID: 11400000, guid: 6e80eb52ade18244ea52a6632d07563c, type: 2}
-  Run: {fileID: 11400000, guid: 2cc7f2d9fad2991469474fe8093160ed, type: 2}
-  AtkList:
-  - {fileID: 11400000, guid: e3ceb1a465b35374cab3bc89963a9675, type: 2}
-  HeavyAtk: {fileID: 0}
-  KnockBack: {fileID: 0}
-  Hurt: {fileID: 11400000, guid: f2c8b66bcac7192488505d4bf861e499, type: 2}
-  Die: {fileID: 11400000, guid: 45632961b351c1e4eb938435895db999, type: 2}
+version https://git-lfs.github.com/spec/v1
+oid sha256:875660bd784a83a40f66aceec5badf852673604f8a279a7f96ea62ea12d2f204
+size 1233

@@ -1,33 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63f08684b98d78448b711cb70203875e, type: 3}
-  m_Name: EagleArmor
-  m_EditorClassIdentifier: 
-  Display_In_Backpacks: {fileID: 21300000, guid: 3bd555c800281264fafea81547da6851, type: 3}
-  Drop: {fileID: 4036299250517763226, guid: 1542936375958304f9808c6d6d51f112, type: 3}
-  Stackable: 0
-  StackMax: 1
-  item_name: "\u98DE\u7FCE\u74F7\u7532"
-  item_id: 16
-  Height: 4
-  Width: 4
-  PriceValue: 200
-  Introduction: "\u300C\u9E1F\u626C\u7FBD\u7FFC\uFF0C\u517D\u9732\u7259\u722A\u3002\u5C82\u66F0\u65E0\u6301\uFF0C\u540C\u888D\u4E3A\u7532\u300D"
-  item_Kind: 2
-  buff: {fileID: 0}
-  EquipmentSlot: 1
-  MaxHP: 100
-  Defense: 40
-  MoveSpeed: -20
-  Attack: 0
-  SpecialGain: 0
-  EndGain: 0
+version https://git-lfs.github.com/spec/v1
+oid sha256:bf165d7bd1bcaff16da9a7b040c65bdba15dad473e69c20b67266ea7a8c7ad79
+size 987

@@ -1,20 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f07cd29b8943cab4ca89a155dd596839, type: 3}
-  m_Name: Ellen_Attack2
-  m_EditorClassIdentifier: 
-  actionID: 2
-  actionName: "\u653B\u51FB2"
-  timeline: {fileID: 11400000, guid: 63ba3feaa0222044cb41d7872a8b4d1f, type: 2}
-  actionType: 1
-  nextAction: {fileID: 11400000, guid: 201b5edae52e4cc438780a53fd9911a1, type: 2}
-  Related: 1
+version https://git-lfs.github.com/spec/v1
+oid sha256:ccd3c7ece8663d986680fba804cd6020f93063f4b1ef4c1db7ccdb9d210c8af3
+size 637

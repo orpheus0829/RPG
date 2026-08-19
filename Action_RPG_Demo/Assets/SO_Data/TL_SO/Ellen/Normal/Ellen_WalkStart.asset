@@ -1,20 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f07cd29b8943cab4ca89a155dd596839, type: 3}
-  m_Name: Ellen_WalkStart
-  m_EditorClassIdentifier: 
-  actionID: 5
-  actionName: "\u8D77\u6B65"
-  timeline: {fileID: 11400000, guid: 7d15396468069cc458dbaff7d5935234, type: 2}
-  actionType: 0
-  nextAction: {fileID: 11400000, guid: 2b0efb3912250d64594cdd05ca0bfb99, type: 2}
-  Related: 0
+version https://git-lfs.github.com/spec/v1
+oid sha256:1be9d43204525c476492a90a7910f634c39d226b99d7b9e9a9391a3c5d302e5f
+size 638

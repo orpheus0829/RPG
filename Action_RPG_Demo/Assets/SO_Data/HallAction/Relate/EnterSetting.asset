@@ -1,20 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f07cd29b8943cab4ca89a155dd596839, type: 3}
-  m_Name: EnterSetting
-  m_EditorClassIdentifier: 
-  actionID: 0
-  actionName: "\u8FDB\u5165\u8BBE\u7F6E"
-  timeline: {fileID: 11400000, guid: c61551d48eac0b84dbcaefc4c05db4fd, type: 2}
-  actionType: 0
-  nextAction: {fileID: 11400000}
-  Related: 0
+version https://git-lfs.github.com/spec/v1
+oid sha256:2af5116399f4b3b1df8041ac48f84408d16885e95fb888603748c34a3066c713
+size 598

@@ -1,20 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f07cd29b8943cab4ca89a155dd596839, type: 3}
-  m_Name: idle
-  m_EditorClassIdentifier: 
-  actionID: 0
-  actionName: "\u7AD9\u7ACB"
-  timeline: {fileID: 11400000, guid: 66324f941ead8ad46897249c5d1aa4c1, type: 2}
-  actionType: 0
-  nextAction: {fileID: 11400000}
-  Related: 0
+version https://git-lfs.github.com/spec/v1
+oid sha256:33a95eb62c07a32386928cb1945ffe3f8390130a1bb6a4bb9b7cade9f6938f6e
+size 578

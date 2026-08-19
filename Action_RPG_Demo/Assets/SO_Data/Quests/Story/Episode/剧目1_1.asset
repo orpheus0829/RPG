@@ -1,21 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14e6a70f17d065e4d98025684ebd6090, type: 3}
-  m_Name: "\u5267\u76EE1_1"
-  m_EditorClassIdentifier: 
-  Episode_Title: "\u7B2C\u4E00\u5E55\u2014\u20141"
-  Episode_ID: 1
-  Episode_Introduction: "\u5148\u719F\u6089\u719F\u6089\u8857\u533A\u5427"
-  Quests:
-  - {fileID: 11400000, guid: 42294402f86d90f468ec80c12235b2e6, type: 2}
-  - {fileID: 11400000, guid: c043e90df87715f46b990b8904a72a93, type: 2}
-  Episode_Rewards: []
+version https://git-lfs.github.com/spec/v1
+oid sha256:db7a4c6cdc5d4ffb545584bda662619edaf4c367df2880f20a7edf9b31d413a6
+size 724

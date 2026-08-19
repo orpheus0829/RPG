@@ -1,25 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84a21208345c59144a271dea08749a16, type: 3}
-  m_Name: HealingBuff
-  m_EditorClassIdentifier: 
-  SuitableTags:
-  - Player
-  - Enemy
-  BuffName: "\u751F\u547D\u6062\u590D1"
-  BuffIntro: "\u572810\u79D2\u5185\u7F13\u6162\u6062\u590D\u751F\u547D\u503C\uFF0C\u6BCF\u79D2\u6062\u590D5\u70B9"
-  BuffIcon: {fileID: 21300000, guid: bc3267bebf8ce71498cf9d7fbfd586ff, type: 3}
-  Duration: 10
-  ActiveInterval: 1
-  IsInstant: 0
-  TargetValue: 0
-  Val: 5
+version https://git-lfs.github.com/spec/v1
+oid sha256:98934d8bc3302a8dcd9b7befdc290fc0034c0079147958d118f0c4b6b805aea6
+size 748

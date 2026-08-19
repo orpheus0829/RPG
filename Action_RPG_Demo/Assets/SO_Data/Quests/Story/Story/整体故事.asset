@@ -1,20 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: acabd7c3101c9b7489b6d4babbc77f43, type: 3}
-  m_Name: "\u6574\u4F53\u6545\u4E8B"
-  m_EditorClassIdentifier: 
-  Story_Title: "\u6DF1\u5165\u8857\u533A"
-  Story_ID: 1
-  Story_Introduction: "\u4E86\u89E3\u793E\u533A\u7684\u73B0\u72B6"
-  Chapters:
-  - {fileID: 11400000, guid: 756620a5548a75240a1e1835668f6968, type: 2}
-  - {fileID: 11400000, guid: d17310dca80053848888ac97691f13d9, type: 2}
+version https://git-lfs.github.com/spec/v1
+oid sha256:21f90f90280691bded5a83742d3ea489e976b9e12fe6f78482ba3d8a7323b98c
+size 694

@@ -1,20 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f07cd29b8943cab4ca89a155dd596839, type: 3}
-  m_Name: RaiderHurt
-  m_EditorClassIdentifier: 
-  actionID: 8
-  actionName: RaiderHurt
-  timeline: {fileID: 11400000, guid: eb269da9b1349df4d9c6b94e7933eace, type: 2}
-  actionType: 0
-  nextAction: {fileID: 0}
-  Related: 0
+version https://git-lfs.github.com/spec/v1
+oid sha256:6f72c8669fe22ec79062d601a91627ae370a51a63c63f184cc1f345b6d9270e4
+size 573

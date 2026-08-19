@@ -1,20 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f07cd29b8943cab4ca89a155dd596839, type: 3}
-  m_Name: Ellen_SwitchIn
-  m_EditorClassIdentifier: 
-  actionID: 30
-  actionName: "\u5207\u5165"
-  timeline: {fileID: 11400000, guid: aa0ff114263b73641841c7095ba3c372, type: 2}
-  actionType: 0
-  nextAction: {fileID: 11400000, guid: 201b5edae52e4cc438780a53fd9911a1, type: 2}
-  Related: 0
+version https://git-lfs.github.com/spec/v1
+oid sha256:22fc3c13ad1536b08e1b8239eca59257cb199eb819747687424c8ec8c75e123f
+size 638
