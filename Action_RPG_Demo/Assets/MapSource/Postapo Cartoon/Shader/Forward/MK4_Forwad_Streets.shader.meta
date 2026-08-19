@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c23beb98190843e449f7cb60387635e1
+timeCreated: 1461057938
+licenseType: Store
+ShaderImporter:
+  defaultTextures:
+  - _MainTex: {fileID: 2800000, guid: aeb745ed7c49d5c4c8d3139c39632ad8, type: 3}
+  - _BumpMap: {fileID: 2800000, guid: c16101dc3f8e3e0458ba52dc7bfe46a6, type: 3}
+  - _Aldebo: {fileID: 2800000, guid: cad4fcf2ba398dd4c98c65186a533c03, type: 3}
+  - _MetallicGloss: {fileID: 2800000, guid: 564aa1ae0b65dc941a3ce1a787f5c093, type: 3}
+  - _AlphaDetails: {fileID: 2800000, guid: e5f4d1e5f11059b47b4daca2dd100891, type: 3}
+  - _Cracks: {fileID: 2800000, guid: d4675ebdff8f5e440a56a32968f261ea, type: 3}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
