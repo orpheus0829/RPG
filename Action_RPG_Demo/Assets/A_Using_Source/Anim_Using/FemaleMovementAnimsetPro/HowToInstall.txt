@@ -1,0 +1,14 @@
+INSTALLATION NOTES
+
+1. Create a new, fresh, EMPTY Unity Project
+
+2. Download and Import fresh version of Playmaker
+
+3. Import Movement Animset Pro
+
+4. Unzip
+	Assets\MovementAnimsetPro\UnzipAndReplace_InputManager\ProjectSettings.zip
+and replace the existing
+	ProjectSettings\InputManager.asset and TagManager.asset with the unzipped files.
+
+5. Enjoy
