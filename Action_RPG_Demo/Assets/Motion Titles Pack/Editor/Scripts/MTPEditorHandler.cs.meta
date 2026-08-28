@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 914e31b62a6bb37469f941c5b766b297
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 195031
+  packageName: Motion Titles Pack
+  packageVersion: 1.0.6
+  assetPath: Assets/Motion Titles Pack/Scripts/Core/MTPEditorHandler.cs
+  uploadId: 718233

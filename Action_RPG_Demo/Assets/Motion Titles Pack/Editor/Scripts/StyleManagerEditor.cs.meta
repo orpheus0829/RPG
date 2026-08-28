@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 04816b433d636fa498abf0bca8c054b0
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 195031
+  packageName: Motion Titles Pack
+  packageVersion: 1.0.6
+  assetPath: Assets/Motion Titles Pack/Editor/Scripts/StyleManagerEditor.cs
+  uploadId: 718233

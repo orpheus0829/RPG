@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 9e5708a185c5ce14387481f9632abb76
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - m_ViewDataDictionary: {instanceID: 0}
+  - bannerTexture: {fileID: 2800000, guid: 557a7efc2aba88740819aef3a12ed7d3, type: 3}
+  - styleCreatorList: {fileID: 11400000, guid: 7c8c7276cd108ed48b7b41aecf42392b, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 195031
+  packageName: Motion Titles Pack
+  packageVersion: 1.0.6
+  assetPath: Assets/Motion Titles Pack/Editor/Scripts/StyleCreator.cs
+  uploadId: 718233

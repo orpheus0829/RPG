@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 666a97a50d8409f44bbfd81d403d44b2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 195031
+  packageName: Motion Titles Pack
+  packageVersion: 1.0.6
+  assetPath: Assets/Motion Titles Pack/Scripts/Core/ImageItem.cs
+  uploadId: 718233
