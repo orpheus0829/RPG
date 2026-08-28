@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 02689d4026143204aacf60eb068d488a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 195031
+  packageName: Motion Titles Pack
+  packageVersion: 1.0.6
+  assetPath: Assets/Motion Titles Pack/Editor/Scripts/StyleVideoPreview.cs
+  uploadId: 718233

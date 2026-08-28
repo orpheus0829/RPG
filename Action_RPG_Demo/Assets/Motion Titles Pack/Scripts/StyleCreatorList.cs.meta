@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: a68f89386b5a8364ca1345d264a42085
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 195031
+  packageName: Motion Titles Pack
+  packageVersion: 1.0.6
+  assetPath: Assets/Motion Titles Pack/Scripts/Core/StyleCreatorList.cs
+  uploadId: 718233
