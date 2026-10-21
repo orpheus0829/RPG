@@ -52,21 +52,19 @@ public class SaveLoadDataCtrl : MonoBehaviour, IPointerClickHandler
     }
     public void SaveAllData()
     {
-        string json = JsonUtility.ToJson(CurData);
-        File.WriteAllText(FullSavePath, json);
+        JsonFileStore.Save(FullSavePath, CurData);
         Debug.Log($"存档{SaveSlotIndex}保存成功,路径:{FullSavePath}");
         RefreshSlotText();
     }
     public void LoadAllData()
     {
-        if (!File.Exists(FullSavePath))
+        if (!JsonFileStore.TryLoad(FullSavePath, out DataSum data))
         {
             CurData = new DataSum();
             CurData.HaveData = false;
             return;
         }
-        string jsonText = File.ReadAllText(FullSavePath);
-        CurData = JsonUtility.FromJson<DataSum>(jsonText);
+        CurData = data;
         Debug.Log($"读取存档{SaveSlotIndex}成功");
     }
     public void DeleteSaveFile()

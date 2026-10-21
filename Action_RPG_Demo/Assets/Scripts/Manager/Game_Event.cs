@@ -214,7 +214,7 @@ public class Game_Event : Base_mgr<Game_Event>
     }
     public bool SameEquip(Item_Dragger dragger)
     {
-        return AlreadyEquip.Invoke(dragger);
+        return AlreadyEquip?.Invoke(dragger) ?? false;
     }
     #endregion
     #region ×°±¸À¸

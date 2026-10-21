@@ -425,7 +425,7 @@ public class Player_Bag : BaseBag
     #region 保存与读取
     public override void Save_Bag(string path)
     {
-        string fullPath = Application.persistentDataPath + "/" + path + ".json";
+        string fullPath = JsonFileStore.PersistentPath(path);
         Bag_Save_Data save = new Bag_Save_Data { row = Bag_Row, col = Bag_Col };
         for (int y = 0; y < Bag_Row; y++)
         {
@@ -434,18 +434,15 @@ public class Player_Bag : BaseBag
                 save.slots.Add(bag[y, x]);
             }
         }
-        string jsonStr = JsonUtility.ToJson(save);
-        File.WriteAllText(fullPath, jsonStr);
+        JsonFileStore.Save(fullPath, save);
         Debug.Log($"存档路径:{fullPath}");
     }
     public override void Load_Data(string path)
     {
-        string pathFull = Application.persistentDataPath + "/" + path + ".json";
+        string pathFull = JsonFileStore.PersistentPath(path);
         Debug.Log($"文件地址：{pathFull}");
-        if (File.Exists(pathFull))
+        if (JsonFileStore.TryLoad(pathFull, out Bag_Save_Data save))
         {
-            string json = File.ReadAllText(pathFull);
-            Bag_Save_Data save = JsonUtility.FromJson<Bag_Save_Data>(json);
             Init_Bag();
             int index = 0;
             for (int y = 0; y < save.row; y++)
@@ -473,7 +470,7 @@ public class Player_Bag : BaseBag
     }
     public void SaveWeaponBag(string filePath)
     {
-        string fullPath = Application.persistentDataPath + "/" + filePath + ".json";
+        string fullPath = JsonFileStore.PersistentPath(filePath);
         Bag_Save_Data save = new Bag_Save_Data { row = WeaponBag_Row, col = WeaponBag_Col };
         for (int y = 0; y < WeaponBag_Row; y++)
         {
@@ -482,16 +479,13 @@ public class Player_Bag : BaseBag
                 save.slots.Add(WeaponBag[y, x]);
             }
         }
-        string jsonStr = JsonUtility.ToJson(save);
-        File.WriteAllText(fullPath, jsonStr);
+        JsonFileStore.Save(fullPath, save);
     }
     public void LoadWeaponBag(string filePath)
     {
-        string pathFull = Application.persistentDataPath + "/" + filePath + ".json";
-        if (File.Exists(pathFull))
+        string pathFull = JsonFileStore.PersistentPath(filePath);
+        if (JsonFileStore.TryLoad(pathFull, out Bag_Save_Data save))
         {
-            string json = File.ReadAllText(pathFull);
-            Bag_Save_Data save = JsonUtility.FromJson<Bag_Save_Data>(json);
             InitWeaponBag();
             int index = 0;
             for (int y = 0; y < save.row; y++)

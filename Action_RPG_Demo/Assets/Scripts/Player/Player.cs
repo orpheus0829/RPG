@@ -2,11 +2,9 @@ using DG.Tweening.Plugins.Core.PathCore;
 using MMD4MecanimInternal;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
@@ -1714,15 +1712,14 @@ public class Player : MonoBehaviour
     }
     public void SaveWeaponData()
     {
-        string fullPath = Application.persistentDataPath + "/" + EquipDataPath + ".json";
-        string json = JsonUtility.ToJson(EquipData);
-        File.WriteAllText(fullPath, json);
+        string fullPath = JsonFileStore.PersistentPath(EquipDataPath);
+        JsonFileStore.Save(fullPath, EquipData);
         Debug.Log($"装备存档已保存：{fullPath}");
     }
     public EquipWeaponData LoadWeaponData()
     {
-        string fullPath = Application.persistentDataPath + "/" + EquipDataPath + ".json";
-        if (!File.Exists(fullPath))
+        string fullPath = JsonFileStore.PersistentPath(EquipDataPath);
+        if (!JsonFileStore.TryLoad(fullPath, out EquipWeaponData data))
         {
             Debug.LogWarning("装备存档不存在，返回空白装备数据");
             return new EquipWeaponData
@@ -1734,8 +1731,6 @@ public class Player : MonoBehaviour
                 OnHandData = -1
             };
         }
-        string json = File.ReadAllText(fullPath);
-        EquipWeaponData data = JsonUtility.FromJson<EquipWeaponData>(json);
         return data;
     }
     public void ImportWeaponData(EquipWeaponData equip)

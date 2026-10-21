@@ -1,7 +1,6 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -164,17 +163,16 @@ public class Story_Mgr : Base_mgr<Story_Mgr>
     }
     public void Save_WorldStory(string path)
     {
-        string json_story_data = JsonUtility.ToJson(CurStory);
-        File.WriteAllText(Application.persistentDataPath + "/" + path + ".json", json_story_data);
+        string fullPath = JsonFileStore.PersistentPath(path);
+        JsonFileStore.Save(fullPath, CurStory);
         Debug.Log("剧情进度保存成功，地址为" + Application.persistentDataPath + "/" + path + ".json");
     }
     public void Load_WorldStory(string path)
     {
-        string json_story_data = Application.persistentDataPath + "/" + path + ".json";
-        if (File.Exists(json_story_data))
+        string fullPath = JsonFileStore.PersistentPath(path);
+        if (JsonFileStore.TryLoad(fullPath, out MainStoryData story))
         {
-            string json = File.ReadAllText(json_story_data);
-            CurStory = JsonUtility.FromJson<MainStoryData>(json);
+            CurStory = story;
             Debug.Log("已加载剧情，地址为" + Application.persistentDataPath + "/" + path + ".json");
         }
         else
