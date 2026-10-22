@@ -27,10 +27,17 @@ public class LoadingMgr : Base_mgr<LoadingMgr>
     private bool _LoadFinished;
     private bool _MinTimeReached;
     private bool _IsTransitionRunning;
+    private RectTransform _LoadingText;
+    private Vector2 _LoadingTextBasePosition;
 
     protected override void Awake()
     {
         base.Awake();
+        _LoadingText = transform.Find("LoadingCanvas/LoadingGroup/AllBlack/Load") as RectTransform;
+        if (_LoadingText != null)
+        {
+            _LoadingTextBasePosition = _LoadingText.anchoredPosition;
+        }
         if (instance == this)
         {
             DontDestroyOnLoad(this.gameObject);
@@ -82,6 +89,7 @@ public class LoadingMgr : Base_mgr<LoadingMgr>
 
         AllBlack.gameObject.SetActive(true);
         AllBlack.anchoredPosition = Vector2.zero;
+        KeepLoadingTextVisible();
 
         StartCoroutine(WaitMinimumTime());
 
@@ -185,6 +193,25 @@ public class LoadingMgr : Base_mgr<LoadingMgr>
         _MinTimeReached = true;
     }
     #region ÍË³ö
+    private void KeepLoadingTextVisible()
+    {
+        if (_LoadingText == null)
+        {
+            return;
+        }
+
+        Canvas canvas = _LoadingText.GetComponentInParent<Canvas>();
+        if (canvas == null || canvas.scaleFactor <= 0f)
+        {
+            return;
+        }
+
+        float HalfCanvasHeight = canvas.pixelRect.height * 0.5f / canvas.scaleFactor;
+        float HalfTextHeight = _LoadingText.rect.height * 0.5f;
+        Vector2 Position = _LoadingTextBasePosition;
+        Position.y = Mathf.Max(Position.y, -HalfCanvasHeight + HalfTextHeight + 5f);
+        _LoadingText.anchoredPosition = Position;
+    }
     public void StartQuitTransition()
     {
         if (_IsTransitionRunning)
