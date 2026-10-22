@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: f19c4dd34f83a034c877aaa43d02d4d3
+timeCreated: 1459331368
+licenseType: Store
+ShaderImporter:
+  defaultTextures:
+  - _MainTex: {fileID: 2800000, guid: 5153fdb8e4d98984d828997a1a931574, type: 3}
+  - _BumpMap: {fileID: 2800000, guid: ad81124f0a29b9548b2db0b0963f6d29, type: 3}
+  - _AORMask1GMask2B: {fileID: 2800000, guid: 3429a19243f01eb4894ba4abacd3feb8, type: 3}
+  - _MetallicGloss: {fileID: 2800000, guid: 1dce3ba3a32d6bd468aefb16091edb6f, type: 3}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

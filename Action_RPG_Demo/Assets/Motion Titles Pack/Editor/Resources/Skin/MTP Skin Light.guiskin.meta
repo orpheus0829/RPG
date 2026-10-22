@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: af19fb37d19f2ab49ae3bfa1320601e8
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 195031
+  packageName: Motion Titles Pack
+  packageVersion: 1.0.6
+  assetPath: Assets/Motion Titles Pack/Resources/Editor/Skin/MTP Skin Light.guiskin
+  uploadId: 718233

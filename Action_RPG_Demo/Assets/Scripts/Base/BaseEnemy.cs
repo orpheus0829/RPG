@@ -82,7 +82,7 @@ public class BaseEnemy : MonoBehaviour
     }
     public virtual void TurnToPlayer(float time , float rotatesmmoth)
     {
-        if (PlayerList.Count == 0)
+        if (PlayerList.Count<0)
         {
             return;
         }
@@ -92,10 +92,6 @@ public class BaseEnemy : MonoBehaviour
     }
     public virtual void LookAtPlayer()
     {
-        if (PlayerList.Count == 0)
-        {
-            return;
-        }
         Vector3 dir = PlayerList[0].transform.position - transform.position;
         transform.LookAt(transform.position + dir);
     }

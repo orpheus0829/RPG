@@ -75,25 +75,3 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 /Action_RPG_Demo/Assets/Anims/
 /Action_RPG_Demo/Assets/Image_Resource/
-/Action_RPG_Demo/Assets/A_Using_Source/
-/Action_RPG_Demo/Assets/HQ PBR/
-/Action_RPG_Demo/Assets/Hovl Studio/
-/Action_RPG_Demo/Assets/Hyper Casual FX/
-/Action_RPG_Demo/Assets/MapSource/
-/Action_RPG_Demo/Assets/Motion Titles Pack/
-/Action_RPG_Demo/Assets/SFX_Resource/
-/Action_RPG_Demo/Assets/TimeLine/
-/Action_RPG_Demo/Assets/VFX_Klaus/
-/Action_RPG_Demo/Assets/VFX_Resource/
-/Action_RPG_Demo/Assets/MagicaCloth2/Example (Can be deleted)/
-/Action_RPG_Demo/Assets/Prefab/Item_Image/
-/Action_RPG_Demo/Assets/Prefab/Map.prefab*
-/Action_RPG_Demo/Assets/Prefab/Panel/DamageNumPanel.prefab*
-/Action_RPG_Demo/Assets/Prefab/SM_GlassWall.prefab*
-/Action_RPG_Demo/Assets/SceneMaterial/FriendLst_Transparent.mat*
-/Action_RPG_Demo/Assets/_TerrainAutoUpgrade/
-/Action_RPG_Demo/Assets/角色源文件/
-*.max
-*.blend
-*.ztl
-*.spp

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 75fafb284e53d8d4ca8fe2c95abd9ea1
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 195031
+  packageName: Motion Titles Pack
+  packageVersion: 1.0.6
+  assetPath: Assets/Motion Titles Pack/Animations/Demo/Opening.controller
+  uploadId: 718233

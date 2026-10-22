@@ -27,7 +27,6 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
 
     [Header("确认面板")]
     public BasePanel ConfirmPanel;
-    private TextMeshProUGUI interactChatLabel;
     [Header("效果")]
     public float FadeInDuration;
     public float FadeOutDuration;
@@ -68,7 +67,6 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
         }
         ActiveAllPanel(PanelCollector.transform);
         FindAllPanel();
-        CacheInteractChatLabel();
         UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
     }
     public void Start()
@@ -78,7 +76,6 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
     private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
     {
         FindAllPanel();
-        CacheInteractChatLabel();
     }
     public void On_PanelChanged()
     {
@@ -96,22 +93,11 @@ public class Panel_Mgr : Base_mgr<Panel_Mgr>
     }
     public void Update()
     {
-        if (MapPanel && !MapPanel.gameObject.activeSelf)
+        if (MapPanel)
         {
             MapPanel.gameObject.SetActive(true);
         }
-        if (interactChatLabel)
-        {
-            string text = Game_Event.instance.Current_Chater ? "对话" : "交互";
-            if (interactChatLabel.text != text)
-            {
-                interactChatLabel.text = text;
-            }
-        }
-    }
-    private void CacheInteractChatLabel()
-    {
-        interactChatLabel = InteractChatPanel ? InteractChatPanel.GetComponentInChildren<TextMeshProUGUI>(true) : null;
+        InteractChatPanel.GetComponentInChildren<TextMeshProUGUI>().text = Game_Event.instance.Current_Chater ? "对话" : "交互";
     }
     public void FindAllPanel()
     {

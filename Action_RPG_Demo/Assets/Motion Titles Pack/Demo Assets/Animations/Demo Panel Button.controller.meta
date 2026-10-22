@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a1f060d81cdaaef4c925e75cb71e0227
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 195031
+  packageName: Motion Titles Pack
+  packageVersion: 1.0.6
+  assetPath: Assets/Motion Titles Pack/Animations/Demo/Demo Panel Button.controller
+  uploadId: 718233

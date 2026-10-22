@@ -1,0 +1,6 @@
+Motion Titles Pack - 2.0.0
+--------------------------------
+Documentation: https://docs.michsky.com/docs/motion-titles-pack/
+Support: https://www.michsky.com/contact
+
+Make sure to update TextMesh Pro to the latest version and import its essentials if you haven't already!
