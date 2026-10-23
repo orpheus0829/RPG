@@ -74,7 +74,8 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 /Action_RPG_Demo/Assets/Anims/
-/Action_RPG_Demo/Assets/Image_Resource//Action_RPG_Demo/Assets/A_Using_Source/Anim_Using/StartAnim/Mvm_8way_Walk/Controller/
+/Action_RPG_Demo/Assets/Image_Resource/
+/Action_RPG_Demo/Assets/A_Using_Source/Anim_Using/StartAnim/Mvm_8way_Walk/Controller/
 /Action_RPG_Demo/Assets/A_Using_Source/Anim_Using/StartAnim/Mvm_Idle/Controller/
 /Action_RPG_Demo/Assets/A_Using_Source/Anim_Using/安比文件/Branch/
 /Action_RPG_Demo/Assets/A_Using_Source/Anim_Using/安比文件/fbx/
