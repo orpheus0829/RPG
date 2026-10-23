@@ -367,18 +367,13 @@ crashlytics-build.properties
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/Humanoid/04_Run/02_Run_Combat_RM/11_Run_Fast_Combat_RM/
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/TextMesh Pro/Resources/Sprite Assets/
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/TextMesh Pro/Resources/Style Sheets/
-/Action_RPG_Demo/Assets/Anims/Buy_Resource.meta
-/Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack.meta
-/Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Animations.meta
 /Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Animations/P1_CLazyMovement.meta
 /Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Animations/P2_CLazyEscape.meta
-/Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Animations/P3_CLazyJump.meta
 /Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Animations/P3_CLazyJump/Jmp_Air_Loop.meta
 /Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Animations/P3_CLazyJump/Jmp_Air_Rolling.meta
 /Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Animations/P3_CLazyJump/Jmp_Back_Air.meta
 /Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Animations/P3_CLazyJump/Jmp_Base.meta
 /Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Animations/P3_CLazyJump/Jmp_Front_Air.meta
-/Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Animations/P3_CLazyJump/Jmp_Land.meta
 /Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Animations/P3_CLazyJump/Jmp_Land/CLazy@Land_Base_Move_Root.FBX
 /Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Animations/P3_CLazyJump/Jmp_Land/CLazy@Land_Base_Move_Root.FBX.meta
 /Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Animations/P3_CLazyJump/Jmp_Land/CLazy@Land_Base_Wait.FBX
@@ -405,23 +400,16 @@ crashlytics-build.properties
 /Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Animations/P5_CLazyCollision.meta
 /Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Animations/P6_CLazyWallRun.meta
 /Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Materials.meta
-/Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Models.meta
 /Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Models/ClazyRunner.fbm.meta
 /Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Models/ClazyWeapon.fbm.meta
 /Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Scenes.meta
 /Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Textures.meta
 /Action_RPG_Demo/Assets/Anims/Buy_Resource/Ultimate_Ninja_Anims.meta
 /Action_RPG_Demo/Assets/Anims/Dodge_and_Evade_Anims.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/01_Idle.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/01_Idle/Idle_Combat_To_Idle.fbx
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/01_Idle/Idle_Combat_To_Idle.fbx.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/01_Idle/Idle_To_Idle_Combat.fbx
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/01_Idle/Idle_To_Idle_Combat.fbx.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack/01_Combo_Attack_01.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack/01_Combo_Attack_01/Combo_Attack_01_02.fbx
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack/01_Combo_Attack_01/Combo_Attack_01_02.fbx.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack/01_Combo_Attack_01/Combo_Attack_01_03.fbx
@@ -443,26 +431,19 @@ crashlytics-build.properties
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack/12_Run_Attact.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack/13_Parry_Counter_Attack.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack/14_Dash_Air_Attack.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack/15_Execution.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack/15_Execution/01_Execution.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack/15_Execution/01_Execution/Execution_02.fbx
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack/15_Execution/01_Execution/Execution_02.fbx.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack/15_Execution/01_Execution/Execution_03.fbx
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack/15_Execution/01_Execution/Execution_03.fbx.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack/15_Execution/02_Target.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack/15_Execution/02_Target/Execution_Target_02.fbx
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack/15_Execution/02_Target/Execution_Target_02.fbx.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack/15_Execution/02_Target/Execution_Target_03.fbx
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack/15_Execution/02_Target/Execution_Target_03.fbx.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/02_Attack/16_Power_Attack.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/03_Walk.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/03_Walk/01_Walk_RM.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/03_Walk/02_Walk_Combat_RM.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/03_Walk/02_Walk_Combat_RM/01_Walk_Combat_F_0_RM.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/03_Walk/02_Walk_Combat_RM/02_Walk_Combat_F_L_45_RM.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/03_Walk/02_Walk_Combat_RM/03_Walk_Combat_F_R_45_RM.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/03_Walk/02_Walk_Combat_RM/04_Walk_Combat_F_L_90_RM.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/03_Walk/02_Walk_Combat_RM/05_Walk_Combat_F_R_90_RM.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/03_Walk/02_Walk_Combat_RM/06_Walk_Combat_B_180_RM.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/03_Walk/02_Walk_Combat_RM/07_Walk_Combat_B_L_45_RM.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/03_Walk/02_Walk_Combat_RM/08_Walk_Combat_B_R_45_RM.meta
@@ -473,9 +454,7 @@ crashlytics-build.properties
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/03_Walk/05_Walk_to_Walk_Combat.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/04_Run.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/05_Jump.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/06_Dodge.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/06_Dodge/01_Dodge.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/06_Dodge/02_Dodge_Combat.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/06_Dodge/02_Dodge_Combat/Dodge_Combat_B_L_45.fbx
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/06_Dodge/02_Dodge_Combat/Dodge_Combat_B_L_45.fbx.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/06_Dodge/02_Dodge_Combat/Dodge_Combat_B_R_45.fbx
@@ -495,12 +474,10 @@ crashlytics-build.properties
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/06_Dodge/05_Dodge_to_Run.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/06_Dodge/06_Dodge_Combat_to_Run.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/07_Roll.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/01_Hit.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/02_Hit_Combat.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/03_Hit_Air.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/04_Hit_Combat_Air.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/05_Hit_Large.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/05_Hit_Large/Hit_Large_B.fbx
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/05_Hit_Large/Hit_Large_B.fbx.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/05_Hit_Large/Hit_Large_Death.fbx
@@ -509,7 +486,6 @@ crashlytics-build.properties
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/05_Hit_Large/Hit_Large_L.fbx.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/05_Hit_Large/Hit_Large_R.fbx
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/05_Hit_Large/Hit_Large_R.fbx.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/06_Hit_Large_Combat.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/06_Hit_Large_Combat/Hit_Large_Combat_B.fbx
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/06_Hit_Large_Combat/Hit_Large_Combat_B.fbx.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/06_Hit_Large_Combat/Hit_Large_Combat_Death.fbx
@@ -522,7 +498,6 @@ crashlytics-build.properties
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/08_Hit_Combat_Air_Large_To_Floor.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/09_Get_Up.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/10_Knock_Down.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/11_Knock_Down_Combat.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/11_Knock_Down_Combat/Knock_Down_Combat_End.fbx
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/11_Knock_Down_Combat/Knock_Down_Combat_End.fbx.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/11_Knock_Down_Combat/Knock_Down_Combat_Loop.fbx
@@ -531,18 +506,13 @@ crashlytics-build.properties
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/11_Knock_Down_Combat/Knock_Down_Combat_Start.fbx.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/08_Hit/12_Block.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/FBX/09_Turn.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/Humanoid.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/Humanoid/01_Idle.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/Humanoid/01_Idle/Idle_Combat.anim
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/Humanoid/01_Idle/Idle_Combat.anim.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/Humanoid/01_Idle/Idle_Combat_To_Idle.anim
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/Humanoid/01_Idle/Idle_Combat_To_Idle.anim.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/Humanoid/02_Attack.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/Humanoid/03_Walk.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/Humanoid/04_Run.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/Humanoid/04_Run/01_Run_RM.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/Humanoid/04_Run/02_Run_Combat_RM.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/Humanoid/04_Run/02_Run_Combat_RM/01_Run_Combat_F_0_RM.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/Humanoid/04_Run/02_Run_Combat_RM/01_Run_Combat_F_0_RM/Run_Combat_Start_F_0_RM.anim
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/Humanoid/04_Run/02_Run_Combat_RM/01_Run_Combat_F_0_RM/Run_Combat_Start_F_0_RM.anim.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/Humanoid/04_Run/02_Run_Combat_RM/01_Run_Combat_F_0_RM/Run_Combat_Stop_F_0_RM.anim
@@ -564,25 +534,16 @@ crashlytics-build.properties
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/Humanoid/07_Roll.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/Humanoid/08_Hit.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Animation/Humanoid/09_Turn.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Materials.meta
-/Action_RPG_Demo/Assets/Anims/RaiderAnim/Model.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Prefabs.meta
 /Action_RPG_Demo/Assets/Anims/RaiderAnim/Scenes.meta
 /Action_RPG_Demo/Assets/Anims/Sword_sheath_AnimSet.meta
-/Action_RPG_Demo/Assets/Anims/Zombie_Anim.meta
-/Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap.meta
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Art.meta
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Audio.meta
-/Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo.meta
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/Character.meta
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/Scene.meta
-/Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/TextMesh Pro.meta
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/TextMesh Pro/Documentation.meta
-/Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/TextMesh Pro/Fonts.meta
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/TextMesh Pro/Fonts/LiberationSans - OFL.txt
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/TextMesh Pro/Fonts/LiberationSans - OFL.txt.meta
-/Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/TextMesh Pro/Resources.meta
-/Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/TextMesh Pro/Resources/Fonts & Materials.meta
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Drop Shadow.mat
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Drop Shadow.mat.meta
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Outline.mat
@@ -595,7 +556,6 @@ crashlytics-build.properties
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/TextMesh Pro/Resources/Style Sheets.meta
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/TextMesh Pro/Resources/TMP Settings.asset
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/TextMesh Pro/Resources/TMP Settings.asset.meta
-/Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/TextMesh Pro/Shaders.meta
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/TextMesh Pro/Shaders/TMP_Bitmap-Custom-Atlas.shader
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/TextMesh Pro/Shaders/TMP_Bitmap-Custom-Atlas.shader.meta
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Demo/TextMesh Pro/Shaders/TMP_Bitmap-Mobile.shader
@@ -628,13 +588,10 @@ crashlytics-build.properties
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Documentation.meta
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Prefab.meta
 /Action_RPG_Demo/Assets/Anims/Zombie_Anim/Zombie Animations Mocap/Skeleton_Reference.meta
-/Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon.meta
 /Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon/icon_line_app_34_20260724160258.png
 /Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon/icon_line_app_34_20260724160258.png.meta
 /Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon/icon_line_game_120_20260724160315.png
 /Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon/icon_line_game_120_20260724160315.png.meta
-/Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon/png_128.meta
-/Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon/png_128/button_line.meta
 /Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon/png_128/button_line/button_line_circle1.meta
 /Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon/png_128/button_line/button_line_circle2.meta
 /Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon/png_128/button_line/button_line_circle3.meta
@@ -661,7 +618,6 @@ crashlytics-build.properties
 /Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon/png_128/button_line/button_line_rectangle3.meta
 /Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon/png_128/button_line/button_line_square1.meta
 /Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon/png_128/button_line/button_line_square2.meta
-/Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon/png_128/button_line/button_line_square3.meta
 /Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon/png_128/button_line/button_line_square3/button_line_square3_1.png
 /Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon/png_128/button_line/button_line_square3/button_line_square3_1.png.meta
 /Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon/png_128/button_line/button_line_square3/button_line_square3_10.png
@@ -769,9 +725,6 @@ crashlytics-build.properties
 /Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon/readme.txt
 /Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon/readme.txt.meta
 /Action_RPG_Demo/Assets/Image_Resource/CleanFlatIcon/unity_demo.meta
-/Action_RPG_Demo/Assets/Image_Resource/Kyrise's 16x16 RPG Icon Pack - V1.3.meta
-/Action_RPG_Demo/Assets/Image_Resource/Kyrise's 16x16 RPG Icon Pack - V1.3/icons.meta
-/Action_RPG_Demo/Assets/Image_Resource/Kyrise's 16x16 RPG Icon Pack - V1.3/icons/16x16.meta
 /Action_RPG_Demo/Assets/Image_Resource/Kyrise's 16x16 RPG Icon Pack - V1.3/icons/16x16/armor_01d.png
 /Action_RPG_Demo/Assets/Image_Resource/Kyrise's 16x16 RPG Icon Pack - V1.3/icons/16x16/armor_01d.png.meta
 /Action_RPG_Demo/Assets/Image_Resource/Kyrise's 16x16 RPG Icon Pack - V1.3/icons/16x16/armor_01e.png
@@ -1462,8 +1415,6 @@ crashlytics-build.properties
 /Action_RPG_Demo/Assets/Image_Resource/Kyrise's 16x16 RPG Icon Pack - V1.3/icons/16x16/sword_03e.png.meta
 /Action_RPG_Demo/Assets/Image_Resource/Kyrise's 16x16 RPG Icon Pack - V1.3/icons/16x16/wood_01a.png
 /Action_RPG_Demo/Assets/Image_Resource/Kyrise's 16x16 RPG Icon Pack - V1.3/icons/16x16/wood_01a.png.meta
-/Action_RPG_Demo/Assets/Image_Resource/绝区零：UI.meta
-/Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/LOGO.meta
 /Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/LOGO/0ce86ee140a04fd833f948a637af2283_1513181873101011224.png
 /Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/LOGO/0ce86ee140a04fd833f948a637af2283_1513181873101011224.png.meta
 /Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/LOGO/1-.png
@@ -1554,13 +1505,10 @@ crashlytics-build.properties
 /Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/LOGO/下载 (6).png.meta
 /Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/官方物料.meta
 /Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/材料.meta
-/Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/表情包.meta
-/Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/表情包/《绝区零》「丽都漫步」系列表情包第一弹.meta
 /Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/表情包/表情包更新1.meta
 /Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/表情包/表情包更新2.meta
 /Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/表情包/表情包更新3.meta
 /Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/角色半身.meta
-/Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/角色头像.meta
 /Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/角色头像/002.png
 /Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/角色头像/002.png.meta
 /Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/角色头像/004.png
@@ -1622,7 +1570,6 @@ crashlytics-build.properties
 /Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/角色头像/f1104e9b26d696fa6063d46593286af9_2740020603372887152.png
 /Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/角色头像/f1104e9b26d696fa6063d46593286af9_2740020603372887152.png.meta
 /Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/音乐.meta
-/Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/音擎图鉴.meta
 /Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/音擎图鉴/001.png
 /Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/音擎图鉴/001.png.meta
 /Action_RPG_Demo/Assets/Image_Resource/绝区零：UI/音擎图鉴/002.png
@@ -8018,3 +7965,12 @@ crashlytics-build.properties
 /Action_RPG_Demo/Assets/角色源文件/猫又/Tsubaki_Walk.max.meta
 /Action_RPG_Demo/Assets/角色源文件/猫又/Tsubaki_Walk_Start.max
 /Action_RPG_Demo/Assets/角色源文件/猫又/Tsubaki_Walk_Start.max.meta
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Standard Assets/Effects/ImageEffects/Shaders/Contrast Stretch.meta
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Standard Assets/Effects/ImageEffects/Shaders/_Antialiasing.meta
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Standard Assets/Effects/ImageEffects/Shaders/_BloomAndFlares.meta
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Standard Assets/Effects/ImageEffects/Shaders/_DepthOfField.meta
+/Action_RPG_Demo/Assets/Anims/Buy_Resource/CLazyRunnerActionAnimPack/Animations/P3_CLazyJump/Jmp_Land/Materials/
+/Action_RPG_Demo/Assets/Resources/PerformanceTestRunInfo.json
+/Action_RPG_Demo/Assets/Resources/PerformanceTestRunInfo.json.meta
+/Action_RPG_Demo/Assets/Resources/PerformanceTestRunSettings.json
+/Action_RPG_Demo/Assets/Resources/PerformanceTestRunSettings.json.meta
