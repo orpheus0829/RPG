@@ -74,4 +74,162 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 /Action_RPG_Demo/Assets/Anims/
-/Action_RPG_Demo/Assets/Image_Resource/
+/Action_RPG_Demo/Assets/Image_Resource//Action_RPG_Demo/Assets/A_Using_Source/Anim_Using/StartAnim/Mvm_8way_Walk/Controller/
+/Action_RPG_Demo/Assets/A_Using_Source/Anim_Using/StartAnim/Mvm_Idle/Controller/
+/Action_RPG_Demo/Assets/A_Using_Source/Anim_Using/安比文件/Branch/
+/Action_RPG_Demo/Assets/A_Using_Source/Anim_Using/安比文件/fbx/
+/Action_RPG_Demo/Assets/A_Using_Source/Anim_Using/安比文件/动作动画/WallRun/
+/Action_RPG_Demo/Assets/A_Using_Source/Anim_Using/安比文件/动作动画/冲刺攻击/
+/Action_RPG_Demo/Assets/A_Using_Source/Anim_Using/安比文件/动作动画/反弹子弹/
+/Action_RPG_Demo/Assets/A_Using_Source/Anim_Using/安比文件/动作动画/受击/被打飞/
+/Action_RPG_Demo/Assets/A_Using_Source/Anim_Using/安比文件/动作动画/掉落/
+/Action_RPG_Demo/Assets/A_Using_Source/Anim_Using/安比文件/动作动画/跑步折返/
+/Action_RPG_Demo/Assets/A_Using_Source/Anim_Using/安比文件/动作动画/跳/Jmp_Roll_Front/Controller/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Building/Models/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Cars/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Demo/Animation/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Demo/Demo Scene/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Flowers/Models/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Grounds/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Sky/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Standard Assets/Effects/GlassRefraction/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Standard Assets/Effects/ImageEffects/Shaders/Contrast Stretch/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Standard Assets/Effects/ImageEffects/Shaders/_Antialiasing/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Standard Assets/Effects/ImageEffects/Shaders/_BloomAndFlares/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Standard Assets/Effects/ImageEffects/Shaders/_DepthOfField/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Standard Assets/Effects/ImageEffects/Textures/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Standard Assets/Effects/LightCookies/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Standard Assets/Effects/LightFlares/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Standard Assets/Effects/Projectors/Materials/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Standard Assets/Effects/Projectors/Prefabs/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Standard Assets/Effects/Projectors/Shaders/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Standard Assets/Effects/TessellationShaders/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Standard Assets/Effects/ToonShading/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Streets/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Text/Models/
+/Action_RPG_Demo/Assets/MapSource/Postapo Cartoon/Trees/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/Skybox/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/bag_fertilizer_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/blacksmith_hammer_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/cardboard_box_b_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/cardboard_box_c_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/cargo_tarp_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/chair_table_aluminum_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/concrete_floor_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/conveyor_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/conveyor_a_01_belt/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/decals/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/drain_mat_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/electric_generator_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/fire_extinguisher_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/fx_lightcone_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/garage_door_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/legal_pad_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/loudspeaker_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/metal_aluminum_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/pallet_wrapped_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/pallet_wrapped_b_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/paper_crumpled_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/paper_news_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/paper_news_b_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/paper_news_c_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/papers_clippings_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/pipe_insulated_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/pipe_insulated_b_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/plastic_drum_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/plastic_trash_bag_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/propane_gas_tank_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/shelving_metal_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/shipping_crate_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/shipping_pallet_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/stadium_light_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/steel_vat_tank_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/step_ladder_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/storage_crate_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/tiling_metal_painted_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/tiling_metal_steel_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/tiling_plastic_a_01_black/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/tiling_plastic_scratched_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/tiling_wood_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Materials/water_reservoir_tank_a_01/
+/Action_RPG_Demo/Assets/HQ PBR/HQ Warehouse Kit/Prefabs/
+/Action_RPG_Demo/Assets/A_Using_Source/Font/_FONT/
+/Action_RPG_Demo/Assets/SFX_Resource/Fantasy Sounds Bundle/Exclusive Sounds/
+/Action_RPG_Demo/Assets/SFX_Resource/RPG Fight SFX 1/
+/Action_RPG_Demo/Assets/MagicaCloth2/Example (Can be deleted)/Common/Materials/
+/Action_RPG_Demo/Assets/MagicaCloth2/Example (Can be deleted)/Common/Model/
+/Action_RPG_Demo/Assets/MagicaCloth2/Example (Can be deleted)/Common/Prefabs/
+/Action_RPG_Demo/Assets/MagicaCloth2/Example (Can be deleted)/Common/Shaders/
+/Action_RPG_Demo/Assets/MagicaCloth2/Example (Can be deleted)/Common/Textures/
+/Action_RPG_Demo/Assets/MagicaCloth2/Example (Can be deleted)/DemoScenes/
+/Action_RPG_Demo/Assets/MagicaCloth2/Example (Can be deleted)/DemoScenes_Unity_6.1_or_Higher/
+/Action_RPG_Demo/Assets/MagicaCloth2/Example (Can be deleted)/UnityChan/Logo/
+/Action_RPG_Demo/Assets/MagicaCloth2/Example (Can be deleted)/UnityChan/SD_Kohaku_chanz/
+/Action_RPG_Demo/Assets/MagicaCloth2/Example (Can be deleted)/UnityChan/UCL2.0/License Logo/Others/jpg/
+/Action_RPG_Demo/Assets/MagicaCloth2/Example (Can be deleted)/UnityChan/UCL2.0/License Logo/Others/png/
+/Action_RPG_Demo/Assets/MagicaCloth2/Example (Can be deleted)/UnityChan/UnityChanKAGURA/Animation/
+/Action_RPG_Demo/Assets/MagicaCloth2/Example (Can be deleted)/UnityChan/UnityChanKAGURA/Materials/TEX/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/Baker/_DEMOS/Baked Clips/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/FinalIK/_DEMOS/Assets/Car Interior/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/FinalIK/_DEMOS/Assets/Environments/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/FinalIK/_DEMOS/Assets/Interaction Animations/Cigarette/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/FinalIK/_DEMOS/Assets/Interaction Animations/Door/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/FinalIK/_DEMOS/Assets/Mech Spider/Materials/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/FinalIK/_DEMOS/Assets/Mech Spider/Textures/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/FinalIK/_DEMOS/Assets/Textures/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/FinalIK/_DEMOS/Baker/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/FinalIK/_DEMOS/Finger Rig/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/FinalIK/_DEMOS/Look At IK/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/Shared Demo Assets/Characters/Angry Bots Generic/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/Shared Demo Assets/Characters/Dummy/Masks/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/Shared Demo Assets/Characters/Dummy/Prefabs/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/Shared Demo Assets/Characters/Pilot/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/Shared Demo Assets/Characters/Teddy/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/Shared Demo Assets/Characters/Viking/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/Shared Demo Assets/Characters/Wolf Generic/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/Shared Demo Assets/Humanoid Animations/Materials/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/Shared Demo Assets/Props/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/Shared Demo Assets/Prototyping/Models/
+/Action_RPG_Demo/Assets/Plugins/RootMotion/Shared Demo Assets/Prototyping/Textures/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/button/button_corner_rectangle1/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/button/button_corner_rectangle2/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/button/button_corner_square1/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/button/button_corner_square4/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/button/button_corner_square5/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/button/button_rectangle/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/button/button_square/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_activity/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_animal/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_architecture/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_avatar/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_bottle/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_controller/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_device/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_feeling/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_food/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_game/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_gesture/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_media/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_nature/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_shield/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_shopping/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_socialmedia/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_sport/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_store/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_tool/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_traffic/
+/Action_RPG_Demo/Assets/A_Using_Source/pics/icon/icon_weather/
+/Action_RPG_Demo/Assets/A_Using_Source/Map_Using/Anime Tokyo/Demo Scenes/
+/Action_RPG_Demo/Assets/Motion Titles Pack/Scenes/
+/Action_RPG_Demo/Assets/Motion Titles Pack/Sprites/Radial/128px/
+/Action_RPG_Demo/Assets/Motion Titles Pack/Sprites/Radial/512px/
+/Action_RPG_Demo/Assets/Motion Titles Pack/Sprites/Rounded/
+/Action_RPG_Demo/Assets/MapSource/KawaiiCity/Prefabs/BG_Buildings/
+/Action_RPG_Demo/Assets/MapSource/KawaiiCity/Prefabs/Decals/
+/Action_RPG_Demo/Assets/MapSource/KawaiiCity/Prefabs/Lanterns/
+/Action_RPG_Demo/Assets/MapSource/KawaiiCity/Prefabs/Props/
+/Action_RPG_Demo/Assets/MapSource/KawaiiCity/Prefabs/Steret_Pieces/
+/Action_RPG_Demo/Assets/MapSource/KawaiiCity/Prefabs/Tram_Pieces/
+/Action_RPG_Demo/Assets/MapSource/KawaiiCity/Prefabs/Walkway_Pieces/
+/Action_RPG_Demo/Assets/Motion Titles Pack/Demo Assets/Animations/
+/Action_RPG_Demo/Assets/_TerrainAutoUpgrade/
